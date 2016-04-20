@@ -5,6 +5,6 @@ public class AIWalkingState : BaseState
 {
     public override Vector3 ProcessMotion(Vector3 input)
     {
-        return input * motor.Speed;
+        return input * motor.Speed/5;
     }
 }

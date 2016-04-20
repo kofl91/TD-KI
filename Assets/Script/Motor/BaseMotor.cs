@@ -7,8 +7,8 @@ public abstract class BaseMotor : MonoBehaviour {
     protected BaseState state;
     protected Transform thisTransform;
 
-    private float baseSpeed = 5.0f;
-    private float baseGravity = 25.0f;
+    protected float baseSpeed = 2.0f;
+    protected float baseGravity = 25.0f;
 
     public float Speed { get { return baseSpeed; } }
     public float Gravity { get { return baseGravity; } }
