@@ -27,7 +27,7 @@ public class BaseCombat : MonoBehaviour {
     public virtual void OnDamage(DamageInfo dmg)
     {
         Hitpoint -= dmg.amount;
-        Debug.Log(name + "aua "+ hitpoint);
+        //Debug.Log(name + "aua "+ hitpoint);
         if (Hitpoint <= 0)
         {
             OnDeath();
@@ -36,7 +36,7 @@ public class BaseCombat : MonoBehaviour {
 
     public virtual void OnDeath()
     {
-        Debug.Log(name + "has died!");
-        Destroy(this.gameObject);
+        // Debug.Log(name + "has died!");
+        SpawnManager.Instance.Despawn(this.gameObject);
     }
 }

@@ -19,11 +19,13 @@ public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T
     {
 
     }
+
     private void Awake()
     {
         if(instance == null)
         {
             instance = this as T;
+            instance.Init();
         }
     }
 }

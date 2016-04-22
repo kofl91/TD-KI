@@ -8,7 +8,7 @@ public class BoxTurret : BaseTurret {
 
     protected override void Action(Transform t)
     {
-        Debug.Log("Shooting at " + t);
+        //Debug.Log("Shooting at " + t);
         lastAction = Time.time;
         Debug.DrawRay(transform.position, t.position - transform.position, Color.red, 1.5f);
         GameObject bullet = Instantiate(projectile

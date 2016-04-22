@@ -6,6 +6,10 @@ public class EndzoneDespawn : MonoBehaviour {
     private void OnTriggerEnter(Collider col)
     {
         //Debug.Log("Destroy");
-        Destroy(col.gameObject);
+        SpawnManager.Instance.Despawn(col.gameObject);
+        if (col.tag == "Enemy")
+        {
+            LevelManger.Instance.EnemyCrossed();
+        }
     }
 }

@@ -9,7 +9,7 @@ public class ClickableTile : MonoBehaviour {
 
     void OnMouseUp()
     {
-        Debug.Log("Click!");
+       // Debug.Log("Click!");
         tilemap.CreateTurretUnit(tileX, tileY);
     }
 }

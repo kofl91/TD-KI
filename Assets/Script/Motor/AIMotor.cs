@@ -25,7 +25,7 @@ public class AIMotor : BaseMotor {
 
         Vector3 dir = destination - thisTransform.position;
 
-        dir.Set(dir.x, 0, dir.z);
+        dir.Set(dir.x, dir.y, dir.z);
 
         if (dir.magnitude > 1)
         {

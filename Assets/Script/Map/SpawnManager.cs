@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
 public class SpawnPoint
@@ -15,12 +16,13 @@ public class SpawnManager : MonoSingleton<SpawnManager>
     public List<SpawnPoint> spawnPoint = new List<SpawnPoint>();
     public List<GameObject> spawnPrefabs = new List<GameObject>();
 
+    private List<GameObject> activeEnemys = new List<GameObject>();
+
+
     public void Spawn(int spawnPrefabIndex)
     {
         Spawn(spawnPrefabIndex, 0);
-        Spawn(spawnPrefabIndex, 1);
-        
-        
+        Spawn(spawnPrefabIndex, 1); 
     }
 
     public void Spawn(int spawnPrefabIndex,int spawnPointIndex)
@@ -29,6 +31,29 @@ public class SpawnManager : MonoSingleton<SpawnManager>
             , spawnPoint[spawnPointIndex].self.position
             , spawnPoint[spawnPointIndex].self.rotation) as GameObject;
         go.SendMessage("SetDestination", spawnPoint[spawnPointIndex].destination);
+        activeEnemys.Add(go);
+    }
+
+    public void Despawn(GameObject go)
+    {
+        activeEnemys.Remove(go);
+        Destroy(go);
+    }
+
+
+    public void ClearEnemys()
+    {
+        foreach(GameObject go in activeEnemys)
+        {
+            Destroy(go);
+        }
+        activeEnemys.Clear();
+    }
+
+
+    public int getEnemysLeft()
+    {
+        return activeEnemys.Count;
     }
 
     // Temporary

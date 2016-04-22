@@ -34,7 +34,7 @@ public abstract class BaseTurret : MonoBehaviour {
     {
         Collider[] allEnemys = Physics.OverlapSphere(transform.position, range, LayerMask.GetMask("Enemy"));
 
-        Debug.Log(allEnemys.Length);
+        //Debug.Log(allEnemys.Length);
         if (allEnemys.Length != 0)
         {
             int closestIndex = 0;
@@ -56,6 +56,6 @@ public abstract class BaseTurret : MonoBehaviour {
     protected virtual void Action(Transform t)
     {
         lastAction = Time.time;
-        Debug.Log("Shooting");
+        //Debug.Log("Shooting");
     }
 }
