@@ -14,7 +14,8 @@ public class LevelManger : MonoSingleton<LevelManger> {
 
     public override void Init()
     {
-        foreach(Wave w in GetComponents<Wave>())
+        UIManager.Instance.DrawWaveInfo();
+        foreach (Wave w in GetComponents<Wave>())
         {
             waves.Add(w);
         }
@@ -25,6 +26,7 @@ public class LevelManger : MonoSingleton<LevelManger> {
         waves[0].StartWave();
         spawnActive = true;
         waveActive = true;
+        UIManager.Instance.DrawWaveInfo();
     }
 
     public void EndWave()
@@ -32,13 +34,15 @@ public class LevelManger : MonoSingleton<LevelManger> {
         Destroy(waves[0]);
         waves.RemoveAt(0);
         spawnActive = false;
+        UIManager.Instance.DrawWaveInfo();
     }
 
 
     public void EnemyCrossed()
     {
         lifePoint--;
-        if(lifePoint == 0)
+        UIManager.Instance.DrawWaveInfo();
+        if (lifePoint == 0)
         {
             Defeat();
         }
