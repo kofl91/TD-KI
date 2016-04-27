@@ -37,6 +37,11 @@ public class AIMotor : BaseMotor {
     public void SetDestination(Transform t)
     {
         destination = t.position;
+        //this.gameObject.transform.ro
+        var targetPosition = t.position;
+        targetPosition.y = transform.position.y;
+        transform.LookAt(targetPosition);
+
     }
 
 }

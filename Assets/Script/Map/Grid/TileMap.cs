@@ -72,6 +72,6 @@ public class TileMap : MonoBehaviour
 
     public void CreateTurretUnit(int x, int y)
     {
-        GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x, 1 , y), Quaternion.identity);
+        //GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x, 1 , y), Quaternion.identity);
     }
 }

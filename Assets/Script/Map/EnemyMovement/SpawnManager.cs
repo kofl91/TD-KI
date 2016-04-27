@@ -22,7 +22,6 @@ public class SpawnManager : MonoSingleton<SpawnManager>
     public void Spawn(int spawnPrefabIndex)
     {
         Spawn(spawnPrefabIndex, 0);
-        Spawn(spawnPrefabIndex, 1); 
     }
 
     public void Spawn(int spawnPrefabIndex,int spawnPointIndex)

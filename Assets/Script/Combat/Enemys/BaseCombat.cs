@@ -11,6 +11,8 @@ public class BaseCombat : MonoBehaviour {
 
     protected int hitpoint = 5;
     protected int maxHitpoint = 5;
+    protected int goldBounty = 2;
+
     public int Hitpoint { set { hitpoint = value; } get { return hitpoint; } }
     public int MaxHitpoint { set { maxHitpoint = value; } get { return maxHitpoint; } }
 
@@ -38,5 +40,6 @@ public class BaseCombat : MonoBehaviour {
     {
         // Debug.Log(name + "has died!");
         SpawnManager.Instance.Despawn(this.gameObject);
+        LevelManger.Instance.IncreaseGold(goldBounty);
     }
 }

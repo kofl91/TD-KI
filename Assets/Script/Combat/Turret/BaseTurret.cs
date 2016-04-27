@@ -11,7 +11,7 @@ public abstract class BaseTurret : MonoBehaviour {
     protected float cooldown = 1.0f;
     private float lastTick;
     protected float range = 5.0f;
-
+    public int goldCost = 20;
 
     // Update is called once per frame
     void Update()
