@@ -86,7 +86,7 @@ public class Optimizer : MonoBehaviour {
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
         _ea.PausedEvent += new EventHandler(ea_PauseEvent);
 
-        var evoSpeed = 1;
+        var evoSpeed = 10;
 
      //   Time.fixedDeltaTime = 0.045f;
         Time.timeScale = evoSpeed;       
