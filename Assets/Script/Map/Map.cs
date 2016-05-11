@@ -20,6 +20,8 @@ public abstract class Map : MonoBehaviour
         Way
     };
 
+    public GameObject container;
+
     public List<SpawnPoint> spawnPoints = new List<SpawnPoint>();
 
     public List<Waypoint> wayPoints = new List<Waypoint>();
@@ -64,6 +66,7 @@ public abstract class Map : MonoBehaviour
         sp.self = go.transform;
         sp.destination = firstDestination;
         spawnPoints.Add(sp);
+        go.transform.parent = container.transform;
     }
 
     protected void createWayPoint(int x, int y)
@@ -72,11 +75,14 @@ public abstract class Map : MonoBehaviour
         lastWaypoint = (GameObject)Instantiate(PrefabContainer.Instance.wayPointPrefab, new Vector3(x, 1.5f, y), Quaternion.identity);
         Waypoint wp = lastWaypoint.GetComponent<Waypoint>();
         wayPoints.Add(wp);
+        lastWaypoint.transform.parent = container.transform;
     }
 
     protected GameObject createEndZone(int x, int y)
     {
-        return (GameObject) Instantiate(PrefabContainer.Instance.endZonePrefab, new Vector3(x, 1.0f, y), Quaternion.identity);
+        GameObject go = (GameObject)Instantiate(PrefabContainer.Instance.endZonePrefab, new Vector3(x, 1.0f, y), Quaternion.identity);
+        go.transform.parent = container.transform;
+        return go;
     }
 
     protected void startWayFromTo (int x, int y, int xt, int yt)
@@ -140,6 +146,7 @@ public abstract class Map : MonoBehaviour
                 TileType tt = PrefabContainer.Instance.tileTypes[(int)grid[x, y]];
 
                 GameObject go = (GameObject)Instantiate(tt.tileVisualPrefab, new Vector3(x, 1.0f, y), Quaternion.identity);
+                go.transform.parent = container.transform;
                 if (grid[x, y] != eTileType.Way)
                 {
                     ClickableTile ct = go.GetComponent<ClickableTile>();
@@ -183,6 +190,7 @@ public abstract class Map : MonoBehaviour
         GameObject go = Instantiate(PrefabContainer.Instance.enemys[spawnPrefabIndex]
             , spawnPoints[spawnPointIndex].self.position
             , spawnPoints[spawnPointIndex].self.rotation) as GameObject;
+        go.transform.parent = container.transform;
         go.SendMessage("SetDestination", spawnPoints[spawnPointIndex].destination);
         activeEnemys.Add(go);
         go.SendMessage("SetPlayer", GameManager.Instance.firstPlayer);
