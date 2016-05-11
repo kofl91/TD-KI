@@ -4,7 +4,7 @@ using System;
 
 public class BaseProjectile : MonoBehaviour
 {
-    public Transform Turret { get; set; }
+    public Vector3 Turret { get; set; }
     public Transform Target { get; set; }
     public Vector3 TargetLocation { set; get; }
     public DamageInfo Damage { set; get; }
@@ -41,7 +41,7 @@ public class BaseProjectile : MonoBehaviour
             TargetLocation = Target.position;
         }
         //transform.position = Vector3.MoveTowards(transform.position, TargetLocation, ProjectileSpeed * Time.deltaTime);
-        transform.position = Vector3.Lerp(Turret.position, TargetLocation, transition);
+        transform.position = Vector3.Lerp(Turret, TargetLocation, transition);
 
     }
 
@@ -57,7 +57,7 @@ public class BaseProjectile : MonoBehaviour
     public virtual void Launch(Transform turret, Transform target, DamageInfo dmg)
     {
         isLaunched = true;
-        Turret = turret;
+        Turret = turret.position;
         Target = target;
         TargetLocation = target.position;
         IsLockedOnTarget = true;

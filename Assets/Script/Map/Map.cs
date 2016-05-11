@@ -185,6 +185,7 @@ public abstract class Map : MonoBehaviour
             , spawnPoints[spawnPointIndex].self.rotation) as GameObject;
         go.SendMessage("SetDestination", spawnPoints[spawnPointIndex].destination);
         activeEnemys.Add(go);
+        go.SendMessage("SetPlayer", GameManager.Instance.firstPlayer);
     }
 
     public void Despawn(GameObject go)

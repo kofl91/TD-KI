@@ -1,11 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class GameManager : MonoSingleton<GameManager> {
 
     public Map currentMap;
 
-    public Player firstPlayer;
+    public Player firstPlayer = null;
 
     public void TileClicked(ClickableTile tile)
     {
@@ -30,5 +31,24 @@ public class GameManager : MonoSingleton<GameManager> {
             UIManager.Instance.DrawResourcesInfo();
             UIManager.Instance.DrawWaveInfo();
         }
+    }
+
+    internal int GetPlayerGold()
+    {
+        if (firstPlayer != null)
+        {
+            return firstPlayer.Gold;
+        }
+        return -1;
+    }
+
+    internal int GetPlayerLife()
+    {
+
+        if (firstPlayer != null)
+        {
+            return firstPlayer.Life;
+        }
+        return -1;
     }
 }

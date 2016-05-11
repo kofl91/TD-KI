@@ -9,12 +9,14 @@ public class DamageInfo
 
 public class BaseCombat : MonoBehaviour {
 
-    protected int hitpoint = 5;
-    protected int maxHitpoint = 5;
-    protected int goldBounty = 2;
+    protected int hitpoint = 15;
+    protected int maxHitpoint = 15;
+    protected int goldBounty = 3;
 
     public int Hitpoint { set { hitpoint = value; } get { return hitpoint; } }
     public int MaxHitpoint { set { maxHitpoint = value; } get { return maxHitpoint; } }
+
+    public Player player;
 
     private void Start()
     {
@@ -36,11 +38,17 @@ public class BaseCombat : MonoBehaviour {
         }
     }
 
+    public void SetPlayer(Player p)
+    {
+        player = p;
+    }
+
     public virtual void OnDeath()
     {
         // Debug.Log(name + "has died!");
         GameManager.Instance.currentMap.Despawn(this.gameObject);
-        GameManager.Instance.firstPlayer.IncreaseGold(goldBounty);
-        GameManager.Instance.firstPlayer.enemyKilled++;
+        player.IncreaseGold(goldBounty);
+        player.enemyKilled++;
+        Debug.Log(player.enemyKilled);
     }
 }

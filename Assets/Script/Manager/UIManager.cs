@@ -33,7 +33,7 @@ public class UIManager : MonoSingleton<UIManager> {
     #region ResourcesInfo
     public void DrawResourcesInfo()
     {
-        resourcesInfoText[0].text = "Gold : " + GameManager.Instance.firstPlayer.Gold;
+        resourcesInfoText[0].text = "Gold : " + GameManager.Instance.GetPlayerGold();
     }
 
     #endregion
@@ -44,7 +44,7 @@ public class UIManager : MonoSingleton<UIManager> {
     {
         waveInfoText[0].text = "Current wave : " + 1;
         waveInfoText[1].text = "Enemys left : " + 0;
-        waveInfoText[2].text = "Lives left : " + GameManager.Instance.firstPlayer.Life;
+        waveInfoText[2].text = "Lives left : " + GameManager.Instance.GetPlayerLife();
     }
     #endregion
 
