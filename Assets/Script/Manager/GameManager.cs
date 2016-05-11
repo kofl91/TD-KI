@@ -4,9 +4,18 @@ using System;
 
 public class GameManager : MonoSingleton<GameManager> {
 
+    public GameObject container;
+
     public Map currentMap;
 
     public Player firstPlayer = null;
+
+    private int chosenTower = 0;
+
+    void Start()
+    {
+        container = new GameObject();
+    }
 
     public void TileClicked(ClickableTile tile)
     {
@@ -15,7 +24,8 @@ public class GameManager : MonoSingleton<GameManager> {
             Debug.Log("Click");
             int x = tile.tileX;
             int y = tile.tileY;
-            Instantiate(PrefabContainer.Instance.turrets[0], new Vector3(x, 1, y), Quaternion.identity);
+            GameObject go = (GameObject) Instantiate(PrefabContainer.Instance.turrets[chosenTower], new Vector3(x, 2.0f, y), PrefabContainer.Instance.turrets[chosenTower].transform.rotation);
+            go.transform.parent = container.transform;
             firstPlayer.Gold -= 20;
         }
     }
@@ -50,5 +60,10 @@ public class GameManager : MonoSingleton<GameManager> {
             return firstPlayer.Life;
         }
         return -1;
+    }
+
+    void ChooseTower(int ID)
+    {
+        chosenTower = ID;
     }
 }
