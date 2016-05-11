@@ -9,9 +9,18 @@ public class UIManager : MonoSingleton<UIManager> {
     public GameObject resourcesInfo;
     public GameObject messages;
 
+    public Scrollbar speedScroll;
+
     private Text[] waveInfoText;
     private Text[] resourcesInfoText;
     private Text[] messageText;
+
+
+    public void ChangeSpeed()
+    {
+        //Debug.Log(speedScroll.value);
+        Time.timeScale = 1 + (speedScroll.value * 5);
+    }
 
 
     public override void Init()
@@ -19,6 +28,7 @@ public class UIManager : MonoSingleton<UIManager> {
         waveInfoText = waveInfo.GetComponentsInChildren<Text>();
         resourcesInfoText = resourcesInfo.GetComponentsInChildren<Text>();
         messageText = messages.GetComponentsInChildren<Text>();
+        speedScroll = speedScroll.GetComponent<Scrollbar>();
     }
 
     #region ResourcesInfo
