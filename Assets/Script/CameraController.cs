@@ -2,20 +2,7 @@
 
 public class CameraController : MonoBehaviour
 {
-    private const int LevelArea = 100;
-
-    private const int ScrollArea = 25;
-    private const int ScrollSpeed = 25;
-
-    private const int DragSpeed = 100;
-
     private const int ZoomSpeed = 25;
-    private const int ZoomMin = 15;
-    private const int ZoomMax = 100;
-
-    private const int PanSpeed = 50;
-    private const int PanAngleMin = 30;
-    private const int PanAngleMax = 80;
 
     public GameObject cameraBoundsObject;
     Transform cameraTransform;
@@ -28,13 +15,10 @@ public class CameraController : MonoBehaviour
         transform = gameObject.transform;
         bounds = cameraBoundsObject.GetComponent<Renderer>().bounds;
         cameraTransform = GetComponentsInChildren<Camera>(true)[0].transform;
-        //transform.Rotate(transform.right, -30);
     }
-    float lastX = 0f;
+    float lastMousePositionX = 0f;
     float rotation = 0f;
-    // Update is called once per frame
-
-    Vector3 getPoint()
+    Vector3 CameraFocusPoint()
     {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width, Screen.height,0f) / 2f);
@@ -50,53 +34,87 @@ public class CameraController : MonoBehaviour
         }
         return new Vector3();
     }
+    Vector3 FocusPoint()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 0f));
+        RaycastHit[] hits;
+        hits = Physics.RaycastAll(ray);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            hit = hits[i];
+            // if (hit.transform.gameObject.name.Equals(cameraBoundsObject.name))
+            {
+                return hit.point;
+            }
+        }
+        return new Vector3();
+    }
+    Vector3 heightTranslation = Vector3.zero;
+    Vector3 lastTranslation = Vector3.zero;
+
+    float f(float y){
+        if (y == 0) return y;
+        return Mathf.Sign(y)*Mathf.Sqrt(Mathf.Abs(y)) * 10f; ;
+    }
+    float scrolloffset = 0;
+    float lasttranslationy = 0;
+    Vector3 focused = Vector3.zero;
+    bool isfocused = false;
     void Update()
     {
         var translation = Vector3.zero;
         float rotnow = -(float)Input.mouseScrollDelta.y * 15f;
         rotZoom += rotnow;
         float deltascroll = (float)Input.mouseScrollDelta.y / 5f * ZoomSpeed;
-        if (rotZoom > 0 || transform.position.y > 40)
-        {
-            rotZoom = 0;
-            rotnow = 0;
-            translation -= Vector3.up * deltascroll;
-        }
-        else
-        {
+        scrolloffset -= deltascroll;
 
-                translation += transform.forward * deltascroll;
-                transform.RotateAround(getPoint(), transform.right, rotnow);
-            
-            
-        }
+        float step = 10000f * Time.deltaTime * scrolloffset == 0 ? 0 : scrolloffset / Mathf.Abs(scrolloffset);
+        Debug.Log("step" + step);
+        scrolloffset -= step;
+        translation.y += step;
+
+
+        Vector3 forward = transform.forward;
+        forward.y = 0f;// = Quaternion.AngleAxis(-transform.rotation.eulerAngles.z, transform.right) * forward;
+        forward = forward.normalized;
+
+        Vector3 zero = transform.position - heightTranslation;
+        zero.y = CameraFocusPoint().y;
+        transform.LookAt(zero + forward * 20f);
+
         if (Input.GetMouseButton(1)) // MMB
         {
-            float deltarot = lastX - Input.mousePosition.x;
+            if (!isfocused)
+            {
+                isfocused = true;
+                focused = FocusPoint();
+            }
+            float deltarot = lastMousePositionX - Input.mousePosition.x;
             rotation += deltarot;
-            Vector3 point = getPoint();
-            transform.RotateAround(point,Vector3.up, deltarot);
-            lastX = Input.mousePosition.x;
+            transform.RotateAround(focused, Vector3.up, deltarot);
         }
         else
         {
-            Vector3 center = new Vector3(Screen.width,0, Screen.height) / 2f;
-            Vector3 mouse = new Vector3(Input.mousePosition.x, 0, Input.mousePosition.y);
-            Vector3 dist = (mouse - center);
-            if (dist.magnitude > Mathf.Min(center.x, center.z)/2f)
-            {
-                Vector3 v = dist * 1f / 10f * Time.deltaTime;
+            isfocused = false;
+            if (Input.mousePosition.x < Screen.width && Input.mousePosition.y < Screen.height && Input.mousePosition.x >= 0 && Input.mousePosition.y >= 0) { 
+                Vector3 center = new Vector3(Screen.width,0, Screen.height) / 2f;
+                Vector3 mouse = new Vector3(Input.mousePosition.x, 0, Input.mousePosition.y);
+                Vector3 dist = (mouse - center);
+                dist.x = dist.x / center.x * center.z;
+                float minpix = Mathf.Min(center.x, center.z);
+                float area = 0.8f;
+                float strength = Mathf.Clamp(((dist.magnitude / minpix) - area) * (1f / (1f - area)), 0, 1);
+                Vector3 v = dist.normalized * 14f * Time.deltaTime * strength;
                 v = Quaternion.AngleAxis(rotation, Vector3.up) * v;
                 translation += v;
             }
         }
-
-        lastX = Input.mousePosition.x;
+        lastMousePositionX = Input.mousePosition.x;
         transform.position += translation;
-
-        float x = transform.position.x, z = transform.position.z;
-        x = Mathf.Clamp(x, bounds.min.x, bounds.max.x);
-        z = Mathf.Clamp(z, bounds.min.z, bounds.max.z);
-        transform.position = new Vector3(x, transform.position.y, z);
+        transform.position = new Vector3(
+            Mathf.Clamp(transform.position.x, bounds.min.x, bounds.max.x),
+            Mathf.Clamp(transform.position.y, 4,100),
+            Mathf.Clamp(transform.position.z, bounds.min.z, bounds.max.z));
     }
 }
