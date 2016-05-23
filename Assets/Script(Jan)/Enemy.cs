@@ -60,9 +60,9 @@ public class Enemy : MonoBehaviour {
         Destroy(gameObject);
     }
 
-    public void TakeDmg(float damage)
+    public void OnDamage(DamageInfo damage)
     {
-        life -= damage;
+        life -= damage.amount;
         if (life <= 0)
         {
            
