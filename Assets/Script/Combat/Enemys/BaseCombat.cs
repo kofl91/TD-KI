@@ -46,7 +46,7 @@ public class BaseCombat : MonoBehaviour {
     public virtual void OnDeath()
     {
         // Debug.Log(name + "has died!");
-        GameManager.Instance.currentMap.Despawn(this.gameObject);
+        
         player.IncreaseGold(goldBounty);
         player.enemyKilled++;
         Debug.Log(player.enemyKilled);

@@ -229,7 +229,7 @@ public abstract class Map : MonoBehaviour
     {
         if ((Time.time - lastTime) >= interval)
         {
-            GameManager.Instance.currentMap.Spawn(0 , 0);
+            //GameManager.Instance.currentMap.Spawn(0 , 0);
             lastTime = Time.time;
         }
     }

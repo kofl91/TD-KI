@@ -8,7 +8,7 @@ public class EndzoneDespawn : MonoBehaviour {
         //Debug.Log("Destroy");
         if (col.tag == "Enemy")
         {
-            GameManager.Instance.currentMap.Despawn(col.gameObject);
+            //GameManager.Instance.currentMap.Despawn(col.gameObject);
             GameManager.Instance.firstPlayer.EnemyCrossed();
         }
     }

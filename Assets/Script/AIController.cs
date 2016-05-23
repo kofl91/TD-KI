@@ -17,7 +17,6 @@ public class AIController : UnitController
     {
         myPlayer = GameManager.Instance.firstPlayer;
         myPlayer.RemoveTurrets();
-        GameManager.Instance.currentMap.ClearEnemys();
         this.box = box;
         IsRunning = true;
         // Create Player

@@ -6,8 +6,6 @@ public class GameManager : MonoSingleton<GameManager> {
 
     public GameObject container;
 
-    public Map currentMap;
-
     public Player firstPlayer = null;
 
     private int chosenTower = 0;
@@ -31,7 +29,7 @@ public class GameManager : MonoSingleton<GameManager> {
     }
 
 
-    public float lastTime = 0.0f;
+    float lastTime = 0.0f;
     public float interval = 1.0f;
 
     public void Update()
