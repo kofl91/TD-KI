@@ -15,15 +15,13 @@ public class TerrainMap : Map
         clearMap();
         
         setWayFromTo(13, 0, 13, 4);
-        setWayFromTo(14, 0, 14, 5);
+        setWayFromTo(14, 0, 14, 4);
 
         setWayFromTo(1, 3, 14, 3);
         setWayFromTo(1, 4, 14, 4);
-        setWayFromTo(1, 5, 14, 5);
 
         setWayFromTo(1, 3, 1, 18);
         setWayFromTo(2, 3, 2, 18);
-        setWayFromTo(3, 3, 3, 18);
 
         setWayFromTo(1, 16, 18, 16);
         setWayFromTo(1, 17, 18, 17);
