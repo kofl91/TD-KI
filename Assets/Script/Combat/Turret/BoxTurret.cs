@@ -4,7 +4,7 @@ using System;
 
 public class BoxTurret : BaseTurret {
 
-    protected int dmg = 3;
+    protected int dmg = 1;
    
 
     protected override void Action(Transform t)

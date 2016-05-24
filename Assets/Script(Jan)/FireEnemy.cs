@@ -1,39 +1,33 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour {
+public class FireEnemy : MonoBehaviour {
 
 
     GameObject pathstart;
     Transform targetPathNote;
     int pathNodeIndex = 0;
-<<<<<<< HEAD
-    public float speed = 5f;
-    public float life = 1f;
-    public int Score = 1;
+    float speed = 8f;
+    float life = 6f;
+    int Score = 2;
+    int Plfanzenrez = 3;
+    int WaterDmg = -2;
 
-    public float debuffDuration = 0.0f;
-
-    public float speedmodifier = 1.0f;
-
-=======
-    float speed = 5f;
-    float life = 1f;
-    int Score = 1;
->>>>>>> 9ca89b08d590e04e418f04db1a9324c45351b8a1
     // Use this for initialization
     void Start()
     {
         pathstart = GameObject.Find("Waypoints");
+
     }
 
     void GetNextPath()
-    {       
-            targetPathNote = pathstart.transform.GetChild(pathNodeIndex);
-            pathNodeIndex++;
-           if (pathNodeIndex == 10)
+    {
+        targetPathNote = pathstart.transform.GetChild(pathNodeIndex);
+        pathNodeIndex++;
+        if (pathNodeIndex == 10)
         {
             Destroy(gameObject);
+            GameManager.Instance.GetPlayerLife();
             GameManager.Instance.firstPlayer.EnemyCrossed();
 
         }
@@ -42,12 +36,6 @@ public class Enemy : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-
-        debuffDuration -= Time.deltaTime;
-        if (debuffDuration < 0.0f)
-        {
-            speedmodifier = 1.0f;
-        }
 
         if (targetPathNote == null)
         {
@@ -58,7 +46,7 @@ public class Enemy : MonoBehaviour {
             }
         }
         Vector3 dir = targetPathNote.position - this.transform.localPosition;
-        float distThisFrame = speed * speedmodifier * 10 * Time.deltaTime;
+        float distThisFrame = speed * 10 * Time.deltaTime;
 
         if (dir.magnitude <= distThisFrame)
         {
@@ -73,7 +61,7 @@ public class Enemy : MonoBehaviour {
 
     void ReachedGoal()
     {
-      
+
         Destroy(gameObject);
     }
 
@@ -87,3 +75,4 @@ public class Enemy : MonoBehaviour {
         }
     }
 }
+

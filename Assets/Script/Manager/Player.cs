@@ -40,6 +40,8 @@ public class Player : MonoBehaviour
         if (Life == 0)
         {
             Debug.Log("Defeat");
+            
+      
         }
     }
 

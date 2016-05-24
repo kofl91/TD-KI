@@ -8,6 +8,7 @@ public class StartPoint : MonoBehaviour {
     float spwanCDremaining = 0;
 
     public WaveComponent[] waveComps;
+
     // Use this for initialization
     void Start()
     {
@@ -18,7 +19,7 @@ public class StartPoint : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        bool didSpawn = false;
+       
         spwanCDremaining -= Time.deltaTime;
         if (spwanCDremaining < 0)
         {
@@ -29,15 +30,11 @@ public class StartPoint : MonoBehaviour {
                 if (wc.spwaned < wc.num)
                 {
                     wc.spwaned++;
-                    Instantiate(wc.enemyPref, this.transform.position, this.transform.rotation);
-                    didSpawn = true;
+                    Instantiate(wc.enemyPref, this.transform.position, this.transform.rotation);                 
                     break;
                 }
             }
-            if (didSpawn = false)
-            {
-                Destroy(gameObject);
-            }
+          
         }
 
     }
