@@ -8,7 +8,6 @@ public class SupportTower : BaseTurret {
     float buffduration = 3.0f;
     float speedBuff = 0.5f;
 
-    new private GameObject projectile;
 
     protected override void Action(Transform t)
     {

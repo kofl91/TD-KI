@@ -5,8 +5,6 @@ public class PriestTower : BaseTurret {
 
     protected int dmg = 1;
 
-    new private GameObject projectile;
-
     protected override void Action(Transform t)
     {
         lastAction = Time.time;

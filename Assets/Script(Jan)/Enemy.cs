@@ -7,7 +7,6 @@ public class Enemy : MonoBehaviour {
     GameObject pathstart;
     Transform targetPathNote;
     int pathNodeIndex = 0;
-<<<<<<< HEAD
     public float speed = 5f;
     public float life = 1f;
     public int Score = 1;
@@ -16,11 +15,7 @@ public class Enemy : MonoBehaviour {
 
     public float speedmodifier = 1.0f;
 
-=======
-    float speed = 5f;
-    float life = 1f;
-    int Score = 1;
->>>>>>> 9ca89b08d590e04e418f04db1a9324c45351b8a1
+
     // Use this for initialization
     void Start()
     {
