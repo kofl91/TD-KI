@@ -10,11 +10,15 @@ public class Enemy : MonoBehaviour {
     public float speed = 5f;
     public float life = 1f;
     public int Score = 1;
+
+    public float debuffDuration = 0.0f;
+
+    public float speedmodifier = 1.0f;
+
     // Use this for initialization
     void Start()
     {
         pathstart = GameObject.Find("Waypoints");
-
     }
 
     void GetNextPath()
@@ -31,7 +35,13 @@ public class Enemy : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
-        
+
+        debuffDuration -= Time.deltaTime;
+        if (debuffDuration < 0.0f)
+        {
+            speedmodifier = 1.0f;
+        }
+
         if (targetPathNote == null)
         {
             GetNextPath();
@@ -41,7 +51,7 @@ public class Enemy : MonoBehaviour {
             }
         }
         Vector3 dir = targetPathNote.position - this.transform.localPosition;
-        float distThisFrame = speed* 10 * Time.deltaTime;
+        float distThisFrame = speed * speedmodifier * 10 * Time.deltaTime;
 
         if (dir.magnitude <= distThisFrame)
         {

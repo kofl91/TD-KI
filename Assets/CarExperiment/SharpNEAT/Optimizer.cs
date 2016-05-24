@@ -211,19 +211,19 @@ public class Optimizer : MonoBehaviour {
 
     void OnGUI()
     {
-        if (GUI.Button(new Rect(10, 10, 100, 40), "Start EA"))
+        if (GUI.Button(new Rect(10, 60, 100, 40), "Start EA"))
         {
             StartEA();
         }
-        if (GUI.Button(new Rect(10, 60, 100, 40), "Stop EA"))
+        if (GUI.Button(new Rect(10, 110, 100, 40), "Stop EA"))
         {
             StopEA();
         }
-        if (GUI.Button(new Rect(10, 110, 100, 40), "Run best"))
+        if (GUI.Button(new Rect(10, 160, 100, 40), "Run best"))
         {
             RunBest();
         }
 
-        GUI.Button(new Rect(10, Screen.height - 70, 100, 60), string.Format("Generation: {0}\nFitness: {1:0.00}", Generation, Fitness));
+        GUI.Button(new Rect(10, Screen.height - 200, 100, 60), string.Format("Generation: {0}\nFitness: {1:0.00}", Generation, Fitness));
     }
 }
