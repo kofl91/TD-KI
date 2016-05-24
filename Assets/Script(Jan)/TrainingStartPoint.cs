@@ -1,11 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
-
-public class StartPoint : MonoBehaviour {
+public class TrainingStartPoint : MonoBehaviour
+{
 
     float spawnCD = 1f;
     float spwanCDremaining = 0;
+    List<GameObject> minions = new List<GameObject>();
 
     public WaveComponent[] waveComps;
     // Use this for initialization
@@ -28,8 +30,8 @@ public class StartPoint : MonoBehaviour {
             {
                 if (wc.spwaned < wc.num)
                 {
-                    wc.spwaned++;
-                    Instantiate(wc.enemyPref, this.transform.position, this.transform.rotation);
+                    //wc.spwaned++;
+                    minions.Add(Instantiate(wc.enemyPref, this.transform.position, this.transform.rotation) as GameObject);
                     didSpawn = true;
                     break;
                 }
@@ -41,7 +43,22 @@ public class StartPoint : MonoBehaviour {
         }
 
     }
+
+    public void DestroyAllMinions()
+    {
+        foreach( GameObject go in minions)
+        {
+            Destroy(go);
+        }
+        minions.Clear();
+    }
+
+    public void OnMinionDeath(GameObject go)
+    {
+        if(minions.Contains(go))
+        {
+            minions.Remove(go);
+            Destroy(go);
+        }
+    }
 }
-
-
-

@@ -9,8 +9,8 @@ public class DamageInfo
 
 public class BaseCombat : MonoBehaviour {
 
-    protected int hitpoint = 15;
-    protected int maxHitpoint = 15;
+    protected int hitpoint = 30;
+    protected int maxHitpoint = 30;
     protected int goldBounty = 3;
 
     public int Hitpoint { set { hitpoint = value; } get { return hitpoint; } }

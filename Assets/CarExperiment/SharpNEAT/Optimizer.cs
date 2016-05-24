@@ -10,8 +10,10 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-    const int NUM_INPUTS = 36;
-    const int NUM_OUTPUTS = 2;
+    const int NUM_INPUTS = 19 * 21;
+    const int NUM_OUTPUTS = 19 * 21;
+
+    public int evoSpeed = 10;
 
     public int Trials;
     public float TrialDuration;
@@ -86,8 +88,6 @@ public class Optimizer : MonoBehaviour {
         _ea.UpdateEvent += new EventHandler(ea_UpdateEvent);
         _ea.PausedEvent += new EventHandler(ea_PauseEvent);
 
-        var evoSpeed = 10;
-
      //   Time.fixedDeltaTime = 0.045f;
         Time.timeScale = evoSpeed;       
         _ea.StartContinue();
@@ -136,9 +136,7 @@ public class Optimizer : MonoBehaviour {
         Utility.Log("Total time elapsed: " + (endTime - startTime));
 
         System.IO.StreamReader stream = new System.IO.StreamReader(popFileSavePath);
-       
 
-      
         EARunning = false;        
         
     }
@@ -175,14 +173,11 @@ public class Optimizer : MonoBehaviour {
 
         NeatGenome genome = null;
 
-
         // Try to load the genome from the XML document.
         try
         {
             using (XmlReader xr = XmlReader.Create(champFileSavePath))
                 genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, (NeatGenomeFactory)experiment.CreateGenomeFactory())[0];
-
-
         }
         catch (Exception e1)
         {

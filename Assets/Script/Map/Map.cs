@@ -14,7 +14,7 @@ public abstract class Map : MonoSingleton<Map>
 
     public GameObject container;
 
-    protected eTileType[,] grid;
+    public eTileType[,] grid;
 
     public int mapSizeX;
     public int mapSizeY;

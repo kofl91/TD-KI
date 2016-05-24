@@ -65,8 +65,8 @@ public class Enemy : MonoBehaviour {
         life -= damage.amount;
         if (life <= 0)
         {
-           
-            Destroy(gameObject);
+            GameManager.Instance.firstPlayer.enemyKilled++;
+            Destroy(this.gameObject);
         }
     }
 }

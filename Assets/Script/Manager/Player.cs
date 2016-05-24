@@ -13,18 +13,25 @@ public class Player : MonoBehaviour
     private float goldIncrementDelay = 1.0f;
     internal int enemyKilled = 0;
 
+    public int turretsplaced = 0;
+
+    public int failedActions = 0;
+
     public bool[,] freeTiles;
 
     List<GameObject> turrets = new List<GameObject>();
 
 
     public void Start(){
-        freeTiles = new bool[6, 6];
-        for (int x = 0; x < 6; x++)
+        freeTiles = new bool[21, 22];
+        for (int x = 0; x < Map.Instance.mapSizeX; x++)
         {
-            for (int y = 0; y < 6; y++)
+            for (int y = 0; y < Map.Instance.mapSizeY; y++)
             {
-                freeTiles[x, y] = true;
+                if (Map.Instance.grid[x, y] == Map.eTileType.Free)
+                    freeTiles[x, y] = true;
+                else
+                    freeTiles[x, y] = false;
             }
         }
     }
@@ -71,10 +78,20 @@ public class Player : MonoBehaviour
             if (freeTiles[x, y])
             {
                 Gold -= turret.goldCost;
-                turrets.Add((GameObject)Instantiate(turretPrefab, new Vector3(x, 1, y), Quaternion.identity));
+                int offsetX = Map.Instance.xOffset;
+                int offsetY = Map.Instance.yOffset;
+                int tilesize = Map.Instance.tileSize;
+                Debug.Log("Turret at:" + x + "/" + y);
+                GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, 2.0f, y * tilesize + offsetY), turretPrefab.transform.rotation);
+                turrets.Add(go);
+                turretsplaced++;
                 freeTiles[x, y] = false;
-            }  
+            }
+            else
+                failedActions++;
         }
+        else
+            failedActions++;
     }
 
     public void RemoveTurrets()
@@ -84,11 +101,14 @@ public class Player : MonoBehaviour
             Destroy(t.gameObject);
         }
         turrets.Clear();
-        for (int x = 0; x < 6; x++)
+        for (int x = 0; x < Map.Instance.mapSizeX; x++)
         {
-            for (int y = 0; y < 6; y++)
+            for (int y = 0; y < Map.Instance.mapSizeY; y++)
             {
-                freeTiles[x, y] = true;
+                if (Map.Instance.grid[x, y] == Map.eTileType.Free)
+                    freeTiles[x, y] = true;
+                else
+                    freeTiles[x, y] = false;
             }
         }
     }
