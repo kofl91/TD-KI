@@ -10,7 +10,7 @@ public abstract class BaseTurret : MonoBehaviour {
     protected float lastAction;
     protected float cooldown = 1.0f;
     private float lastTick;
-    protected float range = 5.0f;
+    protected float range = 150.0f;
     public int goldCost = 20;
 
 

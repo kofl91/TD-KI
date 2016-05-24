@@ -1,15 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour {
-
+public class PflanzEnemy : MonoBehaviour
+{
 
     GameObject pathstart;
     Transform targetPathNote;
     int pathNodeIndex = 0;
-    float speed = 5f;
-    float life = 1f;
-    int Score = 1;
+    float speed = 8f;
+    float life = 6f;
+    int Score = 2;
+    int WaterenRez = 3;
+    int FireDmg = -2;
+
     // Use this for initialization
     void Start()
     {
@@ -18,31 +21,31 @@ public class Enemy : MonoBehaviour {
     }
 
     void GetNextPath()
-    {       
-            targetPathNote = pathstart.transform.GetChild(pathNodeIndex);
-            pathNodeIndex++;
-           if (pathNodeIndex == 10)
+    {
+        targetPathNote = pathstart.transform.GetChild(pathNodeIndex);
+        pathNodeIndex++;
+        if (pathNodeIndex == 10)
         {
             Destroy(gameObject);
             GameManager.Instance.firstPlayer.EnemyCrossed();
-
         }
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
         if (targetPathNote == null)
         {
             GetNextPath();
             if (targetPathNote == null)
             {
                 Destroy(gameObject);
+               
             }
         }
         Vector3 dir = targetPathNote.position - this.transform.localPosition;
-        float distThisFrame = speed* 10 * Time.deltaTime;
+        float distThisFrame = speed * 10 * Time.deltaTime;
 
         if (dir.magnitude <= distThisFrame)
         {
@@ -57,7 +60,7 @@ public class Enemy : MonoBehaviour {
 
     void ReachedGoal()
     {
-      
+
         Destroy(gameObject);
     }
 
@@ -71,3 +74,5 @@ public class Enemy : MonoBehaviour {
         }
     }
 }
+
+

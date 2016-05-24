@@ -20,9 +20,14 @@ public class GameManager : MonoSingleton<GameManager> {
         if(firstPlayer.Gold > 20)
         {
             Debug.Log("Click");
+            Debug.Log(tile);
             int x = tile.tileX;
             int y = tile.tileY;
-            GameObject go = (GameObject) Instantiate(PrefabContainer.Instance.turrets[chosenTower], new Vector3(x, 2.0f, y), PrefabContainer.Instance.turrets[chosenTower].transform.rotation);
+            int offsetX = Map.Instance.xOffset;
+            int offsetY = Map.Instance.yOffset;
+            int tilesize = Map.Instance.tileSize;
+            Debug.Log("Turret at:" + x + "/" + y);
+            GameObject go = (GameObject) Instantiate(PrefabContainer.Instance.turrets[chosenTower], new Vector3(x* tilesize+ offsetX, 18.0f, y* tilesize+ offsetY), PrefabContainer.Instance.turrets[chosenTower].transform.rotation);
             go.transform.parent = container.transform;
             firstPlayer.Gold -= 20;
         }
