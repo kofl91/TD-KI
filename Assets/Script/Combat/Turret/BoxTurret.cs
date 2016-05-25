@@ -11,12 +11,7 @@ public class BoxTurret : BaseTurret {
     {
         //Debug.Log("Shooting at " + t);
         lastAction = Time.time;
-        Debug.DrawRay(transform.position, t.position - transform.position, Color.red, 1.5f);
-        GameObject bullet = Instantiate(projectile
-            , transform.position
-            , Quaternion.identity) as GameObject;
-        bullet.GetComponent<BaseProjectile>().Launch(this.transform, t, turretDmg);
-        
+        ShootBullet(t);
        // t.SendMessage("OnDamage", turretDmg);
     }
 

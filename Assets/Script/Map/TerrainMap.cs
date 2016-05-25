@@ -42,6 +42,10 @@ public class TerrainMap : Map
         setWayFromTo(17, 7, 17, 14);
         setWayFromTo(18, 7, 18, 14);
 
+        setWayFromTo(0, 18, 3, 18);
+        setWayFromTo(0, 19, 3, 19);
+        setWayFromTo(0, 20, 3, 20);
+
         GenerateMapVisual();
     }
 }

@@ -24,16 +24,7 @@ public class Player : MonoBehaviour
 
     public void Start(){
         freeTiles = new bool[21, 22];
-        for (int x = 0; x < Map.Instance.mapSizeX; x++)
-        {
-            for (int y = 0; y < Map.Instance.mapSizeY; y++)
-            {
-                if (Map.Instance.grid[x, y] == Map.eTileType.Free)
-                    freeTiles[x, y] = true;
-                else
-                    freeTiles[x, y] = false;
-            }
-        }
+        ClearTiles();
     }
 
 
@@ -73,7 +64,6 @@ public class Player : MonoBehaviour
 
     public void CreateTurretUnit(int x, int y, GameObject turretPrefab)
     {
-        //Debug.Log("TurretBUILDING!!!!");
         BaseTurret turret = turretPrefab.GetComponent<BaseTurret>();
         if (turret.goldCost < Gold)
         {
@@ -103,11 +93,16 @@ public class Player : MonoBehaviour
             Destroy(t.gameObject);
         }
         turrets.Clear();
+        ClearTiles();
+    }
+
+    public void ClearTiles()
+    {
         for (int x = 0; x < Map.Instance.mapSizeX; x++)
         {
             for (int y = 0; y < Map.Instance.mapSizeY; y++)
             {
-                if (Map.Instance.grid[x, y] == Map.eTileType.Free)
+                if (Map.Instance.grid[x, y] != Map.eTileType.Way)
                     freeTiles[x, y] = true;
                 else
                     freeTiles[x, y] = false;

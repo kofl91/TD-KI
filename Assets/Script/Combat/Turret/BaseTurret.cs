@@ -13,13 +13,22 @@ public abstract class BaseTurret : MonoBehaviour {
     protected float range = 150.0f;
     public int goldCost = 20;
 
+    public float buffDuration = 0.0f;
 
+    public float rangeMultiplier = 1.0f;
+    public float cooldownMultiplier = 1.0f;
 
     // Update is called once per frame
     void Update()
     {
-
-        if (Time.time - lastAction > cooldown)
+        buffDuration -= Time.deltaTime;
+        if (buffDuration < 0.0f)
+        {
+            rangeMultiplier = 1.0f;
+            cooldownMultiplier = 1.0f;
+            buffDuration = 0.0f;
+        }
+        if (Time.time - lastAction > (cooldown* cooldownMultiplier))
         {
             if (Time.time - lastAction > refreshRate)
             {
@@ -35,7 +44,7 @@ public abstract class BaseTurret : MonoBehaviour {
 
     private Transform GetNearestEnemy()
     {
-        Collider[] allEnemys = Physics.OverlapSphere(transform.position, range, LayerMask.GetMask("Enemy"));
+        Collider[] allEnemys = Physics.OverlapSphere(transform.position, range* rangeMultiplier, LayerMask.GetMask("Enemy"));
 
         //Debug.Log(allEnemys.Length);
         if (allEnemys.Length != 0)
@@ -60,5 +69,14 @@ public abstract class BaseTurret : MonoBehaviour {
     {
         lastAction = Time.time;
         //Debug.Log("Shooting");
+    }
+
+    protected void ShootBullet(Transform t)
+    {
+        Debug.DrawRay(transform.position, t.position - transform.position, Color.red, 1.5f);
+        GameObject bullet = Instantiate(projectile
+            , transform.position
+            , Quaternion.identity) as GameObject;
+        bullet.GetComponent<BaseProjectile>().Launch(this.transform, t, turretDmg);
     }
 }
