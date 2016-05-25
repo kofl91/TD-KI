@@ -18,9 +18,10 @@ public class DamageInfo {
 
     internal float calcAbsoluteDmg(DamageInfo dmgfactor)
     {
-        return normal * dmgfactor.normal +
+        float absDmg = normal * dmgfactor.normal +
             fire * dmgfactor.fire +
             water * dmgfactor.water +
             nature * dmgfactor.nature;
+        return absDmg;
     }
 }

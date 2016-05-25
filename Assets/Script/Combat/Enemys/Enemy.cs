@@ -20,6 +20,11 @@ public class Enemy : MonoBehaviour {
     public float speedmodifier = 1.0f;
 
 
+    public Enemy()
+    {
+        dmgfactor.setNeutralResistance();
+    }
+
     // Use this for initialization
     void Start()
     {
