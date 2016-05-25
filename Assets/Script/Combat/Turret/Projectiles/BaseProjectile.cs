@@ -59,6 +59,7 @@ public class BaseProjectile : MonoBehaviour
 
     public virtual void Launch(Transform turret, Transform target, DamageInfo dmg)
     {
+        
         isLaunched = true;
         Turret = turret.position;
         Target = target;

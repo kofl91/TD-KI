@@ -8,7 +8,6 @@ public class StrongShotTower : BaseTurret {
     // Use this for initialization
     StrongShotTower()
     {
-        turretDmg = new DamageInfo();
         turretDmg.normal = dmg;
         range = 2.5f * range;
         cooldown = 4.5f * cooldown;

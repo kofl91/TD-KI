@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class DamageInfo : MonoBehaviour {
+public class DamageInfo {
     public float normal = 0;
     public float fire = 0;
     public float water = 0;
