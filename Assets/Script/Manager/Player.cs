@@ -28,9 +28,16 @@ public class Player : MonoBehaviour
     }
 
 
-    internal void ChangeBalance(int goldDifference)
+    internal bool ChangeBalance(int goldDifference)
     {
+
         Gold += goldDifference;
+        if (Gold < 0)
+        {
+            Gold -= goldDifference;
+            return false;
+        }
+        return true;
     }
 
 
