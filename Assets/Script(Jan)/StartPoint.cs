@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 public class StartPoint : MonoBehaviour {
@@ -9,17 +10,9 @@ public class StartPoint : MonoBehaviour {
 
     public WaveComponent[] waveComps;
 
-    // Use this for initialization
-    void Start()
-    {
-
-
-    }
-
     // Update is called once per frame
     void Update()
-    {
-       
+    {   
         spwanCDremaining -= Time.deltaTime;
         if (spwanCDremaining < 0)
         {
@@ -30,13 +23,11 @@ public class StartPoint : MonoBehaviour {
                 if (wc.spwaned < wc.num)
                 {
                     wc.spwaned++;
-                    Instantiate(wc.enemyPref, this.transform.position, this.transform.rotation);                 
+                    Instantiate(wc.enemyPref, this.transform.position, this.transform.rotation);
                     break;
                 }
-            }
-          
+            } 
         }
-
     }
 }
 

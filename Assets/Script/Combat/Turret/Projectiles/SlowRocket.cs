@@ -13,12 +13,11 @@ public class SlowRocket : BaseProjectile {
 
         if (Target)
         {
-            Target.gameObject.SendMessage("OnDamage", Damage);
             Collider[] allEnemys = Physics.OverlapSphere(transform.position, range, LayerMask.GetMask("Enemy"));
 
             if (allEnemys.Length != 0)
             {
-                for (int i = 1; i < allEnemys.Length; i++)
+                for (int i = 0; i < allEnemys.Length; i++)
                 {
                     allEnemys[i].gameObject.SendMessage("OnDamage", Damage);
                     allEnemys[i].GetComponent<Enemy>().speedmodifier = slow;

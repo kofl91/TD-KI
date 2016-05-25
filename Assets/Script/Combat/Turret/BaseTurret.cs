@@ -11,7 +11,7 @@ public abstract class BaseTurret : MonoBehaviour {
     protected float cooldown = 1.0f;
     private float lastTick;
     protected float range = 150.0f;
-    public int goldCost = 20;
+    protected int goldCost;
 
     public float buffDuration = 0.0f;
 
@@ -22,6 +22,9 @@ public abstract class BaseTurret : MonoBehaviour {
     {
         //GameObject.Find("Player").GetComponent<Player>().ChangeBalance(-goldCost);
     }
+
+    public abstract int getCost();
+
 
     // Update is called once per frame
     void Update()

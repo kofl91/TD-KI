@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class StrongShotTower : BaseTurret {
 
@@ -12,5 +13,10 @@ public class StrongShotTower : BaseTurret {
         range = 2.5f * range;
         cooldown = 4.5f * cooldown;
         goldCost = 80;
+    }
+
+    public override int getCost()
+    {
+        return 80;
     }
 }

@@ -14,4 +14,9 @@ public class SplashTower : BaseTurret {
         cooldown = 1.0f * cooldown;
         goldCost = 50;
     }
+
+    public override int getCost()
+    {
+        return 50;
+    }
 }

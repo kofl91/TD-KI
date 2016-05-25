@@ -20,4 +20,10 @@ public class GoldTower : BaseTurret {
         cooldown = 1.0f * cooldown;
         goldCost = 100;
     }
+
+
+    public override int getCost()
+    {
+        return 150;
+    }
 }

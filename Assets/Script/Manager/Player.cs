@@ -47,9 +47,7 @@ public class Player : MonoBehaviour
         UIManager.Instance.DrawWaveInfo();
         if (Life == 0)
         {
-            Debug.Log("Defeat");
-            
-      
+            GameManager.Instance.GameOver(false);
         }
     }
 
@@ -73,11 +71,11 @@ public class Player : MonoBehaviour
     public void CreateTurretUnit(int x, int y, GameObject turretPrefab)
     {
         BaseTurret turret = turretPrefab.GetComponent<BaseTurret>();
-        if (turret.goldCost < Gold)
+        if (turret.getCost() < Gold)
         {
             if (freeTiles[x, y])
             {
-                Gold -= turret.goldCost;
+                Gold -= turret.getCost();
                 int offsetX = Map.Instance.xOffset;
                 int offsetY = Map.Instance.yOffset;
                 int tilesize = Map.Instance.tileSize;

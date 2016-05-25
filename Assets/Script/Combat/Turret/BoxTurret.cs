@@ -20,4 +20,9 @@ public class BoxTurret : BaseTurret {
         turretDmg = new DamageInfo();
         turretDmg.normal = dmg;
     }
+
+    public override int getCost()
+    {
+        return 100;
+    }
 }
