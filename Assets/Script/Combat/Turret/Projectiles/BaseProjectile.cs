@@ -41,6 +41,9 @@ public class BaseProjectile : MonoBehaviour
             TargetLocation = Target.position;
         }
         //transform.position = Vector3.MoveTowards(transform.position, TargetLocation, ProjectileSpeed * Time.deltaTime);
+       
+        transform.LookAt(TargetLocation);
+        transform.Rotate(Vector3.up, 90);
         transform.position = Vector3.Lerp(Turret, TargetLocation, transition);
 
     }
