@@ -14,10 +14,14 @@ public class GreenTower : BaseTurret
     }
 
     // Use this for initialization
-    void Start()
+    GreenTower()
     {
         turretDmg = new DamageInfo();
+<<<<<<< HEAD
         turretDmg.amount = dmg;
         goldCost = 40;
+=======
+        turretDmg.nature = dmg;
+>>>>>>> 0c2aeff776256dbd722cafe29698893ae8c50e67
     }
 }

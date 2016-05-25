@@ -12,9 +12,9 @@ public class IceTower : BaseTurret {
     }
 
     // Use this for initialization
-    void Start()
+    IceTower()
     {
         turretDmg = new DamageInfo();
-        turretDmg.amount = dmg;
+        turretDmg.normal = dmg;
     }
 }

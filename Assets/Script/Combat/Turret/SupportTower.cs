@@ -22,7 +22,7 @@ public class SupportTower : BaseTurret {
     }
 
     // Use this for initialization
-    void Start()
+    SupportTower()
     {
         range = 30f * range;
         cooldown = 2.0f * cooldown;

@@ -11,6 +11,10 @@ public class Enemy : MonoBehaviour {
     public float life = 1f;
     public int Score = 1;
 
+    //protected DamageResistance resistance;
+
+    protected DamageInfo dmgfactor = new DamageInfo();
+
     public float debuffDuration = 0.0f;
 
     public float speedmodifier = 1.0f;
@@ -74,7 +78,7 @@ public class Enemy : MonoBehaviour {
 
     public void OnDamage(DamageInfo damage)
     {
-        life -= damage.amount;
+        life -= damage.calcAbsoluteDmg(dmgfactor);
         if (life <= 0)
         {
             GameManager.Instance.firstPlayer.enemyKilled++;

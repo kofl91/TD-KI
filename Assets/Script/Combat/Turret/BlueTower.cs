@@ -3,23 +3,16 @@ using System.Collections;
 
 public class BlueTower : BaseTurret
 {
-
-    protected int dmg = 3;
-
-    protected override void Action(Transform t)
-    {
-        //Debug.Log("Shooting at " + t);
-        lastAction = Time.time;
-        ShootBullet(t);
-        // t.SendMessage("OnDamage", turretDmg);
-    }
-
     // Use this for initialization
-    void Start()
+    BlueTower()
     {
         turretDmg = new DamageInfo();
+<<<<<<< HEAD
         turretDmg.amount = dmg;
 
         goldCost = 40;
+=======
+        turretDmg.water = 3;
+>>>>>>> 0c2aeff776256dbd722cafe29698893ae8c50e67
     }
 }

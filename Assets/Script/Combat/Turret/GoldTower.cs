@@ -12,10 +12,10 @@ public class GoldTower : BaseTurret {
     }
 
     // Use this for initialization
-    void Start()
+    PriestTower()
     {
         turretDmg = new DamageInfo();
-        turretDmg.amount = dmg;
+        turretDmg.normal = dmg;
         range = 2.5f * range;
         cooldown = 1.0f * cooldown;
         goldCost = 100;
