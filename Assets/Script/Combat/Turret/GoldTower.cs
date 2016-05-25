@@ -1,14 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PriestTower : BaseTurret {
+public class GoldTower : BaseTurret {
 
     protected int dmg = 1;
 
     protected override void Action(Transform t)
     {
         lastAction = Time.time;
-        GameManager.Instance.firstPlayer.IncreaseGold(1);
+        GameManager.Instance.firstPlayer.ChangeBalance(1);
     }
 
     // Use this for initialization

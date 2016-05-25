@@ -19,5 +19,7 @@ public class BlueTower : BaseTurret
     {
         turretDmg = new DamageInfo();
         turretDmg.amount = dmg;
+
+        goldCost = 40;
     }
 }

@@ -18,5 +18,6 @@ public class GreenTower : BaseTurret
     {
         turretDmg = new DamageInfo();
         turretDmg.amount = dmg;
+        goldCost = 40;
     }
 }

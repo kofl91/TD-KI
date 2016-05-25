@@ -28,10 +28,11 @@ public class Player : MonoBehaviour
     }
 
 
-    internal void IncreaseGold(int goldBounty)
+    internal void ChangeBalance(int goldDifference)
     {
-        Gold += goldBounty;
+        Gold += goldDifference;
     }
+
 
     public void EnemyCrossed()
     {

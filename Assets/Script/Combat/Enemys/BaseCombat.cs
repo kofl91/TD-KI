@@ -47,7 +47,7 @@ public class BaseCombat : MonoBehaviour {
     {
         // Debug.Log(name + "has died!");
         
-        player.IncreaseGold(goldBounty);
+        player.ChangeBalance(goldBounty);
         player.enemyKilled++;
         Debug.Log(player.enemyKilled);
     }

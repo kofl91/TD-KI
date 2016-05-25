@@ -21,6 +21,6 @@ public class StrongShotTower : BaseTurret {
         turretDmg.amount = dmg;
         range = 2.5f * range;
         cooldown = 4.5f * cooldown;
-        goldCost = 70;
+        goldCost = 80;
     }
 }
