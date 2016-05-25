@@ -7,6 +7,10 @@ public class CameraController : MonoBehaviour
     public GameObject cameraBoundsObject;
     Transform cameraTransform;
     Bounds bounds;
+    float distanceToFocusPoint = 60f;
+    float scrollSpeed = 560f;
+
+
 
     Transform transform;
     float rotZoom = 0f;
@@ -67,9 +71,10 @@ public class CameraController : MonoBehaviour
         float rotnow = -(float)Input.mouseScrollDelta.y * 15f;
         rotZoom += rotnow;
         float deltascroll = (float)Input.mouseScrollDelta.y / 5f * ZoomSpeed;
+        deltascroll *= scrollSpeed;
         scrolloffset -= deltascroll;
 
-        float step = 10000f * Time.deltaTime * scrolloffset == 0 ? 0 : scrolloffset / Mathf.Abs(scrolloffset);
+        float step = scrollSpeed * 10000000f * Time.deltaTime * scrolloffset == 0 ? 0 : scrolloffset / Mathf.Abs(scrolloffset);
         Debug.Log("step" + step);
         scrolloffset -= step;
         translation.y += step;
@@ -81,7 +86,7 @@ public class CameraController : MonoBehaviour
 
         Vector3 zero = transform.position - heightTranslation;
         zero.y = CameraFocusPoint().y;
-        transform.LookAt(zero + forward * 20f);
+        transform.LookAt(zero + forward * distanceToFocusPoint);
 
         if (Input.GetMouseButton(1)) // MMB
         {
@@ -105,7 +110,7 @@ public class CameraController : MonoBehaviour
                 float minpix = Mathf.Min(center.x, center.z);
                 float area = 0.8f;
                 float strength = Mathf.Clamp(((dist.magnitude / minpix) - area) * (1f / (1f - area)), 0, 1);
-                Vector3 v = dist.normalized * 14f * Time.deltaTime * strength;
+                Vector3 v = dist.normalized * 44f * Time.deltaTime * strength;
                 v = Quaternion.AngleAxis(rotation, Vector3.up) * v;
                 translation += v;
             }
@@ -114,7 +119,7 @@ public class CameraController : MonoBehaviour
         transform.position += translation;
         transform.position = new Vector3(
             Mathf.Clamp(transform.position.x, bounds.min.x, bounds.max.x),
-            Mathf.Clamp(transform.position.y, 4,100),
+            Mathf.Clamp(transform.position.y, 4,400),
             Mathf.Clamp(transform.position.z, bounds.min.z, bounds.max.z));
     }
 }
