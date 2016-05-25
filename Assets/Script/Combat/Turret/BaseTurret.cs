@@ -20,7 +20,7 @@ public abstract class BaseTurret : MonoBehaviour {
 
     void Start()
     {
-        GameObject.Find("Player").GetComponent<Player>().ChangeBalance(-goldCost);
+        //GameObject.Find("Player").GetComponent<Player>().ChangeBalance(-goldCost);
     }
 
     // Update is called once per frame
