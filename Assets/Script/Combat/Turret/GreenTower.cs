@@ -14,9 +14,9 @@ public class GreenTower : BaseTurret
     }
 
     // Use this for initialization
-    void Start()
+    GreenTower()
     {
         turretDmg = new DamageInfo();
-        turretDmg.amount = dmg;
+        turretDmg.nature = dmg;
     }
 }

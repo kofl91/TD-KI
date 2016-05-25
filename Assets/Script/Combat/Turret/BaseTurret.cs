@@ -68,7 +68,7 @@ public abstract class BaseTurret : MonoBehaviour {
     protected virtual void Action(Transform t)
     {
         lastAction = Time.time;
-        //Debug.Log("Shooting");
+        ShootBullet(t);
     }
 
     protected void ShootBullet(Transform t)

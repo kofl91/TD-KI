@@ -18,6 +18,6 @@ public class BoxTurret : BaseTurret {
     // Use this for initialization
     void Start () {
         turretDmg = new DamageInfo();
-        turretDmg.amount = dmg;
+        turretDmg.normal = dmg;
     }
 }

@@ -1,15 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class RedTower : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
+public class RedTower : BaseTurret
+{
+    // Use this for initialization
+    RedTower()
+    {
+        turretDmg = new DamageInfo();
+        turretDmg.fire = 3;
+    }
 }
