@@ -12,7 +12,7 @@ public class GoldTower : BaseTurret {
     }
 
     // Use this for initialization
-    PriestTower()
+    GoldTower()
     {
         turretDmg = new DamageInfo();
         turretDmg.normal = dmg;
