@@ -7,12 +7,10 @@ public class BlueTower : BaseTurret
     BlueTower()
     {
         turretDmg = new DamageInfo();
-<<<<<<< HEAD
         turretDmg.amount = dmg;
 
         goldCost = 40;
-=======
         turretDmg.water = 3;
->>>>>>> 0c2aeff776256dbd722cafe29698893ae8c50e67
+        turretDmg.water = 3;
     }
 }
