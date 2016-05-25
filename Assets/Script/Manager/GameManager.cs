@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoSingleton<GameManager> {
 
@@ -9,6 +10,8 @@ public class GameManager : MonoSingleton<GameManager> {
     public Player firstPlayer = null;
 
     private int chosenTower = 0;
+
+    public bool isLearning = false;
 
     void Start()
     {
@@ -51,6 +54,22 @@ public class GameManager : MonoSingleton<GameManager> {
             return firstPlayer.Life;
         }
         return -1;
+    }
+
+    internal void GameOver(bool hasWon)
+    {
+        firstPlayer.RemoveTurrets();
+        if (!isLearning)
+        {
+            if (hasWon)
+            {
+                SceneManager.LoadScene("VictoryScreen");
+            }
+            else
+            {
+                SceneManager.LoadScene("GameOverScreen");
+            }
+        }
     }
 
     void ChooseTower(int ID)

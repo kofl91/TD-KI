@@ -20,4 +20,9 @@ public class GreenTower : BaseTurret
         turretDmg.nature = dmg;
         turretDmg.nature = dmg;
     }
+
+    public override int getCost()
+    {
+        return 40;
+    }
 }

@@ -20,19 +20,6 @@ public class UIManager : MonoSingleton<UIManager>
 
     private Button[] tower;
 
-    public void ChooseTower(int towerID)
-    {
-        GameManager.Instance.SendMessage("ChooseTower", towerID);
-    }
-
-
-    public void ChangeSpeed()
-    {
-        //Debug.Log(speedScroll.value);
-        Time.timeScale = 1 + (speedScroll.value * 5);
-    }
-
-
     public override void Init()
     {
         waveInfoText = waveInfo.GetComponentsInChildren<Text>();
@@ -47,16 +34,11 @@ public class UIManager : MonoSingleton<UIManager>
     {
         messageText[0].text = msg;
     }
-    #endregion
 
-
-
-    #region ResourcesInfo
     public void DrawResourcesInfo()
     {
         resourcesInfoText[0].text = "Gold : " + GameManager.Instance.GetPlayerGold();
     }
-
     #endregion
 
 
@@ -69,4 +51,16 @@ public class UIManager : MonoSingleton<UIManager>
     }
     #endregion
 
+
+    public void ChooseTower(int towerID)
+    {
+        GameManager.Instance.SendMessage("ChooseTower", towerID);
+    }
+
+
+    public void ChangeSpeed()
+    {
+        //Debug.Log(speedScroll.value);
+        Time.timeScale = 1 + (speedScroll.value * 5);
+    }
 }

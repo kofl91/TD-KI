@@ -28,4 +28,10 @@ public class SupportTower : BaseTurret {
         cooldown = 2.0f * cooldown;
         goldCost = 100;
     }
+
+
+    public override int getCost()
+    {
+        return 100;
+    }
 }

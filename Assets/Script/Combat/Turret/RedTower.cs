@@ -1,24 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class RedTower : BaseTurret
-{
-
-	// Use this for initialization
-	void Start () {
-        goldCost = 40;
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
-	}
-
+{ 
     // Use this for initialization
     RedTower()
     {
+        goldCost = 40;
         turretDmg = new DamageInfo();
         turretDmg.fire = 3;
     }
 
+    public override int getCost()
+    {
+        return 40;
+    }
 }

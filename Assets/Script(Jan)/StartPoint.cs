@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 
 public class StartPoint : MonoBehaviour {
@@ -19,30 +20,7 @@ public class StartPoint : MonoBehaviour {
 
     }
     WaveComponent waveComponent;
-    void updateWaveComponent(WaveComponent waveComponent)
-    {
-        spwanCDremaining -= Time.deltaTime;
-        if (spwanCDremaining < 0)
-        {
-            spwanCDremaining = spawnCD;
 
-            foreach (WaveComponent wc in waveComps)
-            {
-                if (wc.spwaned < wc.num)
-                {
-                    wc.spwaned++;
-                    
-                    Instantiate(wc.enemyPref, this.transform.position, this.transform.rotation);
-                    break;
-                }
-                else
-                {
-                    waiting = true;
-                    waveComponentIndex++;
-                }
-            }
-        }
-    }
     // Update is called once per frame
     void Update()
     {
@@ -52,6 +30,7 @@ public class StartPoint : MonoBehaviour {
             {
                 Instantiate(w.enemyPref, transform.position, transform.rotation);
             }
+
         }
     }
 }
