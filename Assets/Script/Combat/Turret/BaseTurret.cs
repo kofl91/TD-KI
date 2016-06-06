@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class BaseTurret : MonoBehaviour {
 
@@ -18,6 +19,8 @@ public abstract class BaseTurret : MonoBehaviour {
     public float rangeMultiplier = 1.0f;
     public float cooldownMultiplier = 1.0f;
 
+    public PlayerController owner;
+
     void Start()
     {
         //GameObject.Find("Player").GetComponent<Player>().ChangeBalance(-goldCost);
@@ -29,6 +32,7 @@ public abstract class BaseTurret : MonoBehaviour {
     // Update is called once per frame
     void Update()
     {
+
         buffDuration -= Time.deltaTime;
         if (buffDuration < 0.0f)
         {
@@ -44,6 +48,7 @@ public abstract class BaseTurret : MonoBehaviour {
                 Transform target = GetNearestEnemy();
                 if (target != null)
                 {
+                    transform.LookAt(target);
                     Action(target);
                 }
             }
@@ -52,17 +57,29 @@ public abstract class BaseTurret : MonoBehaviour {
 
     private Transform GetNearestEnemy()
     {
-        Collider[] allEnemys = Physics.OverlapSphere(transform.position, range* rangeMultiplier, LayerMask.GetMask("Enemy"));
-
+        Collider[] allCollider = Physics.OverlapSphere(transform.position, range* rangeMultiplier, LayerMask.GetMask("Enemy"));
         //Debug.Log(allEnemys.Length);
-        if (allEnemys.Length != 0)
+
+        // Filter for the right Enemys
+        List<Collider> allEnemys = new List<Collider>();
+        for (int i = 0; i < allCollider.Length; i++)
+        {
+            BaseEnemy enemy = allCollider[i].GetComponent<BaseEnemy>();
+            if (enemy.enemy == owner)
+            {
+                allEnemys.Add(allCollider[i]);
+            }
+        }
+
+        if (allEnemys.Count != 0)
         {
             int closestIndex = 0;
             float nearestDistance = Vector3.SqrMagnitude(transform.position - allEnemys[0].transform.position);
-            for (int i = 1; i < allEnemys.Length; i++)
+            for (int i = 1; i < allEnemys.Count; i++)
             {
                 float newDistance = Vector3.SqrMagnitude(transform.position - allEnemys[i].transform.position);
-                if (newDistance < nearestDistance)
+                
+                if ((newDistance < nearestDistance))
                 {
                     nearestDistance = newDistance;
                     closestIndex = i;

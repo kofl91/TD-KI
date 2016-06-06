@@ -4,10 +4,17 @@ using System.Collections;
 public class BaseEnemy : MonoBehaviour
 {
 
+    public float maxlife = 1f;
     public float life = 1f;
     public int bounty = 1;
 
     public GameObject target;
+
+    public PlayerController enemy;
+
+    private NavMeshAgent agent;
+
+    private Healthbar healthbar;
 
     protected DamageInfo dmgfactor = new DamageInfo();
 
@@ -18,7 +25,10 @@ public class BaseEnemy : MonoBehaviour
 
     void Start()
     {
-        GetComponent<NavMeshAgent>().SetDestination(target.transform.position);
+        agent = GetComponent<NavMeshAgent>();
+        if (target)
+            agent.SetDestination(target.transform.position);
+        healthbar = GetComponentInChildren<Healthbar>();
     }
 
     protected void ReachedGoal()
@@ -29,8 +39,11 @@ public class BaseEnemy : MonoBehaviour
     public void OnDamage(DamageInfo damage)
     {
         life -= damage.calcAbsoluteDmg(dmgfactor);
+        if (healthbar)
+            healthbar.SetHealthVisual(life / maxlife);
         if (life <= 0)
         {
+            enemy.Gold += bounty;
             Destroy(this.gameObject);
         }
     }

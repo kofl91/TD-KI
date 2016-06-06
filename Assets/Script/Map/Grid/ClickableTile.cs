@@ -5,28 +5,20 @@ public class ClickableTile : MonoBehaviour {
 
     public int tileX;
     public int tileY;
-
-    void Start()
-    {
-        Debug.Log("I exist");
-    }
-
+    public PlayerController owner;
 
     void OnMouseUp()
     {
-        //GameManager.Instance.SendMessage("TileClicked",this);
-        Debug.Log("Clicked");
+        owner.CreateTurretUnit(tileX, tileY);
     }
 
     void OnMouseOver()
     {
-        Debug.Log("Over");
         GetComponent<MeshRenderer>().enabled = true;
     }
 
     void OnMouseExit()
     {
-        Debug.Log("Out");
         GetComponent<MeshRenderer>().enabled = false;
     }
 }

@@ -13,6 +13,9 @@ public class GameManager : MonoSingleton<GameManager> {
 
     public bool isLearning = false;
 
+    float lastTime = 0.0f;
+    public float interval = 1.0f;
+
     void Start()
     {
         container = new GameObject();
@@ -23,10 +26,6 @@ public class GameManager : MonoSingleton<GameManager> {
     {
         firstPlayer.CreateTurretUnit(tile.tileX, tile.tileY, PrefabContainer.Instance.turrets[chosenTower]);
     }
-
-
-    float lastTime = 0.0f;
-    public float interval = 1.0f;
 
     public void Update()
     {

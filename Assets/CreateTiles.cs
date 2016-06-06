@@ -5,9 +5,11 @@ using System.Collections;
 public class CreateTiles : MonoBehaviour {
 
     public GameObject tile;
+    public PlayerController owner;
 
-	// Use this for initialization
-	void Start () {
+
+    // Use this for initialization
+    void Start () {
         RaycastHit hit;
         Vector3 runPosi;
         runPosi = transform.position;
@@ -31,6 +33,13 @@ public class CreateTiles : MonoBehaviour {
                 if (Terrain.activeTerrain.SampleHeight(spawnPosi) > 1.5f)
                 {
                     GameObject newTile = Instantiate(tile, spawnPosi, tile.transform.rotation) as GameObject;
+                    ClickableTile clickTile = newTile.GetComponent<ClickableTile>();
+                    if (clickTile)
+                    {
+                        clickTile.tileX = x;
+                        clickTile.tileY = y;
+                        clickTile.owner = owner;
+                    }
                     newTile.transform.parent = transform;
                 }
             }
