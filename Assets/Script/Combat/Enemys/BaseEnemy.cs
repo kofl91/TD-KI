@@ -7,7 +7,7 @@ public class BaseEnemy : MonoBehaviour
     public float maxlife = 1f;
     public float life = 1f;
     public int bounty = 1;
-
+    private bool gaveBounty = false;
     public GameObject target;
 
     public PlayerController enemy;
@@ -43,7 +43,11 @@ public class BaseEnemy : MonoBehaviour
             healthbar.SetHealthVisual(life / maxlife);
         if (life <= 0)
         {
-            enemy.Gold += bounty;
+            if (!gaveBounty)
+            {
+                enemy.Gold += bounty;
+                gaveBounty = true;
+            }
             Destroy(this.gameObject);
         }
     }

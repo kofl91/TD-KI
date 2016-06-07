@@ -75,14 +75,17 @@ public class PlayerController : MonoBehaviour {
     public void CreateTurretUnit(int x, int y)
     {
         GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
-        BaseTurret turret = turretPrefab.GetComponent<BaseTurret>();
+        GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, terrainHeight, y * tilesize + offsetY), turretPrefab.transform.rotation);
+        BaseTurret turret = go.GetComponent<BaseTurret>();
         if (turret.getCost() < Gold)
         {
             Gold -= turret.getCost();
-            GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, terrainHeight, y * tilesize + offsetY), turretPrefab.transform.rotation);
             go.transform.parent = transform;
             BaseTurret tower = go.GetComponent<BaseTurret>();
             tower.SetPlayer(this);
+        }else
+        {
+            Destroy(go);
         }
     }
 
