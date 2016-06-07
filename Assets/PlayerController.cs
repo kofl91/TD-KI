@@ -26,8 +26,16 @@ public class PlayerController : MonoBehaviour {
     // Use this for initialization
     void Start () {
 
+        // Hopefully sets all Components that require to be
+        IBelongsToPlayer[] components = (IBelongsToPlayer[])GetComponentsInChildren<IBelongsToPlayer>();
+
+        foreach (IBelongsToPlayer c in components)
+        {
+            c.SetPlayer(this);
+        }
+
         // Initialize where tower should be placed
-	    if (grid)
+        if (grid)
         {
             offsetX = grid.transform.position.x - grid.transform.lossyScale.x * 5 + tilesize / 2;
             offsetY = grid.transform.position.z - grid.transform.lossyScale.z * 5 + tilesize / 2;
@@ -74,11 +82,11 @@ public class PlayerController : MonoBehaviour {
             GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, terrainHeight, y * tilesize + offsetY), turretPrefab.transform.rotation);
             go.transform.parent = transform;
             BaseTurret tower = go.GetComponent<BaseTurret>();
-            tower.owner = this;
+            tower.SetPlayer(this);
         }
     }
 
-    void ChooseTower(int ID)
+    public void ChooseTower(int ID)
     {
         chosenTower = ID;
     }

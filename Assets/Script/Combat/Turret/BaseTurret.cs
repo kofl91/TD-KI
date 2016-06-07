@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-public abstract class BaseTurret : MonoBehaviour {
+public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
 
     public GameObject projectile;
     public DamageInfo turretDmg = new DamageInfo();
@@ -19,7 +20,7 @@ public abstract class BaseTurret : MonoBehaviour {
     public float rangeMultiplier = 1.0f;
     public float cooldownMultiplier = 1.0f;
 
-    public PlayerController owner;
+    private PlayerController owner;
 
     void Start()
     {
@@ -103,5 +104,15 @@ public abstract class BaseTurret : MonoBehaviour {
             , transform.position
             , Quaternion.identity) as GameObject;
         bullet.GetComponent<BaseProjectile>().Launch(this.transform, t, turretDmg);
+    }
+
+    public void SetPlayer(PlayerController player)
+    {
+        owner = player;
+    }
+
+    public PlayerController GetPlayer()
+    {
+        return owner;
     }
 }

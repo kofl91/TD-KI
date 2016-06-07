@@ -18,6 +18,7 @@ public class Spawner : MonoBehaviour {
         if (waves.Count > 0)
         {
             currentWave = waves[0];
+            waves.RemoveAt(0);
         }
     }
 	

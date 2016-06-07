@@ -1,11 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 // WORKS ONLY IF GAMEOBJECT IS A PLANE!!!
-public class CreateTiles : MonoBehaviour {
+public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
 
     public GameObject tile;
-    public PlayerController owner;
+    private PlayerController owner;
+
+    public PlayerController GetPlayer()
+    {
+        return owner;
+    }
+
+    public void SetPlayer(PlayerController player)
+    {
+        owner = player;
+    }
 
 
     // Use this for initialization

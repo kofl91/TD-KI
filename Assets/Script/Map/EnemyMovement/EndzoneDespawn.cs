@@ -1,9 +1,20 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class EndzoneDespawn : MonoBehaviour {
+public class EndzoneDespawn : MonoBehaviour, IBelongsToPlayer {
 
-    public PlayerController owner;
+    private PlayerController owner;
+
+    public PlayerController GetPlayer()
+    {
+        return owner;
+    }
+
+    public void SetPlayer(PlayerController player)
+    {
+        owner = player;
+    }
 
     private void OnTriggerEnter(Collider col)
     {
