@@ -49,7 +49,6 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
                 Transform target = GetNearestEnemy();
                 if (target != null)
                 {
-                    transform.LookAt(target);
                     Action(target);
                 }
             }
