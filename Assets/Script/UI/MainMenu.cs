@@ -33,7 +33,7 @@ public class MainMenu : MonoBehaviour {
     }
     public void PlayPress()
     {
-        SceneManager.LoadScene("firstLevel");
+        SceneManager.LoadScene(1);
     }
     public void ExitGame()
     {

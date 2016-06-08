@@ -61,8 +61,6 @@ public class Spawner : MonoSingleton<Spawner> {
 
     public GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, PlayerController player)
     {
-        Debug.Log(at);
-        Debug.Log(this.transform);
         GameObject spawnedMinion = Instantiate(PrefabContainer.Instance.enemys[enemyID], at.position, at.rotation) as GameObject;
         spawnedMinion.GetComponent<BaseEnemy>().target = towards;
         spawnedMinion.GetComponent<BaseEnemy>().enemy = player;

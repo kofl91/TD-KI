@@ -12,7 +12,7 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
     protected float lastAction;
     protected float cooldown = 1.0f;
     private float lastTick;
-    protected float range = 150.0f;
+    protected float range = 10.0f;
     protected int goldCost;
 
     public float buffDuration = 0.0f;
@@ -22,11 +22,14 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
 
     protected PlayerController owner;
 
+    private RotatesTowardsTarget rtt;
     void Start()
     {
         //GameObject.Find("Player").GetComponent<Player>().ChangeBalance(-goldCost);
+        rtt = GetComponentInChildren<RotatesTowardsTarget>();
+        
     }
-
+    
     public abstract int getCost();
 
 
@@ -47,6 +50,8 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
             {
                 lastTick = Time.time;
                 Transform target = GetNearestEnemy();
+                if (rtt)
+                    rtt.target = target;
                 if (target != null)
                 {
                     Action(target);
@@ -99,10 +104,13 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
     protected void ShootBullet(Transform t)
     {
         Debug.DrawRay(transform.position, t.position - transform.position, Color.red, 1.5f);
-        GameObject bullet = Instantiate(projectile
-            , transform.position
-            , Quaternion.identity) as GameObject;
-        bullet.GetComponent<BaseProjectile>().Launch(this.transform, t, turretDmg);
+        GameObject bullet = Instantiate(projectile) as GameObject;
+        Transform start;
+        if (rtt)
+            start = rtt.transform;
+        else
+            start = transform;
+        bullet.GetComponent<BaseProjectile>().Launch(start, t, turretDmg);
     }
 
     public void SetPlayer(PlayerController player)

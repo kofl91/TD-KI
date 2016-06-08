@@ -8,6 +8,7 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
     public GameObject tile;
     private PlayerController owner;
 
+    bool[,] canPlaceHere;
     public PlayerController GetPlayer()
     {
         return owner;
@@ -21,7 +22,6 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
 
     // Use this for initialization
     void Start () {
-        RaycastHit hit;
         Vector3 runPosi;
         runPosi = transform.position;
         // Find a corner of the plane.
@@ -30,9 +30,12 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
         // Adjust for the size of a Tile
         runPosi.x += 0.5f;
         runPosi.z += 0.5f;
-        for (int x = 0; x < 10*transform.lossyScale.x; x++)
+        int sizeX = (int)Math.Floor(10 * transform.lossyScale.x);
+        int sizeY = (int)Math.Floor(10 * transform.lossyScale.z);
+        canPlaceHere = new bool[sizeX, sizeY];
+        for (int x = 0; x < sizeX; x++)
         {
-            for (int y = 0; y < 10 * transform.lossyScale.z; y++)
+            for (int y = 0; y < sizeY; y++)
             {
                 Vector3 deltaPosi;
                 
@@ -50,11 +53,17 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
                         clickTile.tileX = x;
                         clickTile.tileY = y;
                         clickTile.owner = owner;
+                        
                     }
                     newTile.transform.parent = transform;
+                    // here i can place
+                    canPlaceHere[x, y] = true;
                 }
+                else
+                    canPlaceHere[x, y] = false;
             }
         }
+        owner.setPlaceAbleArea(canPlaceHere, sizeX, sizeY);
     }
 	
 	// Update is called once per frame

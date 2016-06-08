@@ -10,10 +10,10 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-    const int NUM_INPUTS = 19 * 21;
-    const int NUM_OUTPUTS = 19 * 21;
+    const int NUM_INPUTS = 401;
+    const int NUM_OUTPUTS = 3;
 
-    public int evoSpeed = 10;
+    public int evoSpeed = 1;
 
     public int Trials;
     public float TrialDuration;
@@ -45,10 +45,10 @@ public class Optimizer : MonoBehaviour {
         xmlConfig.LoadXml(textAsset.text);
         experiment.SetOptimizer(this);
 
-        experiment.Initialize("Car Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
+        experiment.Initialize("TD Experiment", xmlConfig.DocumentElement, NUM_INPUTS, NUM_OUTPUTS);
 
-        champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "car");
-        popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "car");
+        champFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "TD");
+        popFileSavePath = Application.persistentDataPath + string.Format("/{0}.pop.xml", "TD");
 
         print(champFileSavePath);
 	}
@@ -80,7 +80,7 @@ public class Optimizer : MonoBehaviour {
     public void StartEA()
     {        
         Utility.DebugLog = true;
-        Utility.Log("Starting PhotoTaxis experiment");
+        Utility.Log("Starting TD experiment");
         // print("Loading: " + popFileLoadPath);
         _ea = experiment.CreateEvolutionAlgorithm(popFileSavePath);
         startTime = DateTime.Now;

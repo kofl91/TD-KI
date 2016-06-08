@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerController : MonoBehaviour {
 
@@ -17,14 +18,20 @@ public class PlayerController : MonoBehaviour {
     public int chosenTower = 0;
 
     public GameObject grid;
+    bool[,] canPlaceHere;
+    int mapsizeX;
+    int mapsizeY;
     float offsetX = 0;
     float offsetY = 0;
     float tilesize = 1;
     float terrainHeight = 2.0f;
- 
+
+
+    // AI Score Data
+    public int towerPlaced = 0;
 
     // Use this for initialization
-    void Start () {
+    void Awake () {
 
         // Hopefully sets all Components that require to be
         IBelongsToPlayer[] components = (IBelongsToPlayer[])GetComponentsInChildren<IBelongsToPlayer>();
@@ -74,18 +81,24 @@ public class PlayerController : MonoBehaviour {
 
     public void CreateTurretUnit(int x, int y)
     {
-        GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
-        GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, terrainHeight, y * tilesize + offsetY), turretPrefab.transform.rotation);
-        BaseTurret turret = go.GetComponent<BaseTurret>();
-        if (turret.getCost() < Gold)
+        if (canPlaceHere[x, y])
         {
-            Gold -= turret.getCost();
-            go.transform.parent = transform;
-            BaseTurret tower = go.GetComponent<BaseTurret>();
-            tower.SetPlayer(this);
-        }else
-        {
-            Destroy(go);
+            GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
+            GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, terrainHeight, y * tilesize + offsetY), turretPrefab.transform.rotation);
+            BaseTurret turret = go.GetComponent<BaseTurret>();
+            if (turret.getCost() < Gold)
+            {
+                Gold -= turret.getCost();
+                go.transform.parent = transform;
+                BaseTurret tower = go.GetComponent<BaseTurret>();
+                tower.SetPlayer(this);
+                canPlaceHere[x, y] = false;
+                towerPlaced++;
+            }
+            else
+            {
+                Destroy(go);
+            }
         }
     }
 
@@ -94,5 +107,35 @@ public class PlayerController : MonoBehaviour {
         chosenTower = ID;
     }
 
+    public void setPlaceAbleArea(bool[,] area,int x,int y)
+    {
+        canPlaceHere = area;
+        mapsizeX = x;
+        mapsizeY = y;
+    }
+
+    public int getMapSizeY()
+    {
+        return mapsizeY;
+    }
+
+    public int getMapSizeX()
+    {
+        return mapsizeX;
+    }
+
+    public bool[,] getPlaceAbleArea()
+    {
+        return canPlaceHere;
+    }
+
+    public void removeAllTower()
+    {
+        BaseTurret[] towerList = GetComponentsInChildren<BaseTurret>();
+        foreach(BaseTurret t in towerList)
+        {
+            Destroy(t.gameObject);
+        }
+    }
     #endregion
 }
