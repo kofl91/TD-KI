@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Spawner : MonoBehaviour {
+public class Spawner : MonoSingleton<Spawner> {
 
 
     public PlayerController player1;
@@ -31,18 +31,38 @@ public class Spawner : MonoBehaviour {
     private float intervalLeft = 0.0f;
 
 
-    public void hireMinion(PlayerController player,int enemyID)
+    public void HireMinionForPlayer1(int enemyID)
     {
-        GameObject towards;
-        if (player == player1)
-            towards = basePlayer1;
-        else
-            towards = basePlayer2;
-        spawnMinionAtTowardsVersus(enemyID, hiredSpawnPoint.transform, towards, player);
+        HireMinion(player1, enemyID);
     }
 
-    private GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, PlayerController player)
+
+    public void HireMinion(PlayerController sendingPlayer,int enemyID)
     {
+        int cost = PrefabContainer.Instance.enemys[enemyID].GetComponent<BaseEnemy>().bounty;
+        if (sendingPlayer.Gold> cost) {
+            sendingPlayer.Gold -= cost;
+            GameObject towards;
+            PlayerController playerToSendTowards;
+            if (sendingPlayer == player1)
+            {
+                towards = basePlayer2;
+                playerToSendTowards = player2;
+            }
+            else
+            {
+                towards = basePlayer1;
+                playerToSendTowards = player1;
+            }   
+            spawnMinionAtTowardsVersus(enemyID, hiredSpawnPoint.transform, towards, playerToSendTowards);
+        }
+        
+    }
+
+    public GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, PlayerController player)
+    {
+        Debug.Log(at);
+        Debug.Log(this.transform);
         GameObject spawnedMinion = Instantiate(PrefabContainer.Instance.enemys[enemyID], at.position, at.rotation) as GameObject;
         spawnedMinion.GetComponent<BaseEnemy>().target = towards;
         spawnedMinion.GetComponent<BaseEnemy>().enemy = player;
@@ -50,7 +70,7 @@ public class Spawner : MonoBehaviour {
         return spawnedMinion;
     }
 
-    private void spawnRegular()
+    public void spawnRegular()
     {
         int enemyID = waves[0].enemyID;
         waves[0].count--;
