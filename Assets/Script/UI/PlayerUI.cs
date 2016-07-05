@@ -12,6 +12,7 @@ public class PlayerUI : MonoBehaviour, IBelongsToPlayer {
     private Scrollbar speedbar;
 
     private PlayerController player;
+    public int playerId = 0;
 
 	// Use this for initialization
 	void Start () {
@@ -36,13 +37,14 @@ public class PlayerUI : MonoBehaviour, IBelongsToPlayer {
         }
     }
 
-    public void SetPlayer(PlayerController player)
+    public void SetPlayer(int id)
     {
-        this.player = player;
+        playerId = id;
+
     }
 
     public PlayerController GetPlayer()
     {
-        return player;
+        return GameObject.FindObjectsOfType<PlayerController>()[playerId - 1];
     }
 }

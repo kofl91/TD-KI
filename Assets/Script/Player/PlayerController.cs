@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : NetworkBehaviour{
 
 
     // Game Logic
@@ -25,28 +26,37 @@ public class PlayerController : MonoBehaviour {
     float offsetY = 0;
     float tilesize = 1;
     float terrainHeight = 2.0f;
-
+    [SyncVar]
+    public int myId=0;
 
     // AI Score Data
     public int towerPlaced = 0;
 
+
+    [ClientRpc]
+    public void RpcSetID(int id)
+    {
+        myId = id;
+    }
     // Use this for initialization
-    void Awake () {
+    [ClientRpc]
+    public void RpcInitPlayerController () {
 
         // Hopefully sets all Components that require to be
         IBelongsToPlayer[] components = (IBelongsToPlayer[])GetComponentsInChildren<IBelongsToPlayer>();
 
         foreach (IBelongsToPlayer c in components)
         {
-            c.SetPlayer(this);
+            c.SetPlayer(myId);
         }
-
         // Initialize where tower should be placed
-        if (grid)
-        {
-            offsetX = grid.transform.position.x - grid.transform.lossyScale.x * 5 + tilesize / 2;
-            offsetY = grid.transform.position.z - grid.transform.lossyScale.z * 5 + tilesize / 2;
-        }
+        CreateTiles tilegenerator = gameObject.AddComponent<CreateTiles>();
+        tilegenerator.SetPlayer(myId);
+        tilegenerator.CreateGrid();
+        offsetX = transform.position.x - transform.lossyScale.x * 5 + tilesize / 2;
+        offsetY = transform.position.z - transform.lossyScale.z * 5 + tilesize / 2;
+        GetComponentInChildren<EndzoneDespawn>().SetPlayer(myId);
+        Debug.Log("player initialized "+myId);
 	}
 	
 	// Update is called once per frame
@@ -78,22 +88,23 @@ public class PlayerController : MonoBehaviour {
             Debug.Log("GameOver");
         }
     }
-
-    public void CreateTurretUnit(int x, int y)
+    [Command]
+    public void CmdCreateTurretUnit(Vector3 pos)
     {
-        if (canPlaceHere[x, y])
+        Debug.Log("Creating for:"+myId);
+        //if (canPlaceHere[x, y])
         {
             GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
-            GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, terrainHeight, y * tilesize + offsetY), turretPrefab.transform.rotation);
+            GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(pos.x, terrainHeight, pos.z), turretPrefab.transform.rotation);
             BaseTurret turret = go.GetComponent<BaseTurret>();
             if (turret.getCost() < Gold)
             {
                 Gold -= turret.getCost();
                 go.transform.parent = transform;
-                BaseTurret tower = go.GetComponent<BaseTurret>();
-                tower.SetPlayer(this);
-                canPlaceHere[x, y] = false;
+                turret.SetPlayer(myId);
+                //canPlaceHere[x, y] = false;
                 towerPlaced++;
+                NetworkServer.Spawn(go);
             }
             else
             {

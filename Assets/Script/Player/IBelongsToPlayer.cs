@@ -3,7 +3,7 @@ using System.Collections;
 
 public interface IBelongsToPlayer  {
 
-    void SetPlayer(PlayerController player);
+    void SetPlayer(int player);
 
     PlayerController GetPlayer();
 }

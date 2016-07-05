@@ -8,6 +8,7 @@ public class MainMenu : MonoBehaviour {
     public Canvas quitMenu;
     public Button playButton;
     public Button exitButton;
+    public Button playOnlineButton;
 
     // Use this for initialization
     void Start () {
@@ -15,6 +16,7 @@ public class MainMenu : MonoBehaviour {
         quitMenu = quitMenu.GetComponent<Canvas>();
         playButton = playButton.GetComponent<Button>();
         exitButton = exitButton.GetComponent<Button>();
+        playOnlineButton = playOnlineButton.GetComponent<Button>();
         quitMenu.enabled = false;
     }
 
@@ -23,6 +25,7 @@ public class MainMenu : MonoBehaviour {
         quitMenu.enabled = false;
         exitButton.enabled = true;
         playButton.enabled = true;
+        playOnlineButton.enabled = true;
     }
 
     public void ExitPress()
@@ -30,6 +33,7 @@ public class MainMenu : MonoBehaviour {
         quitMenu.enabled = true;
         exitButton.enabled = false;
         playButton.enabled = false;
+        playOnlineButton.enabled = false;
     }
     public void PlayPress()
     {
@@ -38,6 +42,10 @@ public class MainMenu : MonoBehaviour {
     public void ExitGame()
     {
         Application.Quit();
+    }
+    public void PlayOnlinePress()
+    {
+        SceneManager.LoadScene(2);
     }
 
 

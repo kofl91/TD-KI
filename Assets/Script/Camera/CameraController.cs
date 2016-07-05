@@ -10,13 +10,9 @@ public class CameraController : MonoBehaviour
     float distanceToFocusPoint = 60f;
     float scrollSpeed = 560f;
 
-
-
-    Transform transform;
     float rotZoom = 0f;
     void Start()
     {
-        transform = gameObject.transform;
         bounds = cameraBoundsObject.GetComponent<Renderer>().bounds;
         cameraTransform = GetComponentsInChildren<Camera>(true)[0].transform;
     }

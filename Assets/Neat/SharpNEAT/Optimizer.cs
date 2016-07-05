@@ -181,8 +181,8 @@ public class Optimizer : MonoBehaviour {
         }
         catch (Exception e1)
         {
-            // print(champFileLoadPath + " Error loading genome from file!\nLoading aborted.\n"
-            //						  + e1.Message + "\nJoe: " + champFileLoadPath);
+             Debug.Log(champFileSavePath + " Error loading genome from file!\nLoading aborted.\n"
+            						  + e1.Message + "\nJoe: " + champFileSavePath);
             return;
         }
 

@@ -66,7 +66,7 @@ public class AIController : UnitController
         int y = (int)(outputArr[1] * (mapsixeY-1));
         int towerID = (int) outputArr[2] * (towerCount-1);
         myPlayer.ChooseTower(towerID);    
-        myPlayer.CreateTurretUnit(x, y);
+        //myPlayer.CmdCreateTurretUnit(x, y);
     }
 }
 

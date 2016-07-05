@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -10,8 +11,8 @@ public class Spawner : MonoSingleton<Spawner> {
 
     public GameObject neutralSpawnPoint;
     public GameObject hiredSpawnPoint;
-    public GameObject basePlayer1;
-    public GameObject basePlayer2;
+    private GameObject basePlayer1;
+    private GameObject basePlayer2;
 
 
     public GameObject container;
@@ -33,47 +34,57 @@ public class Spawner : MonoSingleton<Spawner> {
 
     public void HireMinionForPlayer1(int enemyID)
     {
-        HireMinion(player1, enemyID);
+        HireMinion(1, enemyID);
+    }
+
+    public void HireMinionForPlayer2(int enemyID)
+    {
+        HireMinion(2, enemyID);
     }
 
 
-    public void HireMinion(PlayerController sendingPlayer,int enemyID)
+    public void HireMinion(int sendingPlayer,int enemyID)
     {
         int cost = PrefabContainer.Instance.enemys[enemyID].GetComponent<BaseEnemy>().bounty;
-        if (sendingPlayer.Gold> cost) {
-            sendingPlayer.Gold -= cost;
+        PlayerController myplayer = GameObject.FindObjectsOfType<PlayerController>()[sendingPlayer - 1];
+        if (myplayer.Gold> cost) {
+            myplayer.Gold -= cost;
             GameObject towards;
-            PlayerController playerToSendTowards;
-            if (sendingPlayer == player1)
+            int playerToSendTowards;
+            if (sendingPlayer == 1)
             {
                 towards = basePlayer2;
-                playerToSendTowards = player2;
+                playerToSendTowards = 2;
             }
             else
             {
                 towards = basePlayer1;
-                playerToSendTowards = player1;
+                playerToSendTowards = 1;
             }   
             spawnMinionAtTowardsVersus(enemyID, hiredSpawnPoint.transform, towards, playerToSendTowards);
         }
         
     }
 
-    public GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, PlayerController player)
+    public GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, int player)
     {
         GameObject spawnedMinion = Instantiate(PrefabContainer.Instance.enemys[enemyID], at.position, at.rotation) as GameObject;
-        spawnedMinion.GetComponent<BaseEnemy>().target = towards;
-        spawnedMinion.GetComponent<BaseEnemy>().enemy = player;
         spawnedMinion.transform.parent = container.transform;
+        spawnedMinion.GetComponent<BaseEnemy>().SetTarget(towards.transform.position);
+        spawnedMinion.GetComponent<BaseEnemy>().enemyPlayerID = player;
+        if (NetworkServer.active)
+            NetworkServer.Spawn(spawnedMinion);
+   
         return spawnedMinion;
+        
     }
 
     public void spawnRegular()
     {
         int enemyID = waves[0].enemyID;
         waves[0].count--;
-        activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, player1));
-        activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, player2));
+        activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, 1));
+        activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, 2));
     }
 
     // Use this for initialization
@@ -82,6 +93,8 @@ public class Spawner : MonoSingleton<Spawner> {
         // Get Waves from components
         waves = new List<Wave>();
         Wave[] buffWaves = GetComponents<Wave>();
+        basePlayer1 = player1.GetComponentInChildren<EndzoneDespawn>().gameObject;
+        basePlayer2 = player2.GetComponentInChildren<EndzoneDespawn>().gameObject;
         foreach (Wave w in buffWaves)
         {
             waves.Add(w);

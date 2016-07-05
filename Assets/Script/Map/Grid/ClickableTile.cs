@@ -1,15 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ClickableTile : MonoBehaviour {
+public class ClickableTile : MonoBehaviour, IBelongsToPlayer {
 
     public int tileX;
     public int tileY;
-    public PlayerController owner;
+    public int player;
 
     void OnMouseUp()
     {
-        owner.CreateTurretUnit(tileX, tileY);
+        GetPlayer().CmdCreateTurretUnit(transform.position);
     }
 
     void OnMouseOver()
@@ -21,4 +21,15 @@ public class ClickableTile : MonoBehaviour {
     {
         GetComponent<MeshRenderer>().enabled = false;
     }
+    public void SetPlayer(int id)
+    {
+        player = id;
+
+    }
+
+    public PlayerController GetPlayer()
+    {
+        return GameObject.FindObjectsOfType<PlayerController>()[player - 1];
+    }
+
 }

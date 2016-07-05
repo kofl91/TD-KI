@@ -3,25 +3,28 @@ using System.Collections;
 using System;
 
 // WORKS ONLY IF GAMEOBJECT IS A PLANE!!!
-public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
+public class CreateTiles : MonoBehaviour, IBelongsToPlayer
+{
 
     public GameObject tile;
     private PlayerController owner;
+    public int player;
 
     bool[,] canPlaceHere;
-    public PlayerController GetPlayer()
+    public void SetPlayer(int id)
     {
-        return owner;
+        player = id;
     }
 
-    public void SetPlayer(PlayerController player)
+    public PlayerController GetPlayer()
     {
-        owner = player;
+        return GameObject.FindObjectsOfType<PlayerController>()[player - 1];
     }
 
 
     // Use this for initialization
-    void Start () {
+    public void CreateGrid()
+    {
         Vector3 runPosi;
         runPosi = transform.position;
         // Find a corner of the plane.
@@ -30,15 +33,16 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
         // Adjust for the size of a Tile
         runPosi.x += 0.5f;
         runPosi.z += 0.5f;
-        int sizeX = (int)Math.Floor(10 * transform.lossyScale.x);
-        int sizeY = (int)Math.Floor(10 * transform.lossyScale.z);
+        int gridSize = 2;
+        int sizeX = (int)Math.Floor(10.0f * gridSize);
+        int sizeY = (int)Math.Floor(10.0f * gridSize);
         canPlaceHere = new bool[sizeX, sizeY];
         for (int x = 0; x < sizeX; x++)
         {
             for (int y = 0; y < sizeY; y++)
             {
                 Vector3 deltaPosi;
-                
+
                 deltaPosi.x = x;
                 deltaPosi.z = y;
                 deltaPosi.y = 2.0f;
@@ -46,14 +50,17 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
                 spawnPosi.y = 2.0f;
                 if (Terrain.activeTerrain.SampleHeight(spawnPosi) > 1.5f)
                 {
-                    GameObject newTile = Instantiate(tile, spawnPosi, tile.transform.rotation) as GameObject;
+                    GameObject newTile = GameObject.CreatePrimitive(PrimitiveType.Cube);
+                    newTile.transform.position = spawnPosi;
+                    newTile.AddComponent<ClickableTile>();
+                    newTile.GetComponent<MeshRenderer>().enabled = false;
+
                     ClickableTile clickTile = newTile.GetComponent<ClickableTile>();
                     if (clickTile)
                     {
                         clickTile.tileX = x;
                         clickTile.tileY = y;
-                        clickTile.owner = owner;
-                        
+                        clickTile.SetPlayer(player);
                     }
                     newTile.transform.parent = transform;
                     // here i can place
@@ -63,11 +70,6 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
                     canPlaceHere[x, y] = false;
             }
         }
-        owner.setPlaceAbleArea(canPlaceHere, sizeX, sizeY);
-    }
-	
-	// Update is called once per frame
-	void Update () {
-        
+        GetPlayer().setPlaceAbleArea(canPlaceHere, sizeX, sizeY);
     }
 }

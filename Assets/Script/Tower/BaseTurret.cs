@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
+public abstract class BaseTurret : NetworkBehaviour, IBelongsToPlayer {
 
     public GameObject projectile;
     public DamageInfo turretDmg = new DamageInfo();
@@ -15,19 +16,21 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
     protected float range = 10.0f;
     protected int goldCost;
 
+    [SyncVar]
+    public int player;
+
     public float buffDuration = 0.0f;
 
     public float rangeMultiplier = 1.0f;
     public float cooldownMultiplier = 1.0f;
 
-    protected PlayerController owner;
+    public PlayerController owner;
 
     private RotatesTowardsTarget rtt;
     void Start()
     {
         //GameObject.Find("Player").GetComponent<Player>().ChangeBalance(-goldCost);
         rtt = GetComponentInChildren<RotatesTowardsTarget>();
-        
     }
     
     public abstract int getCost();
@@ -113,13 +116,14 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
         bullet.GetComponent<BaseProjectile>().Launch(start, t, turretDmg);
     }
 
-    public void SetPlayer(PlayerController player)
+    public void SetPlayer(int id)
     {
-        owner = player;
+        player = id;
+                
     }
 
     public PlayerController GetPlayer()
     {
-        return owner;
+        return GameObject.FindObjectsOfType<PlayerController>()[player - 1]; 
     }
 }
