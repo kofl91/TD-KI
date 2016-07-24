@@ -25,11 +25,6 @@ public class TowerEvaluator
             
         }
         ratedTower.Sort();
-        foreach (RatedTower rt in ratedTower)
-        {
-            Debug.Log("Tower:" + rt.tower.dmg.normal + ";" + rt.tower.dmg.fire + ";" + rt.tower.dmg.water + ";" + rt.tower.dmg.nature + ";" + rt.tower.dmg.calcAbsoluteDmg(nextResistance) + ";" + rt.rating);
-        }
-        Debug.Log("----------------------------------");
     }
 
     // Rates one Tower
