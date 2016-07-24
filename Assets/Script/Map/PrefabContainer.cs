@@ -9,6 +9,5 @@ public class PrefabContainer : MonoSingleton<PrefabContainer> {
     public GameObject endZonePrefab;
     public List<GameObject> enemys;
     public List<GameObject> turrets;
-
-    public TileType[] tileTypes;
+    public GameObject tile;
 }

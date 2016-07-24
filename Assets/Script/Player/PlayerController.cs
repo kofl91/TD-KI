@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
-public class PlayerController : MonoBehaviour {
+public class PlayerController : MonoBehaviour,IPlayer {
 
 
     // Game Logic
@@ -17,15 +18,8 @@ public class PlayerController : MonoBehaviour {
     // For Tower Placement
     public int chosenTower = 0;
 
-    public GameObject grid;
-    bool[,] canPlaceHere;
-    int mapsizeX;
-    int mapsizeY;
-    float offsetX = 0;
-    float offsetY = 0;
-    float tilesize = 1;
-    float terrainHeight = 2.0f;
 
+    public GridStructure grid;
 
     // AI Score Data
     public int towerPlaced = 0;
@@ -39,14 +33,7 @@ public class PlayerController : MonoBehaviour {
         foreach (IBelongsToPlayer c in components)
         {
             c.SetPlayer(this);
-        }
-
-        // Initialize where tower should be placed
-        if (grid)
-        {
-            offsetX = grid.transform.position.x - grid.transform.lossyScale.x * 5 + tilesize / 2;
-            offsetY = grid.transform.position.z - grid.transform.lossyScale.z * 5 + tilesize / 2;
-        }
+        }  
 	}
 	
 	// Update is called once per frame
@@ -81,10 +68,15 @@ public class PlayerController : MonoBehaviour {
 
     public void CreateTurretUnit(int x, int y)
     {
-        if (canPlaceHere[x, y])
+        if (grid == null)
+        {
+            grid = GetComponentInChildren<GridMaker>().GetGrid();
+        }
+        if (grid.tiles[x,y].type == eTile.Free)
         {
             GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
-            GameObject go = (GameObject)Instantiate(turretPrefab, new Vector3(x * tilesize + offsetX, terrainHeight, y * tilesize + offsetY), turretPrefab.transform.rotation);
+            GameObject go = (GameObject)Instantiate(turretPrefab);
+            go.transform.position = grid.tiles[x, y].obj.transform.position;
             BaseTurret turret = go.GetComponent<BaseTurret>();
             if (turret.getCost() < Gold)
             {
@@ -92,7 +84,7 @@ public class PlayerController : MonoBehaviour {
                 go.transform.parent = transform;
                 BaseTurret tower = go.GetComponent<BaseTurret>();
                 tower.SetPlayer(this);
-                canPlaceHere[x, y] = false;
+                grid.tiles[x, y].type = eTile.Tower;
                 towerPlaced++;
             }
             else
@@ -107,28 +99,6 @@ public class PlayerController : MonoBehaviour {
         chosenTower = ID;
     }
 
-    public void setPlaceAbleArea(bool[,] area,int x,int y)
-    {
-        canPlaceHere = area;
-        mapsizeX = x;
-        mapsizeY = y;
-    }
-
-    public int getMapSizeY()
-    {
-        return mapsizeY;
-    }
-
-    public int getMapSizeX()
-    {
-        return mapsizeX;
-    }
-
-    public bool[,] getPlaceAbleArea()
-    {
-        return canPlaceHere;
-    }
-
     public void removeAllTower()
     {
         BaseTurret[] towerList = GetComponentsInChildren<BaseTurret>();
@@ -136,6 +106,50 @@ public class PlayerController : MonoBehaviour {
         {
             Destroy(t.gameObject);
         }
+    }
+    #endregion
+
+    #region InterfaceImplementation
+
+    /** INTERFACE FUNCTIONS */
+    public bool SpendMoney(int cost)
+    {
+        return ChangeBalance(-cost);
+    }
+
+    public void BuildTower(TowerStructure tower, TileStructure tile)
+    {
+        GameObject go = (GameObject)Instantiate(tower.prefab);
+        go.transform.position = tile.obj.transform.position;
+
+        tile.type = eTile.Tower;
+
+        if (grid == null)
+        {
+            grid = GetComponentInChildren<GridMaker>().GetGrid();
+        }
+
+        if (grid.tiles[tile.xPos, tile.yPos].type != eTile.Tower)
+        {
+            grid.tiles[tile.xPos, tile.yPos].type = eTile.Tower;
+            Debug.Log("Still had to be done!");
+        }
+    }
+
+    public bool LooseLife()
+    {
+        EnemyCrossed();
+        return Life < 0;
+    }
+
+    public int GetMoney()
+    {
+        return Gold;
+    }
+
+    public int GetLife()
+    {
+        return Life;
     }
     #endregion
 }

@@ -19,6 +19,7 @@ public class AIPlayer : MonoBehaviour
     GridStructure grid;
 
     public bool isPlaying = false;
+    private Spawner spawner;
 
     void Update()
     {
@@ -28,21 +29,16 @@ public class AIPlayer : MonoBehaviour
         }
     }
 
-    // Creates a UI for Debug purpose
-    // TODO: Remove
-    void OnGUI()
-    {
-        if (GUI.Button(new Rect(10, 60, 100, 40), "Get Next Move"))
-        {
-            MakeMove();
-        }
-    }
-
     // Makes a move. Decides what to do and where to place.
     // TODO: implement what-to-do decision
     public void MakeMove()
     {
-        if(player == null)
+
+        if (spawner == null)
+        {
+            spawner = GameObject.FindObjectOfType<Spawner>();
+        }
+        if (player == null)
         {
             player = playerObject.GetComponent<IPlayer>();
         }
@@ -60,7 +56,7 @@ public class AIPlayer : MonoBehaviour
         {
             actionEvaluator = new ActionEvaluator();
         }
-        RatedAction bestAction = actionEvaluator.GetBestAction();
+        RatedAction bestAction = actionEvaluator.GetBestAction(new ResourcesStructure(player.GetMoney(), player.GetLife()), spawner.GetWave());
         switch (bestAction.action)
         {
             case Action.Build:

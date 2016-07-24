@@ -70,10 +70,7 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
         for (int i = 0; i < allCollider.Length; i++)
         {
             BaseEnemy enemy = allCollider[i].GetComponent<BaseEnemy>();
-            if (enemy.enemy == owner)
-            {
                 allEnemys.Add(allCollider[i]);
-            }
         }
 
         if (allEnemys.Count != 0)

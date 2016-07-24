@@ -53,5 +53,10 @@ public class PlayerController2 : MonoBehaviour, IPlayer
         return Gold;
     }
 
+    public int GetLife()
+    {
+        throw new NotImplementedException();
+    }
+
     #endregion
 }

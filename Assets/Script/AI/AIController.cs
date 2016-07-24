@@ -7,10 +7,8 @@ public class AIController : UnitController
 {
     bool IsRunning;
     IBlackBox box;
-    int mapsixeX;
-    int mapsixeY;
     int towerCount = 8;
-    bool[,] canPlaceHere;   
+    GridStructure grid;
 
     public PlayerController myPlayer;
 
@@ -19,9 +17,7 @@ public class AIController : UnitController
         this.box = box;
         IsRunning = true;
         myPlayer = GameObject.FindGameObjectsWithTag("Player")[1].GetComponent<PlayerController>();
-        mapsixeX = myPlayer.getMapSizeX();
-        mapsixeY = myPlayer.getMapSizeY();
-        canPlaceHere = myPlayer.getPlaceAbleArea();
+        grid = myPlayer.grid;
         myPlayer.removeAllTower();
         myPlayer.Gold = 100;
         myPlayer.Life = 20;
@@ -53,17 +49,17 @@ public class AIController : UnitController
     void FixedUpdate()
     {
         ISignalArray inputArr = box.InputSignalArray;
-        for (int i = 0; i < mapsixeX; i++)
+        for (int i = 0; i < grid.sizeX; i++)
         {
-            for (int j = 0; j < mapsixeY; j++)
+            for (int j = 0; j < grid.sizeY; j++)
             {
-                inputArr[i + j * mapsixeX] = boolToFloat(canPlaceHere[i, j]) ;
+                inputArr[i + j * grid.sizeX] = boolToFloat(grid.tiles[i,j].type == eTile.Free) ;
             }
         }
         box.Activate();
         ISignalArray outputArr = box.OutputSignalArray;
-        int x = (int)(outputArr[0] * (mapsixeX-1));
-        int y = (int)(outputArr[1] * (mapsixeY-1));
+        int x = (int)(outputArr[0] * (grid.sizeX - 1));
+        int y = (int)(outputArr[1] * (grid.sizeY- 1));
         int towerID = (int) outputArr[2] * (towerCount-1);
         myPlayer.ChooseTower(towerID);    
         myPlayer.CreateTurretUnit(x, y);

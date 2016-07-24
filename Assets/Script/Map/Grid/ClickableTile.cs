@@ -9,11 +9,11 @@ public class ClickableTile : MonoBehaviour {
 
     void OnMouseUp()
     {
-        Debug.Log("X:"+tileX+";Y:"+tileY);
-        if (owner)
+        if (!owner)
         {
-            owner.CreateTurretUnit(tileX, tileY);
+            owner = GetComponentInParent<PlayerController>();
         }
+        owner.CreateTurretUnit(tileX, tileY);
     }
 
     void OnMouseOver()

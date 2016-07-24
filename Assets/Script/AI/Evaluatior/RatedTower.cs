@@ -22,6 +22,6 @@ public class RatedTower : IEquatable<RatedTower>, IComparable<RatedTower>
 
     public int CompareTo(RatedTower other)
     {
-        return (int) (other.rating - rating);
+        return (int) ((other.rating - rating)*1000);
     }
 }

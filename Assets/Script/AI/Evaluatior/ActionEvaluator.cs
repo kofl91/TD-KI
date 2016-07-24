@@ -3,14 +3,36 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class ActionEvaluator  {
+public class ActionEvaluator
+{
 
     private List<RatedAction> ratedActions;
 
+    private bool letthrough = true;
 
-    public RatedAction GetBestAction()
+    private int wave = 0;
+
+    private int lifeLastTurn = 99999;
+
+    public RatedAction GetBestAction(ResourcesStructure res, int currentwave)
     {
+
+        if (currentwave != wave)
+        {
+            wave = currentwave;
+            if (lifeLastTurn > res.life)
+            {
+                letthrough = true;
+                lifeLastTurn = res.life;
+            }
+        }
+
         evaluateActions();
+
+        if (wave > 2)
+        {
+            letthrough = false;
+        }
         return ratedActions[0];
     }
 
@@ -43,11 +65,15 @@ public class ActionEvaluator  {
 
     private float evaluateBuild()
     {
-        return 1.0f;
+        return 50.0f;
     }
 
     private float evaluateNothing()
     {
+        if (!letthrough)
+        {
+            return 100.0f;
+        }
         return 0.0f;
     }
 }

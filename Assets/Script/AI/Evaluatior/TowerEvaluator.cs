@@ -8,24 +8,35 @@ public class TowerEvaluator
 
     private List<RatedTower> ratedTower;
 
+    private Spawner spawner;
+
+    private DamageInfo nextResistance;
+
     //TODO: Make more efficient by adding turrets in a sorted way.
     private void evaluateAllTower()
     {
+        spawner = (Spawner)GameObject.FindObjectOfType<Spawner>();
+        BaseEnemy enemy = spawner.GetNextEnemy();
+        nextResistance = enemy.GetResistance();
         ratedTower = new List<RatedTower>();
         foreach (TowerStructure tower in allTower)
         {
             ratedTower.Add(new RatedTower(tower, evaluateTower(tower)));
+            
         }
         ratedTower.Sort();
+        foreach (RatedTower rt in ratedTower)
+        {
+            Debug.Log("Tower:" + rt.tower.dmg.normal + ";" + rt.tower.dmg.fire + ";" + rt.tower.dmg.water + ";" + rt.tower.dmg.nature + ";" + rt.tower.dmg.calcAbsoluteDmg(nextResistance) + ";" + rt.rating);
+        }
+        Debug.Log("----------------------------------");
     }
 
     // Rates one Tower
     // TODO: Make the rating more dynamic. Also calculate what dmg is already there and what dmg is needed for the next wave.
     private float evaluateTower(TowerStructure t)
     {
-        DamageInfo neutralDmg = new DamageInfo();
-        neutralDmg.setNeutralResistance();
-        return t.dmg.calcAbsoluteDmg(neutralDmg) * t.attackspeed / t.cost;
+        return t.dmg.calcAbsoluteDmg(nextResistance) * t.attackspeed / t.cost;
     }
 
     public RatedTower GetBestTower()
@@ -34,8 +45,8 @@ public class TowerEvaluator
         return ratedTower[0];   
     }
 
-    public void SetTowerList(List<TowerStructure> l)
+    public void SetTowerList(List<TowerStructure> list)
     {
-        allTower = l;
+        allTower = list;
     }
 }

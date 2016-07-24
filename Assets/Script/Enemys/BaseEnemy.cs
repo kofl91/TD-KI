@@ -51,4 +51,9 @@ public class BaseEnemy : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
+
+    public DamageInfo GetResistance()
+    {
+        return dmgfactor;
+    }
 }

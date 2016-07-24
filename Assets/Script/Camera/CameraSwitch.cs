@@ -4,10 +4,11 @@ using System.Collections.Generic;
 
 public class CameraSwitch : MonoBehaviour {
 
-    public List<Camera> cameras;
+    private List<Camera> cameras;
 
 	// Use this for initialization
 	void Start () {
+        cameras = new List<Camera>();
         Camera[] cams = GetComponentsInChildren<Camera>();
         foreach (Camera c in cams)
         {

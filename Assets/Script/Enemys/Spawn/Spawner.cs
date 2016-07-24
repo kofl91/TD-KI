@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 public class Spawner : MonoSingleton<Spawner> {
 
@@ -19,6 +20,16 @@ public class Spawner : MonoSingleton<Spawner> {
     private List<GameObject> activeWaveEnemys = new List<GameObject>();
 
     private List<Wave> waves;
+
+    public BaseEnemy GetNextEnemy()
+    {
+        if (waves.Count > 1)
+        {
+            return PrefabContainer.Instance.enemys[waves[1].enemyID].GetComponent<BaseEnemy>();
+        }else
+            return PrefabContainer.Instance.enemys[0].GetComponent<BaseEnemy>();
+    }
+
     private int waveNumber = 0;
 
     public float delayBetweenWaves = 20.0f;
@@ -57,6 +68,11 @@ public class Spawner : MonoSingleton<Spawner> {
             spawnMinionAtTowardsVersus(enemyID, hiredSpawnPoint.transform, towards, playerToSendTowards);
         }
         
+    }
+
+    public int GetWave()
+    {
+        return waveNumber;
     }
 
     public GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, PlayerController player)
