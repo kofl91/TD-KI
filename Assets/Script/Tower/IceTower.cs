@@ -16,10 +16,11 @@ public class IceTower : BaseTurret {
     {
         turretDmg = new DamageInfo();
         turretDmg.normal = dmg;
+        goldCost = 40;
     }
 
     public override int getCost()
     {
-        return 50;
+        return goldCost;
     }
 }

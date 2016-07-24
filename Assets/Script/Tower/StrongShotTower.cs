@@ -17,6 +17,6 @@ public class StrongShotTower : BaseTurret {
 
     public override int getCost()
     {
-        return 80;
+        return goldCost;
     }
 }

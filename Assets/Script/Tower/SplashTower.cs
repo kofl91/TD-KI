@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class SplashTower : BaseTurret {
 
@@ -17,6 +18,6 @@ public class SplashTower : BaseTurret {
 
     public override int getCost()
     {
-        return 50;
+        return goldCost;
     }
 }

@@ -24,6 +24,6 @@ public class GoldTower : BaseTurret {
 
     public override int getCost()
     {
-        return 150;
+        return goldCost;
     }
 }

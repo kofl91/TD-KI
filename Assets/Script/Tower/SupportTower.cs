@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
 public class SupportTower : BaseTurret {
 
@@ -21,17 +22,16 @@ public class SupportTower : BaseTurret {
         }
     }
 
+    public override int getCost()
+    {
+        return goldCost;
+    }
+
     // Use this for initialization
     SupportTower()
     {
         range = 30f * range;
         cooldown = 2.0f * cooldown;
         goldCost = 100;
-    }
-
-
-    public override int getCost()
-    {
-        return 100;
     }
 }

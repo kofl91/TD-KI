@@ -17,12 +17,12 @@ public class GreenTower : BaseTurret
     GreenTower()
     {
         goldCost = 40;
-        turretDmg.nature = dmg;
+        turretDmg = new DamageInfo();
         turretDmg.nature = dmg;
     }
 
     public override int getCost()
     {
-        return 40;
+        return goldCost;
     }
 }

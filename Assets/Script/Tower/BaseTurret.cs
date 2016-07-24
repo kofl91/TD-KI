@@ -13,7 +13,7 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
     protected float cooldown = 1.0f;
     private float lastTick;
     protected float range = 10.0f;
-    protected int goldCost;
+    protected int goldCost = 10;
 
     public float buffDuration = 0.0f;
 
@@ -121,5 +121,10 @@ public abstract class BaseTurret : MonoBehaviour, IBelongsToPlayer {
     public PlayerController GetPlayer()
     {
         return owner;
+    }
+
+    public TowerStructure GetTowerStructure()
+    {
+        return new TowerStructure(turretDmg, 1 / cooldown, goldCost, this.gameObject);
     }
 }

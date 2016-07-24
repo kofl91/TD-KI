@@ -63,7 +63,15 @@ public class CreateTiles : MonoBehaviour,IBelongsToPlayer {
                     canPlaceHere[x, y] = false;
             }
         }
-        owner.setPlaceAbleArea(canPlaceHere, sizeX, sizeY);
+        if (owner)
+        {
+            owner.setPlaceAbleArea(canPlaceHere, sizeX, sizeY);
+        }
+        else
+        {
+            Debug.Log("No Player was set!");
+        }
+        
     }
 	
 	// Update is called once per frame
