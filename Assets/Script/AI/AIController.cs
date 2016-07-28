@@ -21,12 +21,11 @@ public class AIController : UnitController
         myPlayer.removeAllTower();
         myPlayer.Gold = 100;
         myPlayer.Life = 20;
-        myPlayer.towerPlaced = 0;
     }
 
     public override float GetFitness()
     {
-        float fitnes = myPlayer.towerPlaced + myPlayer.Life;
+        float fitnes = 0 + myPlayer.Life;
         if (fitnes >= 0)
             return fitnes;
         else

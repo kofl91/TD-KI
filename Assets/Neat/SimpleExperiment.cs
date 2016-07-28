@@ -31,6 +31,8 @@ public class SimpleExperiment : INeatExperiment
     int _inputCount;
     int _outputCount;
 
+    SimpleEvaluator evaluator;
+
     public string Name
     {
         get { return _name; }
@@ -70,7 +72,6 @@ public class SimpleExperiment : INeatExperiment
     {
         this._optimizer = se;
     }
-
 
     public void Initialize(string name, XmlElement xmlConfig)
     {
@@ -170,7 +171,7 @@ public class SimpleExperiment : INeatExperiment
         NeatEvolutionAlgorithm<NeatGenome> ea = new NeatEvolutionAlgorithm<NeatGenome>(_eaParams, speciationStrategy, complexityRegulationStrategy);
 
         // Create black box evaluator       
-        SimpleEvaluator evaluator = new SimpleEvaluator(_optimizer);
+        evaluator = new SimpleEvaluator(_optimizer);
 
         IGenomeDecoder<NeatGenome, IBlackBox> genomeDecoder = CreateGenomeDecoder();
 

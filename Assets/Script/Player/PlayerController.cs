@@ -22,7 +22,7 @@ public class PlayerController : MonoBehaviour,IPlayer {
     public GridStructure grid;
 
     // AI Score Data
-    public int towerPlaced = 0;
+    private int towerPlaced = 0;
 
     // Use this for initialization
     void Awake () {
