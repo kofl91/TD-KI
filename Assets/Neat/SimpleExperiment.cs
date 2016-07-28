@@ -137,13 +137,8 @@ public class SimpleExperiment : INeatExperiment
         {
             Utility.Log(fileName + " Error loading genome from file!\nLoading aborted.\n"
                                       + e1.Message + "\nJoe: " + fileName);
-
             genomeList = genomeFactory.CreateGenomeList(_populationSize, 0);
-
         }
-
-
-
         return CreateEvolutionAlgorithm(genomeFactory, genomeList);
     }
 

@@ -2,9 +2,9 @@
 using System.Collections;
 using System;
 
-public enum Action { Nothing, Build, Send, Destroy, Upgrade };
+public enum Action { Nothing, Build, BuildGoldTower, Send, Destroy, Upgrade };
 
-public class RatedAction : IEquatable<RatedAction>, IComparable<RatedAction>
+public class RatedAction: IEquatable<RatedAction>, IComparable<RatedAction>
 {
     public Action action;
     public float rating;

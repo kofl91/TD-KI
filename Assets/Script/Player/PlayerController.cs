@@ -147,6 +147,11 @@ public class PlayerController : MonoBehaviour,IPlayer {
         return Gold;
     }
 
+    internal void SendEnemys(EnemyStructure es)
+    {
+        FindObjectOfType<Spawner>().HireMinion(this, es.Id);
+    }
+
     public int GetLife()
     {
         return Life;

@@ -20,12 +20,20 @@ public class NeatBot : AIPlayer
     private string actionNetFileSavePath;
 
 
+    // The part of the Bot that decides where to place a tower
+    GridEvaluator gridEvaluator;
+    // The part of the Bot that decides what tower to place
+    TowerEvaluator towerEvaluator;
+
     // This initializes the Bot.
     // Finds the spawner, player and grid. Also creates the
     // evaluators
     protected override void Init()
     {
         player = GetComponentInParent<PlayerController>();
+
+        gridEvaluator = new GridEvaluator(player.grid);
+        towerEvaluator = new TowerEvaluator();
 
         positionNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "positionNet");
         towerNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "towerNet");
@@ -35,18 +43,7 @@ public class NeatBot : AIPlayer
         // Try to load the genome from the XML document.
         try
         {
-            NeatGenomeFactory ngf = new NeatGenomeFactory(20 * 20, 2);
-
-            // Position
-            using (XmlReader xr = XmlReader.Create(positionNetFileSavePath))
-                genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, ngf)[0];
-            positionNet = experiment.CreateGenomeDecoder().Decode(genome);
-
-            // Tower
-            using (XmlReader xr = XmlReader.Create(towerNetFileSavePath))
-                genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, ngf)[0];
-            towerNet = experiment.CreateGenomeDecoder().Decode(genome);
-
+            NeatGenomeFactory ngf = new NeatGenomeFactory(4, 1);
             // Action
             using (XmlReader xr = XmlReader.Create(actionNetFileSavePath))
                 genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, ngf)[0];
@@ -55,10 +52,6 @@ public class NeatBot : AIPlayer
         catch
         {
             Debug.Log("Failed to load brain.");
-            Debug.Log(positionNetFileSavePath);
-            Debug.Log(actionNetFileSavePath);
-            Debug.Log(towerNetFileSavePath);
-            Debug.Log(positionNetFileSavePath);
             return;
         }
     }
@@ -84,6 +77,10 @@ public class NeatBot : AIPlayer
             case Action.Destroy:
                 AIDestory();
                 break;
+            case Action.BuildGoldTower:
+                // Build Gold Tower
+                Debug.Log("Build Gold Tower");
+                break;
             case Action.Send:
                 AISend();
                 break;
@@ -100,25 +97,14 @@ public class NeatBot : AIPlayer
     // The position and tower are chosen by a neuronal network
     protected override void AIBuild()
     {
-        towerNet.Activate();
-        int towerID = (int)(towerNet.OutputSignalArray[0] * towers.Count());
-        TowerStructure bestTower = towers[towerID];
-        if (player.SpendMoney(bestTower.cost))
+        RatedTower bestTower = towerEvaluator.GetBestTower();
+        if (player.SpendMoney(bestTower.tower.cost))
         {
-            int x = (int)(positionNet.OutputSignalArray[0] * player.grid.sizeX);
-            int y = (int)(positionNet.OutputSignalArray[1] * player.grid.sizeY);
-
-            TileStructure nextPosition = player.grid.tiles[x,y];
-
-            if (nextPosition.type == eTile.Free)
-            {
-                nextPosition.obj.GetComponent<MeshRenderer>().enabled = true;
-                player.BuildTower(bestTower, nextPosition);
-            }
+            RatedPosition nextPosition = gridEvaluator.GetNextPosition();
+            nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
+            player.BuildTower(bestTower.tower, nextPosition.tile);
         }
     }
-
-    
 
     protected override void AIDestory()
     {
@@ -127,7 +113,11 @@ public class NeatBot : AIPlayer
 
     protected override void AISend()
     {
-        throw new NotImplementedException();
+        List<EnemyStructure> enemys = PrefabContainer.Instance.GetAllEnemys();
+        EnemyEvaluator enemyEvaluator = new EnemyEvaluator(enemys);
+        DamageInfo enemyDmg = new DamageInfo();
+        // TODO: Calculate enemy damage
+        player.SendEnemys(enemyEvaluator.GetBestEnemy(enemyDmg));
     }
 
     protected override void AIUpgrade()
