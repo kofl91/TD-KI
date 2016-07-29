@@ -4,6 +4,8 @@ using System;
 
 public class AlgorithmBot : AIPlayer
 {
+    public GameObject gridMaker;
+
     // The part of the Bot that decides where to place a tower
     GridEvaluator gridEvaluator;
     // The part of the Bot that decides what tower to place
@@ -17,11 +19,11 @@ public class AlgorithmBot : AIPlayer
     // This initializes the Bot.
     // Finds the spawner, player and grid. Also creates the
     // evaluators
-    protected override void Init()
+    public override void Init()
     {
         spawner = GameObject.FindObjectOfType<Spawner>();
         player = GetComponentInParent<PlayerController>();
-        gridEvaluator = new GridEvaluator(player.grid);
+        gridEvaluator = new GridEvaluator(gridMaker.GetComponent<GridMaker>().GetGrid());
         towerEvaluator = new TowerEvaluator();
         towerEvaluator.SetTowerList(GetTowerStructureList());
         actionEvaluator = new ActionEvaluator();
@@ -43,7 +45,7 @@ public class AlgorithmBot : AIPlayer
                 AIBuild();
                 break;
             case Action.Destroy:
-                AIDestory();
+                AIDestroy();
                 break;
             case Action.Send:
                 AISend();
@@ -68,7 +70,7 @@ public class AlgorithmBot : AIPlayer
         }
     }
 
-    protected override void AIDestory()
+    protected override void AIDestroy()
     {
         throw new NotImplementedException();
     }
@@ -81,5 +83,10 @@ public class AlgorithmBot : AIPlayer
     protected override void AIUpgrade()
     {
         throw new NotImplementedException();
+    }
+
+    internal override void Reset()
+    {
+        gridEvaluator = new GridEvaluator(gridMaker.GetComponent<GridMaker>().GetGrid());
     }
 }

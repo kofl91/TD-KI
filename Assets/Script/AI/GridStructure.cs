@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public enum eTile { Free, Path, Tower, Else };
 
@@ -18,7 +19,7 @@ public class TileStructure
         obj = go;
     }
 }
-
+[Serializable()]
 public class GridStructure
 {
     public int sizeX;

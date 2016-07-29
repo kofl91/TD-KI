@@ -10,8 +10,8 @@ using System.IO;
 
 public class Optimizer : MonoBehaviour {
 
-    public int NUM_INPUTS = 401;
-    public int NUM_OUTPUTS = 3;
+    public int NUM_INPUTS = 13;
+    public int NUM_OUTPUTS = 1;
 
     public int evoSpeed = 1;
 
@@ -41,6 +41,8 @@ public class Optimizer : MonoBehaviour {
 
     private uint Generation;
     private double Fitness;
+
+    public GameObject UnitParent;
 
     // Initializes the optimizer and the experiment
     void Start () {
@@ -146,12 +148,31 @@ public class Optimizer : MonoBehaviour {
 
     public void Evaluate(IBlackBox box)
     {
+        // Create new Controller to evaluate
         GameObject obj = Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
+        obj.transform.SetParent(UnitParent.transform);
         UnitController controller = obj.GetComponent<UnitController>();
-
         ControllerMap.Add(box, controller);
 
+        // Reset Spawner and all enemys
+        Spawner spawner = GameObject.FindObjectOfType<Spawner>();
+        spawner.Reset();
+
+        // Reset Player
+        PlayerController[] player = GameObject.FindObjectsOfType<PlayerController>();
+        foreach (PlayerController p in player)
+        {
+            p.Reset();
+            AIPlayer bot = p.GetComponentInChildren<AIPlayer>();
+            if (bot)
+            {
+                bot.Reset();
+                bot.isPlaying = true;
+            }
+        }
+
         controller.Activate(box);
+        spawner.isSpawning = true;
     }
 
     public void StopEvaluation(IBlackBox box)
@@ -186,6 +207,7 @@ public class Optimizer : MonoBehaviour {
         var phenome = genomeDecoder.Decode(genome);
 
         GameObject obj = Instantiate(Unit, Unit.transform.position, Unit.transform.rotation) as GameObject;
+        obj.transform.SetParent(UnitParent.transform);
         UnitController controller = obj.GetComponent<UnitController>();
 
         ControllerMap.Add(phenome, controller);

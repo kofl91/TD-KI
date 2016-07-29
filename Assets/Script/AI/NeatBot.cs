@@ -28,12 +28,13 @@ public class NeatBot : AIPlayer
     // This initializes the Bot.
     // Finds the spawner, player and grid. Also creates the
     // evaluators
-    protected override void Init()
+    public override void Init()
     {
         player = GetComponentInParent<PlayerController>();
 
         gridEvaluator = new GridEvaluator(player.grid);
         towerEvaluator = new TowerEvaluator();
+        towerEvaluator.SetTowerList(GetTowerStructureList());
 
         positionNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "positionNet");
         towerNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "towerNet");
@@ -43,7 +44,7 @@ public class NeatBot : AIPlayer
         // Try to load the genome from the XML document.
         try
         {
-            NeatGenomeFactory ngf = new NeatGenomeFactory(4, 1);
+            NeatGenomeFactory ngf = new NeatGenomeFactory(13, 1);
             // Action
             using (XmlReader xr = XmlReader.Create(actionNetFileSavePath))
                 genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, ngf)[0];
@@ -56,6 +57,11 @@ public class NeatBot : AIPlayer
         }
     }
 
+    public void SetActionNet(IBlackBox box)
+    {
+        actionNet = box;
+    }
+
     // Makes a move. Decides what to do and where to place.
     // TODO: implement what-to-do decision
     public override void MakeMove()
@@ -65,17 +71,38 @@ public class NeatBot : AIPlayer
             Init();
             isInitialized = true;
         }
+        DamageInfo enemyResi = player.GetNextEnemyResistance();
+        DamageInfo playerDmg = player.GetCurrentTowerDmg();
+        DamageInfo opponentDmg = player.GetOpponentTowerDmg();
+        actionNet.InputSignalArray[0] = player.Gold;
+        actionNet.InputSignalArray[1] = playerDmg.normal;
+        actionNet.InputSignalArray[2] = playerDmg.fire;
+        actionNet.InputSignalArray[3] = playerDmg.water;
+        actionNet.InputSignalArray[4] = playerDmg.nature;
+
+        actionNet.InputSignalArray[5] = opponentDmg.normal;
+        actionNet.InputSignalArray[6] = opponentDmg.fire;
+        actionNet.InputSignalArray[7] = opponentDmg.water;
+        actionNet.InputSignalArray[8] = opponentDmg.nature;
+
+        actionNet.InputSignalArray[9] =  enemyResi.normal;
+        actionNet.InputSignalArray[10] = enemyResi.fire;
+        actionNet.InputSignalArray[11] = enemyResi.water;
+        actionNet.InputSignalArray[12] = enemyResi.nature;
+
+
         actionNet.Activate();
 
-        Action action = (Action) (actionNet.OutputSignalArray[0] * Enum.GetNames(typeof(Action)).Length);
-        Debug.Log("Action is: "+action);
+        Action action = (Action)(actionNet.OutputSignalArray[0] * 2);
+            //Enum.GetNames(typeof(Action)).Length);
+        //Debug.Log("Action is: "+action);
         switch (action)
         {
             case Action.Build:
                 AIBuild();
                 break;
             case Action.Destroy:
-                AIDestory();
+                AIDestroy();
                 break;
             case Action.BuildGoldTower:
                 // Build Gold Tower
@@ -101,12 +128,12 @@ public class NeatBot : AIPlayer
         if (player.SpendMoney(bestTower.tower.cost))
         {
             RatedPosition nextPosition = gridEvaluator.GetNextPosition();
-            nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
+            //nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
             player.BuildTower(bestTower.tower, nextPosition.tile);
         }
     }
 
-    protected override void AIDestory()
+    protected override void AIDestroy()
     {
         throw new NotImplementedException();
     }
@@ -115,7 +142,7 @@ public class NeatBot : AIPlayer
     {
         List<EnemyStructure> enemys = PrefabContainer.Instance.GetAllEnemys();
         EnemyEvaluator enemyEvaluator = new EnemyEvaluator(enemys);
-        DamageInfo enemyDmg = new DamageInfo();
+        DamageInfo enemyDmg = player.GetOpponentTowerDmg();
         // TODO: Calculate enemy damage
         player.SendEnemys(enemyEvaluator.GetBestEnemy(enemyDmg));
     }
@@ -123,5 +150,10 @@ public class NeatBot : AIPlayer
     protected override void AIUpgrade()
     {
         throw new NotImplementedException();
+    }
+
+    internal override void Reset()
+    {
+        gridEvaluator = new GridEvaluator(player.grid);
     }
 }

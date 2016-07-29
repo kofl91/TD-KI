@@ -67,7 +67,6 @@ public class Spawner : MonoSingleton<Spawner> {
             }   
             spawnMinionAtTowardsVersus(enemyID, hiredSpawnPoint.transform, towards, playerToSendTowards);
         }
-        
     }
 
     public int GetWave()
@@ -87,7 +86,7 @@ public class Spawner : MonoSingleton<Spawner> {
     public void spawnRegular()
     {
         int enemyID = waves[0].enemyID;
-        waves[0].count--;
+        waves[0].Decr();
         activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, player1));
         activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, player2));
     }
@@ -97,10 +96,10 @@ public class Spawner : MonoSingleton<Spawner> {
     {
         // Get Waves from components
         waves = new List<Wave>();
-        Wave[] buffWaves = GetComponents<Wave>();
-        foreach (Wave w in buffWaves)
+        waves.AddRange(GetComponents<Wave>());
+        foreach (Wave w in waves)
         {
-            waves.Add(w);
+            w.Reset();
         }
     }
 	
@@ -115,7 +114,7 @@ public class Spawner : MonoSingleton<Spawner> {
             {
                 intervalLeft = waves[0].interval;
                 spawnRegular();
-                if (waves[0].count <= 0)
+                if (waves[0].hasEnded())
                 {
                     isSpawning = false;
                     waves.RemoveAt(0);
@@ -151,5 +150,28 @@ public class Spawner : MonoSingleton<Spawner> {
     private bool waveIsOver()
     {
         return activeWaveEnemys.Count == 0;
+    }
+
+    internal void Reset()
+    {
+        foreach (Wave w in waves)
+        {
+            w.Reset();
+        }
+        isSpawning = false;
+        waveNumber = 0;
+        BaseEnemy[] enemys = FindObjectsOfType<BaseEnemy>();
+        foreach (BaseEnemy be in enemys)
+        {
+            Destroy(be.gameObject);
+        }
+        activeWaveEnemys = new List<GameObject>();
+
+        waves = new List<Wave>();
+        waves.AddRange(GetComponents<Wave>());
+        foreach (Wave w in waves)
+        {
+            w.Reset();
+        }
     }
 }

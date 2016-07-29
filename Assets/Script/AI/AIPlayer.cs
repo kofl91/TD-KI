@@ -24,11 +24,11 @@ public abstract class AIPlayer : MonoBehaviour
         }
     }
 
-    protected abstract void Init();
+    public abstract void Init();
 
     protected abstract void AIBuild();
 
-    protected abstract void AIDestory();
+    protected abstract void AIDestroy();
 
     protected abstract void AISend();
 
@@ -48,4 +48,6 @@ public abstract class AIPlayer : MonoBehaviour
 
         return mylist;
     }
+
+    internal abstract void Reset();
 }

@@ -35,6 +35,11 @@ public class PlayerController : MonoBehaviour,IPlayer {
             c.SetPlayer(this);
         }  
 	}
+    
+    void Start()
+    {
+        grid = GetComponentInChildren<GridMaker>().GetGrid();
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -94,6 +99,54 @@ public class PlayerController : MonoBehaviour,IPlayer {
         }
     }
 
+    internal DamageInfo GetNextEnemyResistance()
+    {
+        return FindObjectOfType<Spawner>().GetNextEnemy().GetResistance();
+    }
+
+    internal DamageInfo GetOpponentTowerDmg()
+    {
+        PlayerController[] allPlayer = GameObject.FindObjectsOfType<PlayerController>();
+        PlayerController opponent;
+        foreach (PlayerController p in allPlayer)
+        {
+            if (p != this)
+            {
+                opponent = p.GetComponent<PlayerController>();
+                return opponent.GetCurrentTowerDmg();
+            }
+        }
+        Debug.Log("No other player found!");
+        return new DamageInfo();
+    }
+
+    public PlayerController GetOppponent()
+    {
+        PlayerController[] allPlayer = GameObject.FindObjectsOfType<PlayerController>();
+
+        foreach (PlayerController p in allPlayer)
+        {
+            if (p != this)
+            {
+                return p;
+            }
+        }
+        Debug.Log("No other player found!");
+        return null;
+    }
+
+    internal DamageInfo GetCurrentTowerDmg()
+    {
+        DamageInfo myDmg = new DamageInfo();
+        List<BaseTurret> turrets = new List<BaseTurret>();
+        turrets.AddRange(GetComponentsInChildren<BaseTurret>());
+        foreach (BaseTurret t in turrets)
+        {
+            myDmg.Add(t.turretDmg);
+        }
+        return myDmg;
+    }
+
     public void ChooseTower(int ID)
     {
         chosenTower = ID;
@@ -119,9 +172,13 @@ public class PlayerController : MonoBehaviour,IPlayer {
 
     public void BuildTower(TowerStructure tower, TileStructure tile)
     {
+        if (grid == null)
+        {
+            grid = GetComponentInChildren<GridMaker>().GetGrid();
+        }
         GameObject go = (GameObject)Instantiate(tower.prefab);
         go.transform.position = tile.obj.transform.position;
-
+        go.transform.parent = this.transform;
         tile.type = eTile.Tower;
 
         if (grid == null)
@@ -156,5 +213,23 @@ public class PlayerController : MonoBehaviour,IPlayer {
     {
         return Life;
     }
+
+    internal void Reset()
+    {
+        removeAllTower();
+        Life = 20;
+        Gold = 100;
+        resetGrid();
+    }
+
+    void resetGrid()
+    {
+        foreach(TileStructure ts in grid.tiles)
+        {
+            if (ts.type == eTile.Tower)
+                ts.type = eTile.Free;
+        }
+    }
+
     #endregion
 }

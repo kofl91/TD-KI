@@ -24,4 +24,12 @@ public class DamageInfo {
             nature * dmgfactor.nature;
         return absDmg;
     }
+
+    internal void Add(DamageInfo dmg)
+    {
+        this.normal += dmg.normal;
+        this.fire += dmg.fire;
+        this.water += dmg.water;
+        this.nature += dmg.nature;
+    }
 }

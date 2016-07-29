@@ -32,7 +32,7 @@ public class PlayerUI : MonoBehaviour, IBelongsToPlayer {
         }
         if (speedbar)
         {
-            Time.timeScale = speedbar.value + 1.0f;
+            Time.timeScale = speedbar.value*100 + 1.0f;
         }
     }
 

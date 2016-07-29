@@ -45,7 +45,7 @@ public class AIController : UnitController
     }
 
     // Update is called once per frame
-    void FixedUpdate()
+    void Update()
     {
         ISignalArray inputArr = box.InputSignalArray;
         for (int i = 0; i < grid.sizeX; i++)

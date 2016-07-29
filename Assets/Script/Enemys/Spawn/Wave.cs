@@ -6,8 +6,24 @@ public class Wave : MonoBehaviour
 {
     public int enemyID;
 
-    public int count;
+    private int count;
+
+    public int maxCount;
 
     public float interval;
 
+    internal void Reset()
+    {
+        count = maxCount;
+    }
+
+    internal void Decr()
+    {
+        count--;
+    }
+
+    internal bool hasEnded()
+    {
+        return count <= 0;
+    }
 }

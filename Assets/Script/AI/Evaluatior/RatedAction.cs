@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public enum Action { Nothing, Build, BuildGoldTower, Send, Destroy, Upgrade };
+public enum Action { Nothing, Build, Send, BuildGoldTower , Destroy, Upgrade };
 
 public class RatedAction: IEquatable<RatedAction>, IComparable<RatedAction>
 {
