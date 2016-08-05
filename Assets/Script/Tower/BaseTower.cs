@@ -29,7 +29,6 @@ public class BaseTower : MonoBehaviour {
     // Zeitvariablen für das kontinuierliche abfeuern von Projektilen
     protected float refreshRate = 0.10f;
     protected float lastAction;
-    private float lastTick;
     #endregion
 
     // Variablen für Buffs und Debuffs
@@ -43,11 +42,32 @@ public class BaseTower : MonoBehaviour {
     // Eine Referenz auf ein GameObject, dass sich zum Ziel drehen soll
     private RotatesTowardsTarget rtt;
 
+    // Ein Delegate FunktionsTyp
+    public delegate Transform Del();
 
+    // Ein Platzhalter für die Zielauswahl
+    public Del GetTarget;
+
+    // Eine Liste aller Targetfunktionen
+    public List<Del> TargetingFunkcions = new List<Del>();
+
+    // Aufzählung aller Zielerfassungsmodi
+    public enum TargetingModes { Close=0, Weak=1, Strong=2 };
+
+    // Der Ausgewählte Zielerfassungsmode.
+    public TargetingModes TargetChooser;
+
+    // Initialisierung
     public BaseTower()
     {
         baseDmg.Set(turretDmg.normal/2,turretDmg.fire / 2, turretDmg.water / 2, turretDmg.nature / 2);
         upgradeCost = buildCost / 2;
+
+        TargetingFunkcions.Add(GetNearestEnemy);
+        TargetingFunkcions.Add(GetWeakestEnemy);
+        TargetingFunkcions.Add(GetStrongestEnemy);
+
+        GetTarget = TargetingFunkcions[(int)TargetChooser];
     }
 
     #region Unity
@@ -74,8 +94,7 @@ public class BaseTower : MonoBehaviour {
         {
             if (Time.time - lastAction > refreshRate)
             {
-                lastTick = Time.time;
-                Transform target = GetNearestEnemy();
+                Transform target = GetTarget();
                 if (rtt)
                     rtt.target = target;
                 if (target != null)

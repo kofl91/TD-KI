@@ -15,8 +15,8 @@ public class NeatBot : AIPlayer
     IBlackBox positionNet;
     IBlackBox actionNet;
     private SimpleExperiment experiment;
-    private string positionNetFileSavePath;
-    private string towerNetFileSavePath;
+    //private string positionNetFileSavePath;
+    //private string towerNetFileSavePath;
     private string actionNetFileSavePath;
 
 
@@ -36,8 +36,8 @@ public class NeatBot : AIPlayer
         towerEvaluator = new TowerEvaluator();
         towerEvaluator.SetTowerList(GetTowerStructureList());
 
-        positionNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "positionNet");
-        towerNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "towerNet");
+        //positionNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "positionNet");
+        //towerNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "towerNet");
         actionNetFileSavePath = Application.persistentDataPath + string.Format("/{0}.champ.xml", "actionNet");
 
         NeatGenome genome = null;
@@ -48,6 +48,14 @@ public class NeatBot : AIPlayer
             // Action
             using (XmlReader xr = XmlReader.Create(actionNetFileSavePath))
                 genome = NeatGenomeXmlIO.ReadCompleteGenomeList(xr, false, ngf)[0];
+
+            // TODO: Remove Experiemnt for Genome Decoder
+            experiment = new SimpleExperiment();
+            XmlDocument xmlConfig = new XmlDocument();
+            TextAsset textAsset = (TextAsset)Resources.Load("experiment.config");
+            xmlConfig.LoadXml(textAsset.text);
+            experiment.Initialize("Experiment", xmlConfig.DocumentElement, 13, 1);
+
             actionNet = experiment.CreateGenomeDecoder().Decode(genome);
         }
         catch

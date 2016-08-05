@@ -7,7 +7,7 @@ public class PlayerUI : MonoBehaviour {
 
     private Text[] texts;
 
-    private Button[] towerButton;
+    //private Button[] towerButton;
 
     private Scrollbar speedbar;
 
@@ -17,7 +17,7 @@ public class PlayerUI : MonoBehaviour {
 	void Start () {
         texts = GetComponentsInChildren<Text>();
         speedbar = GetComponentInChildren<Scrollbar>();
-        towerButton = GetComponentsInChildren<Button>();
+        //towerButton = GetComponentsInChildren<Button>();
         player = GetComponentInParent<PlayerController>();
     }
 	

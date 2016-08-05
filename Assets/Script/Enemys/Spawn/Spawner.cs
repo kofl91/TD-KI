@@ -1,60 +1,68 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
+using UnityEngine.SceneManagement;
 
+
+// Singleton welcher das Spawnen der Minions übernimmt
 public class Spawner : MonoSingleton<Spawner> {
 
-
+    #region Attribute
+    // Referenzen zu den beiden Spielerns
+    public PlayerController[] player;
     public PlayerController player1;
     public PlayerController player2;
 
+    // Standorte der  Spawn/Despawn Punkte
     public GameObject neutralSpawnPoint;
     public GameObject hiredSpawnPoint;
     public GameObject basePlayer1;
     public GameObject basePlayer2;
 
-
+    // Parent Container für alle Enemy Objekte
     public GameObject container;
-
-    private List<GameObject> activeWaveEnemys = new List<GameObject>();
-
+    
+    // Liste an Wellen. Werden aus den Componenten gezogen
     private List<Wave> waves;
-
-    public BaseEnemy GetNextEnemy()
-    {
-        if (waves.Count > 1)
-        {
-            return PrefabContainer.Instance.enemys[waves[1].enemyID].GetComponent<BaseEnemy>();
-        }else
-            return PrefabContainer.Instance.enemys[0].GetComponent<BaseEnemy>();
-    }
-
+    // Index der aktuellen Welle
     private int waveNumber = 0;
 
+    // Timing Variablen 
+    // Abstand zwischen zwei Wellen
     public float delayBetweenWaves = 20.0f;
+    // Übrige Zeit bis zur nächsten Welle
     private float delayLeft = 0.0f;
+    // Übrige Zeit bis nächste Einheit gespawnt wird
+    private float intervalLeft = 0.0f;
 
-    // States
+    // Status Variablen
     public bool isSpawning = true;
     private bool isWaitingForNextWave = false;
 
-    private float intervalLeft = 0.0f;
+    #endregion
 
-
+    #region SpawnFunktionen
+    // Heuert einen Minion für Spieler 1 an.
     public void HireMinionForPlayer1(int enemyID)
     {
         HireMinion(player1, enemyID);
     }
 
+    // Heuert einen Minion für Spieler 2 an.
+    public void HireMinionForPlayer2(int enemyID)
+    {
+        HireMinion(player2, enemyID);
+    }
 
+    // Heuert einen Minion an
     public void HireMinion(PlayerController sendingPlayer,int enemyID)
     {
         int cost = PrefabContainer.Instance.enemys[enemyID].GetComponent<BaseEnemy>().bounty;
-        if (sendingPlayer.Gold> cost) {
+        // Kann sich der Spieler die Einheit leisten?
+        if (sendingPlayer.Gold > cost) {
             sendingPlayer.Gold -= cost;
             GameObject towards;
             PlayerController playerToSendTowards;
+            // Entscheide wer der Gegner ist.
             if (sendingPlayer == player1)
             {
                 towards = basePlayer2;
@@ -69,11 +77,7 @@ public class Spawner : MonoSingleton<Spawner> {
         }
     }
 
-    public int GetWave()
-    {
-        return waveNumber;
-    }
-
+    // Spawnt einen Minion, an einer Position, das zu einem Punkt läuft und gegen eine Spieler ist.
     public GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, PlayerController player)
     {
         GameObject spawnedMinion = Instantiate(PrefabContainer.Instance.enemys[enemyID], at.position, at.rotation) as GameObject;
@@ -81,20 +85,23 @@ public class Spawner : MonoSingleton<Spawner> {
         buffer.target = towards;
         buffer.enemy = player;
         buffer.bounty = waves[0].enemyBounty;
-        buffer.life = waves[0].enemyHP;
+        buffer.SetMaxLife(waves[0].enemyHP);
 
         spawnedMinion.transform.parent = container.transform;
         return spawnedMinion;
     }
 
+    // Eine Spawn Iteration
     public void spawnRegular()
     {
         int enemyID = waves[0].enemyID;
         waves[0].Decr();
-        activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, player1));
-        activeWaveEnemys.Add(spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, player2));
+        spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, player1);
+        spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, player2);
     }
+    #endregion
 
+    #region Unity
     // Use this for initialization
     void Start()
     {
@@ -146,16 +153,26 @@ public class Spawner : MonoSingleton<Spawner> {
         {
             if (waveIsOver())
             {
-                Debug.Log("Game Over");
+                SceneManager.LoadScene("GameOverScreen");
             }
         }
     }
+    #endregion
 
-    private bool waveIsOver()
+    #region Hilfsfunktionen
+    // Gibt den Index der aktuellen Welle zurück
+    public int GetWave()
     {
-        return activeWaveEnemys.Count == 0;
+        return waveNumber;
     }
 
+    // Gibt zurück ob alle Gegner einer Welle tot sind
+    private bool waveIsOver()
+    {
+        return container.GetComponents<BaseEnemy>().Length == 0;
+    }
+
+    // Setzt den Spawnmanager zurück
     internal void Reset()
     {
         foreach (Wave w in waves)
@@ -169,8 +186,6 @@ public class Spawner : MonoSingleton<Spawner> {
         {
             Destroy(be.gameObject);
         }
-        activeWaveEnemys = new List<GameObject>();
-
         waves = new List<Wave>();
         waves.AddRange(GetComponents<Wave>());
         foreach (Wave w in waves)
@@ -178,4 +193,16 @@ public class Spawner : MonoSingleton<Spawner> {
             w.Reset();
         }
     }
+
+    // Gibt den nächsten Gegner zurück
+    public BaseEnemy GetNextEnemy()
+    {
+        if (waves.Count > 1)
+        {
+            return PrefabContainer.Instance.enemys[waves[1].enemyID].GetComponent<BaseEnemy>();
+        }
+        else
+            return PrefabContainer.Instance.enemys[0].GetComponent<BaseEnemy>();
+    }
+    #endregion
 }

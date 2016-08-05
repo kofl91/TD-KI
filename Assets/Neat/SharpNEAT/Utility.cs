@@ -73,7 +73,6 @@ public class Utility : MonoBehaviour {
                 throw new ArgumentNullException("GameObject B is null");
             }
         }
-        return 0.0f;
     }
 
     /// <summary>

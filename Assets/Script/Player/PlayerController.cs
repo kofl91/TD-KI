@@ -70,12 +70,11 @@ public class PlayerController : NetworkBehaviour,IPlayer {
             GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
             GameObject go = (GameObject)Instantiate(turretPrefab);
             go.transform.position = grid.tiles[x, y].obj.transform.position;
-            BaseTower turret = go.GetComponent<BaseTower>();
-            if (turret.buildCost < Gold)
+            BaseTower tower = go.GetComponent<BaseTower>();
+            if (tower.buildCost < Gold)
             {
-                Gold -= turret.buildCost;
+                Gold -= tower.buildCost;
                 go.transform.parent = transform;
-                BaseTower tower = go.GetComponent<BaseTower>();
                 grid.tiles[x, y].type = eTile.Tower;
             }
             else

@@ -47,21 +47,24 @@ public class AIController : UnitController
     // Update is called once per frame
     void Update()
     {
-        ISignalArray inputArr = box.InputSignalArray;
-        for (int i = 0; i < grid.sizeX; i++)
+        if (IsRunning)
         {
-            for (int j = 0; j < grid.sizeY; j++)
+            ISignalArray inputArr = box.InputSignalArray;
+            for (int i = 0; i < grid.sizeX; i++)
             {
-                inputArr[i + j * grid.sizeX] = boolToFloat(grid.tiles[i,j].type == eTile.Free) ;
+                for (int j = 0; j < grid.sizeY; j++)
+                {
+                    inputArr[i + j * grid.sizeX] = boolToFloat(grid.tiles[i, j].type == eTile.Free);
+                }
             }
+            box.Activate();
+            ISignalArray outputArr = box.OutputSignalArray;
+            int x = (int)(outputArr[0] * (grid.sizeX - 1));
+            int y = (int)(outputArr[1] * (grid.sizeY - 1));
+            int towerID = (int)outputArr[2] * (towerCount - 1);
+            myPlayer.ChooseTower(towerID);
+            myPlayer.CreateTurretUnit(x, y);
         }
-        box.Activate();
-        ISignalArray outputArr = box.OutputSignalArray;
-        int x = (int)(outputArr[0] * (grid.sizeX - 1));
-        int y = (int)(outputArr[1] * (grid.sizeY- 1));
-        int towerID = (int) outputArr[2] * (towerCount-1);
-        myPlayer.ChooseTower(towerID);    
-        myPlayer.CreateTurretUnit(x, y);
     }
 }
 
