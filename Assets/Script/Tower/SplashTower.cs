@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class SplashTower : BaseTurret {
+public class SplashTower : BaseTower {
 
     protected int dmg = 1;
 
@@ -13,11 +13,6 @@ public class SplashTower : BaseTurret {
         turretDmg.normal = dmg;
         range = 1.0f * range;
         cooldown = 1.0f * cooldown;
-        goldCost = 50;
-    }
-
-    public override int getCost()
-    {
-        return goldCost;
+        buildCost = 50;
     }
 }

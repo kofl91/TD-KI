@@ -48,22 +48,22 @@
   <Class Name="AIController" Collapsed="true">
     <Position X="4.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAwIAEABAAAgAQgAEAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <HashCode>AAQAAAAAAQIAEABAAAgAQgAEAAAAAAAAIAAAAAAAAAA=</HashCode>
       <FileName>Assets\Script\AI\AIController.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AIPlayer" Collapsed="true">
     <Position X="0.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAAAAAAAAAAAAAAAAAAAgAEAAACAAAAAAA=</HashCode>
+      <HashCode>AQQQAAkAIAAARAAAAAAAAAAAAAAAAgAFAAACAAAAAAA=</HashCode>
       <FileName>Assets\Script\AI\AIPlayer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="AlgorithmBot">
     <Position X="0.5" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AQAABAkAIAJAQAACAAAAAAAAQAAAAgABAAACAACAgAA=</HashCode>
-      <FileName>Assets\Script\AI\AlgorithmBot.cs</FileName>
+      <HashCode>AAAABAkAIABARAAAAAAAAAAAQAAAAgAAAAECAAAAgAA=</HashCode>
+      <FileName>Assets\Script\AI\Bot\AlgorithmBot.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GridMaker" Collapsed="true">
@@ -77,29 +77,21 @@
     <Position X="13.75" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAIAAAAAAAAAAAAAABAIAAAAAAAQAAAAA=</HashCode>
-      <FileName>Assets\Script\AI\GridStructure.cs</FileName>
+      <FileName>Assets\Script\AI\Structures\GridStructure.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="GridStructure" Collapsed="true">
     <Position X="12" Y="4" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAABAAAAAAAAAAAgAAAAAAEACAAAAAAAA=</HashCode>
-      <FileName>Assets\Script\AI\GridStructure.cs</FileName>
+      <FileName>Assets\Script\AI\Structures\GridStructure.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="PlayerController2" Collapsed="true" BaseTypeListCollapsed="true">
-    <Position X="4.75" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>IQUAAAAAAAAAAAAAAQIAACAAAAgAAAAAAAEAAAABAAE=</HashCode>
-      <FileName>Assets\Script\AI\PlayerController2.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
   <Class Name="TowerStructure" Collapsed="true">
     <Position X="13.75" Y="4.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAAAAAAAIAAAAQAAAAAAAAAAAAAgA=</HashCode>
-      <FileName>Assets\Script\AI\TowerStructure.cs</FileName>
+      <FileName>Assets\Script\AI\Structures\TowerStructure.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="CameraController" Collapsed="true">
@@ -133,7 +125,7 @@
   <Class Name="DamageInfo" Collapsed="true">
     <Position X="15.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAEAAAAAAABAAAAAAAAgAAAAAEAAAJAAAAAAAAAA=</HashCode>
+      <HashCode>AAIAAEAAAAAAABAAAAAAAAgAAAAAEAAAJAAAAAAAAAA=</HashCode>
       <FileName>Assets\Script\Enemys\DamageInfo.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -189,14 +181,14 @@
   <Class Name="PrefabContainer" Collapsed="true">
     <Position X="18.25" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <HashCode>gAAAAAAABAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
       <FileName>Assets\Script\Map\PrefabContainer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="PlayerController" Collapsed="true" BaseTypeListCollapsed="true">
     <Position X="7.5" Y="2.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IQUAAAAAAAIAAAAAASIAAKCAAAgAAAAAgEkAEAABAEE=</HashCode>
+      <HashCode>IQUKAAAAACIABAEAASIQAKCgAAgAAAAAgEkAEAAJAEE=</HashCode>
       <FileName>Assets\Script\Player\PlayerController.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" Collapsed="true" />
@@ -339,7 +331,7 @@
   <Enum Name="Action" Collapsed="true">
     <Position X="3" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAAAAAAEAgAAAAAABAgAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>ACAAAAAAAAAAAAAAAEAgAAAAAABAwAAAAAAAAAAAAAA=</HashCode>
       <FileName>Assets\Script\AI\Evaluatior\RatedAction.cs</FileName>
     </TypeIdentifier>
   </Enum>
@@ -347,7 +339,7 @@
     <Position X="4.75" Y="6" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAABAEAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAI=</HashCode>
-      <FileName>Assets\Script\AI\GridStructure.cs</FileName>
+      <FileName>Assets\Script\AI\Structures\GridStructure.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Font Name="Segoe UI" Size="9" />

@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class StrongShotTower : BaseTurret {
+public class StrongShotTower : BaseTower {
 
     protected int dmg = 20;
 
@@ -12,11 +12,7 @@ public class StrongShotTower : BaseTurret {
         turretDmg.normal = dmg;
         range = 2.5f * range;
         cooldown = 4.5f * cooldown;
-        goldCost = 80;
+        buildCost = 80;
     }
 
-    public override int getCost()
-    {
-        return goldCost;
-    }
 }

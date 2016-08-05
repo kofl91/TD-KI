@@ -43,7 +43,7 @@ public abstract class AIPlayer : MonoBehaviour
 
         foreach (GameObject bt in turrets)
         {
-            mylist.Add(bt.GetComponent<BaseTurret>().GetTowerStructure());
+            mylist.Add(bt.GetComponent<BaseTower>().GetTowerStructure());
         }
 
         return mylist;

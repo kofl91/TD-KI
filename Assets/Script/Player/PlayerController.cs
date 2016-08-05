@@ -2,12 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using System;
+using UnityEngine.Networking;
 
-public class PlayerController : MonoBehaviour,IPlayer {
+public class PlayerController : NetworkBehaviour,IPlayer {
 
 
     // Game Logic
+    [SyncVar]
     public int Life = 20;
+    [SyncVar]
     public int Gold = 100;
 
     // Gold Generation
@@ -16,25 +19,10 @@ public class PlayerController : MonoBehaviour,IPlayer {
     private float goldIncrementDelay = 1.0f;
 
     // For Tower Placement
+    [SyncVar]
     public int chosenTower = 0;
 
-
     public GridStructure grid;
-
-    // AI Score Data
-    private int towerPlaced = 0;
-
-    // Use this for initialization
-    void Awake () {
-
-        // Hopefully sets all Components that require to be
-        IBelongsToPlayer[] components = (IBelongsToPlayer[])GetComponentsInChildren<IBelongsToPlayer>();
-
-        foreach (IBelongsToPlayer c in components)
-        {
-            c.SetPlayer(this);
-        }  
-	}
     
     void Start()
     {
@@ -82,15 +70,13 @@ public class PlayerController : MonoBehaviour,IPlayer {
             GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
             GameObject go = (GameObject)Instantiate(turretPrefab);
             go.transform.position = grid.tiles[x, y].obj.transform.position;
-            BaseTurret turret = go.GetComponent<BaseTurret>();
-            if (turret.getCost() < Gold)
+            BaseTower turret = go.GetComponent<BaseTower>();
+            if (turret.buildCost < Gold)
             {
-                Gold -= turret.getCost();
+                Gold -= turret.buildCost;
                 go.transform.parent = transform;
-                BaseTurret tower = go.GetComponent<BaseTurret>();
-                tower.SetPlayer(this);
+                BaseTower tower = go.GetComponent<BaseTower>();
                 grid.tiles[x, y].type = eTile.Tower;
-                towerPlaced++;
             }
             else
             {
@@ -138,9 +124,9 @@ public class PlayerController : MonoBehaviour,IPlayer {
     internal DamageInfo GetCurrentTowerDmg()
     {
         DamageInfo myDmg = new DamageInfo();
-        List<BaseTurret> turrets = new List<BaseTurret>();
-        turrets.AddRange(GetComponentsInChildren<BaseTurret>());
-        foreach (BaseTurret t in turrets)
+        List<BaseTower> turrets = new List<BaseTower>();
+        turrets.AddRange(GetComponentsInChildren<BaseTower>());
+        foreach (BaseTower t in turrets)
         {
             myDmg.Add(t.turretDmg);
         }
@@ -154,8 +140,8 @@ public class PlayerController : MonoBehaviour,IPlayer {
 
     public void removeAllTower()
     {
-        BaseTurret[] towerList = GetComponentsInChildren<BaseTurret>();
-        foreach(BaseTurret t in towerList)
+        BaseTower[] towerList = GetComponentsInChildren<BaseTower>();
+        foreach(BaseTower t in towerList)
         {
             Destroy(t.gameObject);
         }

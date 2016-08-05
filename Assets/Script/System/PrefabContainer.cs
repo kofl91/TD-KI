@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
-using System;
 
+
+// Eine Singleton Klasse die alle Prefabs zur verfügung stellt.
 public class PrefabContainer : MonoSingleton<PrefabContainer> {
 
     public GameObject endZonePrefab;

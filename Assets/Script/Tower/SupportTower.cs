@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class SupportTower : BaseTurret {
+public class SupportTower : BaseTower {
 
 
     float rangeBuff = 1.5f;
@@ -16,15 +16,10 @@ public class SupportTower : BaseTurret {
         Collider[] allTower = Physics.OverlapSphere(transform.position, range * rangeMultiplier, LayerMask.GetMask("Tower"));
         for (int i = 0; i < allTower.Length; i++)
         {
-            allTower[i].GetComponent<BaseTurret>().buffDuration = buffduration;
-            allTower[i].GetComponent<BaseTurret>().rangeMultiplier = rangeBuff;
-            allTower[i].GetComponent<BaseTurret>().cooldownMultiplier = speedBuff;
+            //allTower[i].GetComponent<BaseTower>().buffDuration = buffduration;
+            //allTower[i].GetComponent<BaseTower>().rangeMultiplier = rangeBuff;
+            //allTower[i].GetComponent<BaseTower>().cooldownMultiplier = speedBuff;
         }
-    }
-
-    public override int getCost()
-    {
-        return goldCost;
     }
 
     // Use this for initialization
@@ -32,6 +27,6 @@ public class SupportTower : BaseTurret {
     {
         range = 30f * range;
         cooldown = 2.0f * cooldown;
-        goldCost = 100;
+        buildCost = 100;
     }
 }

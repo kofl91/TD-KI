@@ -4,6 +4,10 @@ using UnityEngine;
 
 public class Wave : MonoBehaviour
 {
+    public int enemyHP;
+
+    public int enemyBounty;
+
     public int enemyID;
 
     private int count;

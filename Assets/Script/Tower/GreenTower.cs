@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GreenTower : BaseTurret
+public class GreenTower : BaseTower
 {
     protected int dmg = 3;
 
@@ -16,13 +16,8 @@ public class GreenTower : BaseTurret
     // Use this for initialization
     GreenTower()
     {
-        goldCost = 40;
+        buildCost = 40;
         turretDmg = new DamageInfo();
         turretDmg.nature = dmg;
-    }
-
-    public override int getCost()
-    {
-        return goldCost;
     }
 }

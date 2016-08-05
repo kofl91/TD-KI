@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System;
 
-public class PlayerUI : MonoBehaviour, IBelongsToPlayer {
+public class PlayerUI : MonoBehaviour {
 
     private Text[] texts;
 
@@ -18,6 +18,7 @@ public class PlayerUI : MonoBehaviour, IBelongsToPlayer {
         texts = GetComponentsInChildren<Text>();
         speedbar = GetComponentInChildren<Scrollbar>();
         towerButton = GetComponentsInChildren<Button>();
+        player = GetComponentInParent<PlayerController>();
     }
 	
 	// Update is called once per frame
@@ -34,15 +35,5 @@ public class PlayerUI : MonoBehaviour, IBelongsToPlayer {
         {
             Time.timeScale = speedbar.value*100 + 1.0f;
         }
-    }
-
-    public void SetPlayer(PlayerController player)
-    {
-        this.player = player;
-    }
-
-    public PlayerController GetPlayer()
-    {
-        return player;
     }
 }

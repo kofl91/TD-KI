@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class GoldTower : BaseTurret {
+public class GoldTower : BaseTower {
 
     protected int dmg = 1;
 
@@ -18,12 +18,6 @@ public class GoldTower : BaseTurret {
         turretDmg.normal = dmg;
         range = 2.5f * range;
         cooldown = 1.0f * cooldown;
-        goldCost = 100;
-    }
-
-
-    public override int getCost()
-    {
-        return goldCost;
+        buildCost = 100;
     }
 }

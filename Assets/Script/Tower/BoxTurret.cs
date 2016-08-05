@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class BoxTurret : BaseTurret {
+public class BoxTurret : BaseTower {
 
     protected int dmg = 1;
    
@@ -18,10 +18,5 @@ public class BoxTurret : BaseTurret {
     void Start () {
         turretDmg = new DamageInfo();
         turretDmg.normal = dmg;
-    }
-
-    public override int getCost()
-    {
-        return 100;
     }
 }

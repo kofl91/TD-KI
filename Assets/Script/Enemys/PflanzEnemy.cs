@@ -8,8 +8,8 @@ public class PflanzEnemy : BaseEnemy
     {
         life = 6f;
         bounty = 2;
-        dmgfactor.nature = 0.5f;
-        dmgfactor.fire = 1.5f;
+        resistance.nature = 0.5f;
+        resistance.fire = 1.5f;
     } 
 }
 

@@ -11,11 +11,11 @@ public class TowerStructure {
 
     public GameObject prefab;
 
-    public TowerStructure(DamageInfo turretDmg, float v, int goldCost, GameObject p)
+    public TowerStructure(DamageInfo turretDmg, float v, int buildCost, GameObject p)
     {
         this.dmg = turretDmg;
         this.attackspeed = v;
-        this.cost = goldCost;
+        this.cost = buildCost;
         this.prefab = p;
     }
 }

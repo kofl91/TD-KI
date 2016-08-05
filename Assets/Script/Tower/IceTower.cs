@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class IceTower : BaseTurret {
+public class IceTower : BaseTower {
 
     protected int dmg = 0;
 
@@ -16,11 +16,6 @@ public class IceTower : BaseTurret {
     {
         turretDmg = new DamageInfo();
         turretDmg.normal = dmg;
-        goldCost = 40;
-    }
-
-    public override int getCost()
-    {
-        return goldCost;
+        buildCost = 40;
     }
 }

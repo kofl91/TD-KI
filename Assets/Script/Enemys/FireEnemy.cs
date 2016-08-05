@@ -6,8 +6,8 @@ public class FireEnemy : BaseEnemy {
 
     FireEnemy()
     {
-        dmgfactor.fire = 0.5f;
-        dmgfactor.water = 1.5f;
+        resistance.fire = 0.5f;
+        resistance.water = 1.5f;
         life = 6f;
         bounty = 2;
     }
