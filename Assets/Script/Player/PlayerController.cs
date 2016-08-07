@@ -26,6 +26,15 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     
     void Start()
     {
+        // Only make grid enabled when you are the local player
+        if (GetComponentInChildren<NetworkIdentity>())
+        {
+            GetComponentInChildren<GridMaker>().MakeGrid(isLocalPlayer);
+        }
+        else
+        {
+            GetComponentInChildren<GridMaker>().MakeGrid(true);
+        }
         grid = GetComponentInChildren<GridMaker>().GetGrid();
     }
 	
@@ -68,20 +77,37 @@ public class PlayerController : NetworkBehaviour,IPlayer {
         if (grid.tiles[x,y].type == eTile.Free)
         {
             GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
-            GameObject go = (GameObject)Instantiate(turretPrefab);
-            go.transform.position = grid.tiles[x, y].obj.transform.position;
-            BaseTower tower = go.GetComponent<BaseTower>();
+            BaseTower tower = turretPrefab.GetComponent<BaseTower>();
             if (tower.buildCost < Gold)
             {
-                Gold -= tower.buildCost;
-                go.transform.parent = transform;
                 grid.tiles[x, y].type = eTile.Tower;
-            }
-            else
-            {
-                Destroy(go);
+                if (GetComponent<NetworkIdentity>())
+                    CmdSpawnTower(x, y);
+                else
+                    SpawnTower(x,y);
             }
         }
+    }
+
+    public void SpawnTower(int x, int y)
+    {
+        GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
+        Gold -= turretPrefab.GetComponent<BaseTower>().buildCost;
+        GameObject go = (GameObject)Instantiate(turretPrefab);
+        go.transform.position = grid.tiles[x, y].obj.transform.position;
+        go.transform.parent = transform;
+    }
+
+    [Command]
+    public void CmdSpawnTower(int x, int y)
+    {
+        
+        GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
+        Gold -= turretPrefab.GetComponent<BaseTower>().buildCost;
+        GameObject go = (GameObject)Instantiate(turretPrefab);
+        go.transform.position = grid.tiles[x, y].obj.transform.position;
+        go.transform.parent = transform;
+        NetworkServer.Spawn(go);
     }
 
     internal DamageInfo GetNextEnemyResistance()

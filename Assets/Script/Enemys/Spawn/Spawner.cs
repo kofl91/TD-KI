@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
+using UnityEngine.Networking;
 
 
 // Singleton welcher das Spawnen der Minions übernimmt
-public class Spawner : MonoSingleton<Spawner> {
+public class Spawner : NetworkBehaviour {
 
     #region Attribute
     // Referenzen zu den beiden Spielerns
@@ -91,14 +92,56 @@ public class Spawner : MonoSingleton<Spawner> {
         return spawnedMinion;
     }
 
+    
+    [Command]
+    public void CmdspawnMinionAtTowardsVersus(int enemyID, Vector3 at, GameObject towards, GameObject player)
+    {
+        GameObject spawnedMinion = Instantiate(PrefabContainer.Instance.enemys[enemyID], at, Quaternion.identity) as GameObject;
+        BaseEnemy buffer = spawnedMinion.GetComponent<BaseEnemy>();
+        buffer.target = towards;
+        buffer.enemy = player.GetComponent<PlayerController>();
+        buffer.bounty = waves[0].enemyBounty;
+        buffer.SetMaxLife(waves[0].enemyHP);
+        spawnedMinion.transform.parent = container.transform;
+        NetworkServer.Spawn(spawnedMinion);
+        spawnedMinion.GetComponent<NavMeshAgent>().enabled = true;
+    }
+
+
+    bool init = false;
     // Eine Spawn Iteration
     public void spawnRegular()
     {
+        if (!init)
+        {
+            player = FindObjectsOfType<PlayerController>();
+            player1 = player[0];
+            player2 = player[1];
+            init = true;
+            basePlayer1 = player1.GetComponentInChildren<EndzoneDespawn>().gameObject;
+            basePlayer2 = player2.GetComponentInChildren<EndzoneDespawn>().gameObject;
+        }
+
         int enemyID = waves[0].enemyID;
         waves[0].Decr();
-        spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, player1);
-        spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, player2);
+        if (GetComponent<NetworkIdentity>())
+        {
+            CmdspawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform.position, basePlayer1, player1.gameObject);
+            CmdspawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform.position, basePlayer2, player2.gameObject);
+        }
+        else
+        {
+            spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, player1);
+            spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, player2);
+        }
     }
+
+    [Command]
+    public void CmdSpawnOnNetwork(GameObject go)
+    {
+        NetworkServer.Spawn(go);
+    }
+
     #endregion
 
     #region Unity
@@ -153,7 +196,7 @@ public class Spawner : MonoSingleton<Spawner> {
         {
             if (waveIsOver())
             {
-                SceneManager.LoadScene("GameOverScreen");
+                SceneManager.LoadScene("GameOver");
             }
         }
     }

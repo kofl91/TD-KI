@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 
 public abstract class MonoSingleton<T> : MonoBehaviour where T : MonoSingleton<T> {
 
