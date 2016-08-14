@@ -171,6 +171,13 @@ public class PlayerController : NetworkBehaviour,IPlayer {
             Destroy(t.gameObject);
         }
     }
+
+    public void SellTower(BaseTower tower)
+    {
+        Gold += (int) (tower.buildCost * 0.7);
+        Destroy(tower.gameObject);
+    }
+
     #endregion
 
     #region InterfaceImplementation

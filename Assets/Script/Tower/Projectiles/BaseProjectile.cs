@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 // Ein Projektil, das von Türmen geschossen wird und beim Aufprall Schaden an einem Gegner verursacht.
 public class BaseProjectile : MonoBehaviour
@@ -22,7 +23,8 @@ public class BaseProjectile : MonoBehaviour
 
     // Flag zeigt an ob das Projektil abgefeuert wurde
     private bool isLaunched = false;
-    
+
+    public bool splash;
 
     // Basis Initialisierung 
     public BaseProjectile()
@@ -75,7 +77,6 @@ public class BaseProjectile : MonoBehaviour
         }
         Destroy(gameObject);
     }
-
 
     // Abschussfunktion
     // Started das Projektil und setzt Ziel und Ursprung fest.

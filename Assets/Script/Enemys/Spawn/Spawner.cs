@@ -57,7 +57,8 @@ public class Spawner : NetworkBehaviour {
     // Heuert einen Minion an
     public void HireMinion(PlayerController sendingPlayer,int enemyID)
     {
-        int cost = PrefabContainer.Instance.enemys[enemyID].GetComponent<BaseEnemy>().bounty;
+        Debug.Log("Should send stuff!");
+        int cost = waves[0].enemyBounty;
         // Kann sich der Spieler die Einheit leisten?
         if (sendingPlayer.Gold > cost) {
             sendingPlayer.Gold -= cost;

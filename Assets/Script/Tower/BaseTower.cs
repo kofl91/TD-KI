@@ -22,7 +22,7 @@ public class BaseTower : MonoBehaviour {
     // Die Upgradekosten
     protected int upgradeCost = 5;
     // Die Upgradstuffe
-    protected int level = 1;
+    public int level = 1;
     #endregion
 
     #region CooldownBerechnung
@@ -224,11 +224,14 @@ public class BaseTower : MonoBehaviour {
     // Wertet den Turm auf.
     public void Upgrade()
     {
-        if (level < 10)
-        {
-            level++;
-            turretDmg.Add(baseDmg);
-            range *= 1.05f;
+        if (GetComponentInParent<PlayerController>().Gold >= upgradeCost)
+        {    
+            if (level < 10)
+            {
+                level++;
+                turretDmg.Add(baseDmg);
+                range *= 1.05f;
+            }
         }
     }
 

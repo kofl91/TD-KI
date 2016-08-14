@@ -54,4 +54,24 @@ public class DamageInfo {
         this.water = water;
         this.nature = nature;
     }
+
+    internal string GetDamageType()
+    {
+        if ((normal >= fire) && (normal >= water) && (normal >= nature))
+        {
+            return "Normal";
+        }
+        else if ((fire >= water) && (fire >= nature))
+        {
+            return "Fire";
+        }
+        else if (water >= nature)
+        {
+            return "Water";
+        }
+        else
+        {
+            return "Nature";
+        }
+    }
 }
