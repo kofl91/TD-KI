@@ -91,6 +91,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
 
     public void SpawnTower(int x, int y)
     {
+        Debug.Log("offline");
         GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
         Gold -= turretPrefab.GetComponent<BaseTower>().buildCost;
         GameObject go = (GameObject)Instantiate(turretPrefab);
@@ -101,7 +102,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     [Command]
     public void CmdSpawnTower(int x, int y)
     {
-        
+        Debug.Log("online");
         GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
         Gold -= turretPrefab.GetComponent<BaseTower>().buildCost;
         GameObject go = (GameObject)Instantiate(turretPrefab);
