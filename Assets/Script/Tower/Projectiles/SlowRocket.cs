@@ -11,9 +11,14 @@ public class SlowRocket : BaseProjectile {
     // Die Effektivität der Verlangsamung
     float slow = 0.5f;
 
+   
+
     // Der Aufprall und somit das Zünden der Explosion
     override protected void ReachTarget()
     {
+        Vector3 posi = new Vector3(transform.position.x, 1.0f, transform.position.z);
+        GameObject explosionInstance = Instantiate(explosion, posi, Quaternion.identity) as GameObject;
+        Destroy(explosionInstance, 0.5f);
         if (Target)
         {
             Collider[] allEnemys = Physics.OverlapSphere(transform.position, range, LayerMask.GetMask("Enemy"));
@@ -23,7 +28,7 @@ public class SlowRocket : BaseProjectile {
                 for (int i = 0; i < allEnemys.Length; i++)
                 {
                     allEnemys[i].gameObject.SendMessage("OnDamage", Damage);
-                    allEnemys[i].GetComponent<NavMeshAgent>().speed *= slow;
+                    allEnemys[i].GetComponent<NavMeshAgent>().velocity *= slow;
                 }
             }
         }

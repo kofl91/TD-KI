@@ -207,7 +207,7 @@ public class BaseTower : MonoBehaviour {
     protected void ShootBullet(Transform t)
     {
         // Erstelle ein Projektil und...
-        GameObject bullet = Instantiate(projectile) as GameObject;
+        GameObject bullet = Instantiate(projectile,transform.position,Quaternion.identity) as GameObject;
         
         Transform start;
 
@@ -216,7 +216,6 @@ public class BaseTower : MonoBehaviour {
             start = rtt.transform; // schieße das Projektil von hier ab
         else
             start = transform;
-
         // Feuer es ab
         bullet.GetComponent<BaseProjectile>().Launch(start, t, turretDmg);
     }

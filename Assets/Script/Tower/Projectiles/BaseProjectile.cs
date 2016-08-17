@@ -26,6 +26,8 @@ public class BaseProjectile : MonoBehaviour
 
     public bool splash;
 
+    public GameObject explosion;
+
     // Basis Initialisierung 
     public BaseProjectile()
     {
@@ -71,6 +73,9 @@ public class BaseProjectile : MonoBehaviour
     //      - Verfehlene implementieren: NotLockedOn, Ziel erreicht, aber keine Kollision -> kein Schaden 
     protected virtual void ReachTarget()
     {
+        Vector3 posi = new Vector3(transform.position.x, 1.0f, transform.position.z);
+        GameObject explosionInstance = Instantiate(explosion, posi, Quaternion.identity) as GameObject;
+        Destroy(explosionInstance, 0.1f);
         if (Target)
         {
             Target.SendMessage("OnDamage", Damage);
