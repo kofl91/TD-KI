@@ -19,6 +19,9 @@ public class PlayerConfigurator : MonoBehaviour {
         myPos.GetComponentInChildren<EndzoneDespawn>().gameObject.transform.SetParent(this.transform);
 
         // Set Grid
-        GetComponentInChildren<GridMaker>().transform.position.Set(transform.position.x, 0.0f, transform.position.z);
+        GridMaker gm = myPos.GetComponentInChildren<GridMaker>();
+        gm.gameObject.transform.SetParent(this.transform);
+        gm.transform.position.Set(transform.position.x, 0.0f, transform.position.z);
+        GetComponent<PlayerController>().Init();
     }
 }

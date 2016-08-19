@@ -17,6 +17,14 @@ public class DamageInfo {
         nature = 1.0f;
     }
 
+    internal void Multiply(float dmgFactor)
+    {
+        normal *= dmgFactor;
+        fire *= dmgFactor;
+        water *= dmgFactor;
+        nature *= dmgFactor;
+    }
+
     // Berechnet den Absoluten Schaden gegen eine Resistenz
     internal float calcAbsoluteDmg(DamageInfo resistance)
     {

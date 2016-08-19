@@ -106,7 +106,7 @@ public class NeatBot : AIPlayer
         //Debug.Log("Action is: "+action);
         switch (action)
         {
-            case Action.Build:
+            case Action.BuildOrUpgrade:
                 AIBuild();
                 break;
             case Action.Destroy:

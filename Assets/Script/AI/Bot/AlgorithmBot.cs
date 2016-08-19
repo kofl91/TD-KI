@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System;
 
 public class AlgorithmBot : AIPlayer
@@ -38,10 +37,10 @@ public class AlgorithmBot : AIPlayer
             Init();
             isInitialized = true;
         }
-        RatedAction bestAction = actionEvaluator.GetBestAction(new ResourcesStructure(player.GetMoney(), player.GetLife()), spawner.GetWave());
-        switch (bestAction.action)
+        Action bestAction = actionEvaluator.GetBestAction(new ResourcesStructure(player.GetMoney(), player.GetLife()), spawner.GetWave());
+        switch (bestAction)
         {
-            case Action.Build:
+            case Action.BuildOrUpgrade:
                 AIBuild();
                 break;
             case Action.Destroy:
@@ -65,7 +64,7 @@ public class AlgorithmBot : AIPlayer
         if (player.SpendMoney(bestTower.tower.cost))
         {
             RatedPosition nextPosition = gridEvaluator.GetNextPosition();
-            nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
+            //nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
             player.BuildTower(bestTower.tower, nextPosition.tile);
         }
     }

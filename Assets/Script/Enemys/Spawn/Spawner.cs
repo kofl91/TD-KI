@@ -9,15 +9,12 @@ public class Spawner : NetworkBehaviour {
 
     #region Attribute
     // Referenzen zu den beiden Spielerns
-    public PlayerController[] player;
-    public PlayerController player1;
-    public PlayerController player2;
+    private PlayerController[] player;
 
     // Standorte der  Spawn/Despawn Punkte
-    public GameObject neutralSpawnPoint;
-    public GameObject hiredSpawnPoint;
-    public GameObject basePlayer1;
-    public GameObject basePlayer2;
+    public List<GameObject> neutralSpawnPoints;
+    public List<GameObject> hiredSpawnPoints;
+    private List<GameObject> playerBases;
 
     // Parent Container für alle Enemy Objekte
     public GameObject container;
@@ -45,13 +42,13 @@ public class Spawner : NetworkBehaviour {
     // Heuert einen Minion für Spieler 1 an.
     public void HireMinionForPlayer1(int enemyID)
     {
-        HireMinion(player1, enemyID);
+        HireMinion(player[0], enemyID);
     }
 
     // Heuert einen Minion für Spieler 2 an.
     public void HireMinionForPlayer2(int enemyID)
     {
-        HireMinion(player2, enemyID);
+        HireMinion(player[1], enemyID);
     }
 
     // Heuert einen Minion an
@@ -65,17 +62,20 @@ public class Spawner : NetworkBehaviour {
             GameObject towards;
             PlayerController playerToSendTowards;
             // Entscheide wer der Gegner ist.
-            if (sendingPlayer == player1)
+            if (sendingPlayer == player[0])
             {
-                towards = basePlayer2;
-                playerToSendTowards = player2;
+                towards = playerBases[1];
+                playerToSendTowards = player[1];
             }
             else
             {
-                towards = basePlayer1;
-                playerToSendTowards = player1;
+                towards = playerBases[0];
+                playerToSendTowards = player[0];
             }   
-            spawnMinionAtTowardsVersus(enemyID, hiredSpawnPoint.transform, towards, playerToSendTowards);
+            foreach ( GameObject spawnPoint in hiredSpawnPoints)
+            {
+                spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, towards, playerToSendTowards);
+            }
         }
     }
 
@@ -109,31 +109,42 @@ public class Spawner : NetworkBehaviour {
     }
 
 
-    bool init = false;
+    public bool init = false;
     // Eine Spawn Iteration
     public void spawnRegular()
     {
         if (!init)
         {
             player = FindObjectsOfType<PlayerController>();
-            player1 = player[0];
-            player2 = player[1];
-            init = true;
-            basePlayer1 = player1.GetComponentInChildren<EndzoneDespawn>().gameObject;
-            basePlayer2 = player2.GetComponentInChildren<EndzoneDespawn>().gameObject;
+            if (player.Length > 1)
+            {
+                init = true;
+                playerBases = new List<GameObject>();
+                playerBases.Add(player[0].GetComponentInChildren<EndzoneDespawn>().gameObject);
+                playerBases.Add(player[1].GetComponentInChildren<EndzoneDespawn>().gameObject);
+            }
+            return;
         }
 
         int enemyID = waves[0].enemyID;
         waves[0].Decr();
         if (GetComponent<NetworkIdentity>())
         {
-            CmdspawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform.position, basePlayer1, player1.gameObject);
-            CmdspawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform.position, basePlayer2, player2.gameObject);
+            foreach (GameObject spawnPoint in neutralSpawnPoints)
+            {
+                CmdspawnMinionAtTowardsVersus(enemyID, spawnPoint.transform.position, playerBases[0], player[0].gameObject);
+                CmdspawnMinionAtTowardsVersus(enemyID, spawnPoint.transform.position, playerBases[1], player[1].gameObject);
+            }
+            
         }
         else
         {
-            spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer1, player1);
-            spawnMinionAtTowardsVersus(enemyID, neutralSpawnPoint.transform, basePlayer2, player2);
+            foreach (GameObject spawnPoint in neutralSpawnPoints)
+            {
+                Debug.Log("offline send!");
+                spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, playerBases[0], player[0]);
+                spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, playerBases[1], player[1]);
+            }
         }
     }
 

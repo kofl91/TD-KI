@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Networking;
 
+[Serializable]
 public class PlayerController : NetworkBehaviour,IPlayer {
 
 
@@ -23,13 +24,22 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     public int chosenTower = 0;
 
     public GridStructure grid;
+
+    public GameObject UI;
+
+    private bool isNetworkPlayer = false;
     
-    void Start()
+    public void Init()
     {
         // Only make grid enabled when you are the local player
         if (GetComponentInChildren<NetworkIdentity>())
         {
+            isNetworkPlayer = true;
             GetComponentInChildren<GridMaker>().MakeGrid(isLocalPlayer);
+            if (isLocalPlayer)
+            {
+                UI.SetActive(true);
+            }
         }
         else
         {
@@ -160,6 +170,18 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     }
 
     public void ChooseTower(int ID)
+    {
+        if (isNetworkPlayer)
+        {
+            CmdChooseTower(ID);
+        }else
+        {
+            chosenTower = ID;
+        }
+    }
+
+    [Command]
+    public void CmdChooseTower(int ID)
     {
         chosenTower = ID;
     }

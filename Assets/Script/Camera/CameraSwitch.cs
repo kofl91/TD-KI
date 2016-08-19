@@ -9,7 +9,7 @@ public class CameraSwitch : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         cameras = new List<Camera>();
-        Camera[] cams = GetComponentsInChildren<Camera>();
+        Camera[] cams = GetComponentsInChildren<Camera>(true);
         foreach (Camera c in cams)
         {
             cameras.Add(c);

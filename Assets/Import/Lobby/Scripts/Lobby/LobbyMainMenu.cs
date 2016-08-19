@@ -15,6 +15,8 @@ namespace Prototype.NetworkLobby
         public InputField ipInput;
         public InputField matchNameInput;
 
+        public Text chosenLevelName;
+
         public void OnEnable()
         {
             lobbyManager.topPanel.ToggleVisibility(true);
@@ -92,6 +94,12 @@ namespace Prototype.NetworkLobby
             {
                 OnClickCreateMatchmakingGame();
             }
+        }
+
+        public void OnLevelChooseClick(string text)
+        {
+            chosenLevelName.text = text;
+            FindObjectOfType<LobbyManager>().playScene = text+" - 2P";
         }
 
     }

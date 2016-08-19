@@ -13,58 +13,64 @@ public class PlayerUI : MonoBehaviour {
 
     private Scrollbar speedbar;
 
-    private PlayerController player;
-    private PlayerController enemy;
+    public PlayerController player;
+    public PlayerController enemy;
 
     public GameObject InfoPanel;
     public GameObject DetailPanel;
 
-    private Spawner spawner;
+    public Spawner spawner;
 
-    private BaseTower chosenTower;
+    public BaseTower chosenTower;
 
     // Use this for initialization
     void Start () {
         infotexts = InfoPanel.GetComponentsInChildren<Text>();
         detailtexts = DetailPanel.GetComponentsInChildren<Text>();
-        //speedbar = GetComponentInChildren<Scrollbar>();
-        //towerButton = GetComponentsInChildren<Button>();
         player = GetComponentInParent<PlayerController>();
-        PlayerController[] allplayer = FindObjectsOfType<PlayerController>();
-        foreach(PlayerController pl in allplayer)
-        {
-            if (!pl.Equals(player))
-            {
-                enemy = pl;
-            }
-        }
-        spawner = FindObjectOfType<Spawner>();
     }
 	
 	// Update is called once per frame
 	void Update () {
-
+        // Init. Needed in Network Mode.
+        if (!spawner)
+        {
+            spawner = FindObjectOfType<Spawner>();
+            return;
+        }
+        if (!enemy)
+        {
+            PlayerController[] allplayer = FindObjectsOfType<PlayerController>();
+            foreach (PlayerController pl in allplayer)
+            {
+                if (!pl.Equals(player))
+                {
+                    enemy = pl;
+                }
+            }
+            return;
+        }
         // Refresh the text.
         if (infotexts.Length > 0)
         {
-            infotexts[0].text = "Lives :" + player.Life;
+            infotexts[0].text = "" + player.Life;
         }
         if (infotexts.Length > 1)
         {
-            infotexts[1].text = "Gold :" + player.Gold;
-        }
-        if (infotexts.Length > 2)
-        {
-            infotexts[2].text = "Wave :" + (spawner.GetWave()+1) ;
+            infotexts[1].text = "" + player.Gold;
         }
         if (infotexts.Length > 3)
         {
-            BaseEnemy[] minions = FindObjectsOfType<BaseEnemy>();
-            infotexts[3].text = "Minions alive :" + minions.Length;
+            infotexts[3].text = "" + (spawner.GetWave()+1) ;
         }
-        if (infotexts.Length > 4)
+        if (infotexts.Length > 5)
         {
-            infotexts[4].text = "Enemy Lives :" + enemy.Life;
+            BaseEnemy[] minions = FindObjectsOfType<BaseEnemy>();
+            infotexts[5].text = "" + minions.Length;
+        }
+        if (infotexts.Length > 6)
+        {
+            infotexts[6].text = "" + enemy.Life;
         }
         /*if (speedbar)
         {
@@ -82,6 +88,12 @@ public class PlayerUI : MonoBehaviour {
         detailtexts[9].text = "" + tower.range;
         detailtexts[11].text = "" + tower.level;
         chosenTower = tower;
+        /* Disable all options if the one clicking was not the owner. Not working on network mode.
+        Button[] buttons = DetailPanel.GetComponentsInChildren<Button>(true);
+        foreach (Button b in buttons)
+        {
+            b.gameObject.SetActive(tower.owner == player);
+        }*/
     }
 
     public void SellTower()
@@ -98,8 +110,13 @@ public class PlayerUI : MonoBehaviour {
 
     public void HireMinion(int enemyID)
     {
-        Debug.Log("Click registered");
         spawner.HireMinion(player, enemyID);
     }
+
+    public void ChooseTower(int towerID)
+    {
+        player.ChooseTower(towerID);
+    }
+
 
 }
