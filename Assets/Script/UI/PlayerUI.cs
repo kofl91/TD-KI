@@ -27,12 +27,17 @@ public class PlayerUI : MonoBehaviour {
     void Start () {
         infotexts = InfoPanel.GetComponentsInChildren<Text>();
         detailtexts = DetailPanel.GetComponentsInChildren<Text>();
-        player = GetComponentInParent<PlayerController>();
     }
 	
 	// Update is called once per frame
 	void Update () {
         // Init. Needed in Network Mode.
+
+        if (!player)
+        {
+            player = GetComponentInParent<PlayerController>();
+        }
+
         if (!spawner)
         {
             spawner = FindObjectOfType<Spawner>();

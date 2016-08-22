@@ -9,7 +9,7 @@ using System.Collections;
 
 namespace Prototype.NetworkLobby
 {
-    public class LobbyManager : NetworkLobbyManager 
+    public class LobbyManager : NetworkLobbyManager
     {
         static short MsgKicked = MsgType.Highest + 1;
 
@@ -48,7 +48,7 @@ namespace Prototype.NetworkLobby
         public bool _isMatchmaking = false;
 
         protected bool _disconnectServer = false;
-        
+
         protected ulong _currentMatchID;
 
         protected LobbyHook _lobbyHooks;
@@ -179,7 +179,7 @@ namespace Prototype.NetworkLobby
         {
             ChangeTo(mainMenuPanel);
         }
-                 
+
         public void StopHostClbk()
         {
             if (_isMatchmaking)
@@ -192,7 +192,7 @@ namespace Prototype.NetworkLobby
                 StopHost();
             }
 
-            
+
             ChangeTo(mainMenuPanel);
         }
 
@@ -337,15 +337,15 @@ namespace Prototype.NetworkLobby
 
         public override void OnLobbyServerPlayersReady()
         {
-			bool allready = true;
-			for(int i = 0; i < lobbySlots.Length; ++i)
-			{
-				if(lobbySlots[i] != null)
-					allready &= lobbySlots[i].readyToBegin;
-			}
+            bool allready = true;
+            for (int i = 0; i < lobbySlots.Length; ++i)
+            {
+                if (lobbySlots[i] != null)
+                    allready &= lobbySlots[i].readyToBegin;
+            }
 
-			if(allready)
-				StartCoroutine(ServerCountdownCoroutine());
+            if (allready)
+                StartCoroutine(ServerCountdownCoroutine());
         }
 
         public IEnumerator ServerCountdownCoroutine()
@@ -414,6 +414,22 @@ namespace Prototype.NetworkLobby
         {
             ChangeTo(mainMenuPanel);
             infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
+        }
+
+        bool spawnedBot = false;
+        public override void OnServerSceneChanged(string sceneName)
+        {
+            base.OnServerSceneChanged(sceneName);
+            Debug.Log("Match started with :" + _playerNumber + " player.");
+            if(_playerNumber < 2 && !spawnedBot)
+            {
+                Debug.Log("Not enough player. Spawn Bot!");
+                GameObject go = Instantiate(gamePlayerPrefab, GetStartPosition().position, GetStartPosition().rotation) as GameObject;
+                //go.GetComponentInChildren<AlgorithmBot>().gridMaker = go.GetComponentInChildren<GridMaker>().gameObject;
+                go.GetComponentInChildren<AlgorithmBot>(true).gameObject.SetActive(true);
+                spawnedBot = true;
+            }
+            
         }
     }
 }

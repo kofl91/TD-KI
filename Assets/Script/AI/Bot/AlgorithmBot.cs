@@ -38,7 +38,7 @@ public class AlgorithmBot : AIPlayer
             isInitialized = true;
         }
         Action bestAction = actionEvaluator.GetBestAction(new ResourcesStructure(player.GetMoney(), player.GetLife()), spawner.GetWave());
-        switch (bestAction)
+        switch (Action.BuildOrUpgrade)
         {
             case Action.BuildOrUpgrade:
                 AIBuild();

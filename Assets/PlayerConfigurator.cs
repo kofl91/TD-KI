@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using System.Collections;
+using System.Collections.Generic;
 
 public class PlayerConfigurator : MonoBehaviour {
 
@@ -23,5 +23,6 @@ public class PlayerConfigurator : MonoBehaviour {
         gm.gameObject.transform.SetParent(this.transform);
         gm.transform.position.Set(transform.position.x, 0.0f, transform.position.z);
         GetComponent<PlayerController>().Init();
+        GetComponentInChildren<AlgorithmBot>(true).gridMaker = gm.gameObject;
     }
 }

@@ -36,6 +36,8 @@ public class Spawner : NetworkBehaviour {
     public bool isSpawning = true;
     private bool isWaitingForNextWave = false;
 
+    public bool preDefinedWaves = false;
+
     #endregion
 
     #region SpawnFunktionen
@@ -160,6 +162,42 @@ public class Spawner : NetworkBehaviour {
     // Use this for initialization
     void Start()
     {
+        if (preDefinedWaves)
+        {
+            getWavesFromComponent();
+        }else
+        {
+            generateWaves();
+        }  
+    }
+	
+    void generateWaves()
+    {
+        float HP = 5;
+        float Bounty = 1;
+        int numberEnemyTypes = 5;
+        waves = new List<Wave>();
+        for (int i = 0; i < 99; i++)
+        {
+            HP *= 1.1f;
+            Bounty *= 1.1f;
+            if (i % 10 == 9)
+            {
+                waves.Add(new Wave((int)HP * 3, (int)Bounty, i % numberEnemyTypes, 5, 2));
+            }
+            else
+            {
+                waves.Add(new Wave((int)HP, (int)Bounty, i % numberEnemyTypes, 10, 2));
+            }
+        }
+        foreach (Wave w in waves)
+        {
+            w.Reset();
+        }
+    }
+
+    void getWavesFromComponent()
+    {
         // Get Waves from components
         waves = new List<Wave>();
         waves.AddRange(GetComponents<Wave>());
@@ -168,7 +206,6 @@ public class Spawner : NetworkBehaviour {
             w.Reset();
         }
     }
-	
 	// Update is called once per frame
 	void Update () {
 

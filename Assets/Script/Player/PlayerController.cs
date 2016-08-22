@@ -25,7 +25,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
 
     public GridStructure grid;
 
-    public GameObject UI;
+    public PlayerUI UI;
 
     private bool isNetworkPlayer = false;
     
@@ -38,7 +38,9 @@ public class PlayerController : NetworkBehaviour,IPlayer {
             GetComponentInChildren<GridMaker>().MakeGrid(isLocalPlayer);
             if (isLocalPlayer)
             {
-                UI.SetActive(true);
+                UI = FindObjectOfType<PlayerUI>();
+                UI.player = this;
+                //UI.SetActive(true);
             }
         }
         else
