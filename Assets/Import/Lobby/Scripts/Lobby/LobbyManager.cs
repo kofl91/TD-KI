@@ -24,6 +24,13 @@ namespace Prototype.NetworkLobby
         [Header("UI Reference")]
         public LobbyTopPanel topPanel;
 
+
+        public RectTransform ourPanel01;
+        public RectTransform ourPanel02;
+        public RectTransform ourPanel03;
+        public RectTransform ourPanel04;
+
+
         public RectTransform mainMenuPanel;
         public RectTransform lobbyPanel;
 
@@ -31,7 +38,7 @@ namespace Prototype.NetworkLobby
         public LobbyCountdownPanel countdownPanel;
         public GameObject addPlayerButton;
 
-        protected RectTransform currentPanel;
+        public RectTransform currentPanel;
 
         public Button backButton;
 
@@ -115,6 +122,11 @@ namespace Prototype.NetworkLobby
                 topPanel.isInGame = true;
                 topPanel.ToggleVisibility(false);
             }
+        }
+
+        public void OnClickLanHost()
+        {
+            StartHost();
         }
 
         public void ChangeTo(RectTransform newPanel)
@@ -230,14 +242,10 @@ namespace Prototype.NetworkLobby
         }
 
         //===================
-        public bool isMultiplayer = true;
         public override void OnStartHost()
         {
             base.OnStartHost();
-
-            if (isMultiplayer) {
-                ChangeTo(lobbyPanel);
-            }
+            ChangeTo(lobbyPanel);
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
         }
@@ -426,6 +434,22 @@ namespace Prototype.NetworkLobby
                 GameObject go = Instantiate(gamePlayerPrefab, GetStartPosition().position, GetStartPosition().rotation) as GameObject;
                 go.GetComponentInChildren<AlgorithmBot>(true).gameObject.SetActive(true);
             }
+        }
+
+        public void ConfigureForSinglePlayer()
+        {
+            maxPlayers = 1;
+            minPlayers = 1;
+            maxPlayersPerConnection = 1;
+            prematchCountdown = 1;
+        }
+
+        public void ConfigureForMultiPlayer()
+        {
+            maxPlayers = 2;
+            minPlayers = 2;
+            maxPlayersPerConnection = 1;
+            prematchCountdown = 5;
         }
     }
 }

@@ -12,6 +12,7 @@ public class Rocket : BaseProjectile {
     {
         Vector3 posi = new Vector3(transform.position.x, 1.0f, transform.position.z);
         GameObject explosionInstance = Instantiate(explosion, posi, Quaternion.identity) as GameObject;
+        explosionInstance.transform.SetParent(transform);
         Destroy(explosionInstance, 0.5f);
         if (Target)
         {

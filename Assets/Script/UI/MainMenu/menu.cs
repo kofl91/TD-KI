@@ -80,7 +80,6 @@ public class menu : MonoBehaviour {
         if (net == false && ex == false && moCom == true)
         {
             LobbyManager.s_Singleton.playScene = levelname; //+" - 2P";
-            LobbyManager.s_Singleton.isMultiplayer = false;
             LobbyManager.s_Singleton.StartHost();
             modus.SetActive(false);
             playVsCom.SetActive(true);

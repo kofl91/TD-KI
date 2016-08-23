@@ -211,7 +211,7 @@ public class BaseTower : NetworkBehaviour
     {
         // Erstelle ein Projektil und...
         GameObject bullet = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
-
+        bullet.transform.SetParent(transform);
         Transform start;
 
         // Gibt es eine Abschussrampe, welche durch die Rotation zum Ziel identifiziert wird

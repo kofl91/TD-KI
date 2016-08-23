@@ -13,19 +13,24 @@ public class SpwanerMainMenu : MonoBehaviour {
     {
         StartCoroutine(Wave());
     }
+
+
     IEnumerator Wave()
     {
-
+        GameObject go;
         while (true)
         {
             yield return new WaitForSeconds(3);
-            Instantiate(Fire, this.transform.position, this.transform.rotation);
-                      
+            go = Instantiate(Fire, this.transform.position, this.transform.rotation)as GameObject;
+            go.transform.SetParent(transform);
+                     
             yield return new WaitForSeconds(3);
-            Instantiate(Water, this.transform.position, this.transform.rotation);
-            
+            go = Instantiate(Water, this.transform.position, this.transform.rotation) as GameObject;
+            go.transform.SetParent(transform);
+
             yield return new WaitForSeconds(3);
-            Instantiate(Green, this.transform.position, this.transform.rotation);      
+            go = Instantiate(Green, this.transform.position, this.transform.rotation) as GameObject;
+            go.transform.SetParent(transform);
         }
 
     }
