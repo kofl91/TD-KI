@@ -241,7 +241,7 @@ public class BaseTower : NetworkBehaviour
     // Gibt die Turminformationen als Datenstruktur zurück.
     public TowerStructure GetTowerStructure()
     {
-        return new TowerStructure(turretDmg, 1 / cooldown, buildCost, this.gameObject);
+        return new TowerStructure(turretDmg, 1 / cooldown, range, buildCost , this.gameObject);
     }
 
 }

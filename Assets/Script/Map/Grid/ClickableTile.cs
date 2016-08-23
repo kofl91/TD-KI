@@ -9,11 +9,7 @@ public class ClickableTile : MonoBehaviour {
 
     void OnMouseUp()
     {
-        if (UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
-        {
-            Debug.Log("You are on the UI");
-        }
-        else
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
             if (!owner)
             {

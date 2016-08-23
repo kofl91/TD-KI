@@ -12,8 +12,8 @@ public class Spawner : NetworkBehaviour {
     private PlayerController[] player;
 
     // Standorte der  Spawn/Despawn Punkte
-    public List<GameObject> neutralSpawnPoints;
-    public List<GameObject> hiredSpawnPoints;
+    private List<NeutralSpawnPoint> neutralSpawnPoints = new List<NeutralSpawnPoint>();
+    private List<HiredSpawnPoint> hiredSpawnPoints = new List<HiredSpawnPoint>();
     private List<GameObject> playerBases;
 
     // Parent Container für alle Enemy Objekte
@@ -74,7 +74,7 @@ public class Spawner : NetworkBehaviour {
                 towards = playerBases[0];
                 playerToSendTowards = player[0];
             }   
-            foreach ( GameObject spawnPoint in hiredSpawnPoints)
+            foreach ( HiredSpawnPoint spawnPoint in hiredSpawnPoints)
             {
                 spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, towards, playerToSendTowards);
             }
@@ -124,6 +124,10 @@ public class Spawner : NetworkBehaviour {
                 playerBases = new List<GameObject>();
                 playerBases.Add(player[0].GetComponentInChildren<EndzoneDespawn>().gameObject);
                 playerBases.Add(player[1].GetComponentInChildren<EndzoneDespawn>().gameObject);
+
+                neutralSpawnPoints.AddRange(FindObjectsOfType<NeutralSpawnPoint>());
+                hiredSpawnPoints.AddRange(FindObjectsOfType<HiredSpawnPoint>());
+
             }
             return;
         }
@@ -132,7 +136,7 @@ public class Spawner : NetworkBehaviour {
         waves[0].Decr();
         if (GetComponent<NetworkIdentity>())
         {
-            foreach (GameObject spawnPoint in neutralSpawnPoints)
+            foreach (NeutralSpawnPoint spawnPoint in neutralSpawnPoints)
             {
                 CmdspawnMinionAtTowardsVersus(enemyID, spawnPoint.transform.position, playerBases[0], player[0].gameObject);
                 CmdspawnMinionAtTowardsVersus(enemyID, spawnPoint.transform.position, playerBases[1], player[1].gameObject);
@@ -141,7 +145,7 @@ public class Spawner : NetworkBehaviour {
         }
         else
         {
-            foreach (GameObject spawnPoint in neutralSpawnPoints)
+            foreach (NeutralSpawnPoint spawnPoint in neutralSpawnPoints)
             {
                 Debug.Log("offline send!");
                 spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, playerBases[0], player[0]);

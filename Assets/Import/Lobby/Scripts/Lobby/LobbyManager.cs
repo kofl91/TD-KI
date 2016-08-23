@@ -416,20 +416,14 @@ namespace Prototype.NetworkLobby
             infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
         }
 
-        bool spawnedBot = false;
         public override void OnServerSceneChanged(string sceneName)
         {
             base.OnServerSceneChanged(sceneName);
-            Debug.Log("Match started with :" + _playerNumber + " player.");
-            if(_playerNumber < 2 && !spawnedBot)
+            if(_playerNumber < 2)
             {
-                Debug.Log("Not enough player. Spawn Bot!");
                 GameObject go = Instantiate(gamePlayerPrefab, GetStartPosition().position, GetStartPosition().rotation) as GameObject;
-                //go.GetComponentInChildren<AlgorithmBot>().gridMaker = go.GetComponentInChildren<GridMaker>().gameObject;
                 go.GetComponentInChildren<AlgorithmBot>(true).gameObject.SetActive(true);
-                spawnedBot = true;
             }
-            
         }
     }
 }

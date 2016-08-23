@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using Prototype.NetworkLobby;
 
 public class WinConditionChecker : MonoBehaviour {
 
@@ -20,14 +22,17 @@ public class WinConditionChecker : MonoBehaviour {
             else
                 return;
         }
-
         if (player[0].Life <= 0)
         {
-            //SceneManager.LoadScene("GamerOver");
+            NetworkManager.singleton.StopClient();
+            NetworkManager.singleton.StopHost();
+            SceneManager.LoadScene("GameOver");
         }
         if (player[1].Life <= 0)
         {
-           // SceneManager.LoadScene("VictoryScreen");
+            NetworkManager.singleton.StopClient();
+            NetworkManager.singleton.StopHost();
+            SceneManager.LoadScene("VictoryScreen");
         }
     }
 }

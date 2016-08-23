@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.Networking;
 
 // Basisklasse für alle Gegner
@@ -32,13 +33,15 @@ public class BaseEnemy : NetworkBehaviour
     // Die Resistenzen der Einheit
     [SyncVar]
     public DamageInfo resistance = new DamageInfo();
- 
+    public float speed;
+
 
     // Initialisierung
     void Start()
     {
         life = maxlife;
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = speed;
         if (target)
             agent.SetDestination(target.transform.position);
         healthbar = GetComponentInChildren<Healthbar>();
@@ -65,6 +68,7 @@ public class BaseEnemy : NetworkBehaviour
             Destroy(this.gameObject);
         }
     }
+
 
     // Gibt die Resistenz des Gegners zurück
     public DamageInfo GetResistance()

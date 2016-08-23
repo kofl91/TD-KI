@@ -36,6 +36,7 @@ public class PlayerUI : MonoBehaviour {
         if (!player)
         {
             player = GetComponentInParent<PlayerController>();
+            return;
         }
 
         if (!spawner)
