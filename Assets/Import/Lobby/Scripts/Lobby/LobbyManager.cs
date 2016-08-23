@@ -230,12 +230,14 @@ namespace Prototype.NetworkLobby
         }
 
         //===================
-
+        public bool isMultiplayer = true;
         public override void OnStartHost()
         {
             base.OnStartHost();
 
-            ChangeTo(lobbyPanel);
+            if (isMultiplayer) {
+                ChangeTo(lobbyPanel);
+            }
             backDelegate = StopHostClbk;
             SetServerInfo("Hosting", networkAddress);
         }

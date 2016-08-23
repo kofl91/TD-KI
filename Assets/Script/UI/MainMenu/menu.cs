@@ -12,7 +12,6 @@ public class menu : MonoBehaviour {
     public GameObject plyVsply;
     public GameObject exit;
     public GameObject modus;
-    public GameObject LobbyManager;
     public List<Scene> Level;
 
     bool moCom = false;
@@ -76,6 +75,19 @@ public class menu : MonoBehaviour {
        }      
     }
 
+    public void OnClickLevelChoice(string levelname)
+    {
+        if (net == false && ex == false && moCom == true)
+        {
+            LobbyManager.s_Singleton.playScene = levelname; //+" - 2P";
+            LobbyManager.s_Singleton.isMultiplayer = false;
+            LobbyManager.s_Singleton.StartHost();
+            modus.SetActive(false);
+            playVsCom.SetActive(true);
+            com = true;
+        }
+    }
+
     public void NextStep()
     {
         if (com == false && ex == false && moPly == true)
@@ -120,29 +132,22 @@ public class menu : MonoBehaviour {
 	
     public void Easy()
     {
-        //SceneManager.LoadScene();
-        //Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
-        //LobbyManager.sc = Level[0];
-        LobbyManager.GetComponent<LobbyManager>().playScene = "Ladder - 2P";
-        LobbyManager.gameObject.SetActive(true);
-        SceneManager.LoadScene("NetworkLobby");
+
     }
 
     public void Normal()
     {
-        LobbyManager.GetComponent<LobbyManager>().playScene = "Networking";
-        LobbyManager.gameObject.SetActive(true);
-        SceneManager.LoadScene("NetworkLobby");
-        //SceneManager.LoadScene();
+
         Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
     }
     public void Hard()
     {
-        LobbyManager.GetComponent<LobbyManager>().playScene="Networking";
-        LobbyManager.gameObject.SetActive(true);
-        SceneManager.LoadScene("NetworkLobby");
         //SceneManager.LoadScene();
         Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
     }
 
+    public void StartGame()
+    {
+        LobbyManager.s_Singleton.ServerChangeScene(LobbyManager.s_Singleton.playScene);
+    }
 }
