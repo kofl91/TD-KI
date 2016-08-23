@@ -1,15 +1,21 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Networking;
 
 // Basisklasse für alle Gegner
-public class BaseEnemy : MonoBehaviour
+public class BaseEnemy : NetworkBehaviour
 {
     // Das maximale Leben
+    [SyncVar]
     public float maxlife = 1f;
     // Das aktuelle Leben
+    [SyncVar]
     public float life = 1f;
     // Gold-Belohnung nach Zerstörung
+    [SyncVar]
     public int bounty = 1;
     // Flag das sicherstellt, das eine Einheit nur einmal Belohnung gibt
+    [SyncVar]
     private bool gaveBounty = false;
     
     // Zielposition an welche der Gegner läuft
@@ -25,14 +31,17 @@ public class BaseEnemy : MonoBehaviour
     private Healthbar healthbar;
 
     // Die Resistenzen der Einheit
+    [SyncVar]
     public DamageInfo resistance = new DamageInfo();
- 
+    public float speed;
+
 
     // Initialisierung
     void Start()
     {
         life = maxlife;
         agent = GetComponent<NavMeshAgent>();
+        agent.speed = speed;
         if (target)
             agent.SetDestination(target.transform.position);
         healthbar = GetComponentInChildren<Healthbar>();
@@ -50,12 +59,16 @@ public class BaseEnemy : MonoBehaviour
         {
             if (!gaveBounty)
             {
-                enemy.Gold += bounty;
-                gaveBounty = true;
+                if (enemy)
+                {
+                    enemy.Gold += bounty;
+                    gaveBounty = true;
+                }
             }
             Destroy(this.gameObject);
         }
     }
+
 
     // Gibt die Resistenz des Gegners zurück
     public DamageInfo GetResistance()

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 
 //  Eine Wellen-Struktur zum Spawnen von Gegnern
-public class Wave : MonoBehaviour
+public class Wave
 {
     // Die HP die alle Einheiten dieser Welle haben sollen
     public int enemyHP;
@@ -21,6 +21,14 @@ public class Wave : MonoBehaviour
     // Der Zeitabstand in dem die Einheiten geschickt werden
     public float interval;
 
+    public Wave(int HP, int Bounty, int Id, int Count, float Interval){
+        enemyHP = HP;
+        enemyBounty = Bounty;
+        enemyID = Id;
+        maxCount = Count;
+        count = maxCount;
+        interval = Interval;
+    }
 
     // Setzt eine Welle zurück
     internal void Reset()

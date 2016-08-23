@@ -8,72 +8,49 @@ public class ActionEvaluator
 
     private List<RatedAction> ratedActions;
 
-    private bool letthrough = true;
+    // TODO: Find appropriate values
+    public  float HP_DMG_FACTOR = 5.0f;
 
-    private int wave = 0;
+    public  float SEND_MINION_BORDER = 1.0f;
 
-    private int lifeLastTurn = 99999;
+    public  float BUILD_GOLD_BORDER = 1.0f;
 
-    public RatedAction GetBestAction(ResourcesStructure res, int currentwave)
+
+
+
+    public Action GetBestAction(ResourcesStructure res, int currentwave)
     {
+        return Action.Nothing;
+    }
 
-        if (currentwave != wave)
+    internal Action GetBestAction(List<TowerStructure> ownTower, List<TowerStructure> enemyTower, BaseEnemy baseEnemy)
+    {
+        // TODO: Fill variables with values
+        float myEstimatedDamage = estimateDamage(ownTower,baseEnemy);
+        float opponentEstimatedDamage = estimateDamage(enemyTower, baseEnemy);
+        float estimatedWaveHP = baseEnemy.life;
+        if (myEstimatedDamage < estimatedWaveHP * HP_DMG_FACTOR)
         {
-            wave = currentwave;
-            if (lifeLastTurn > res.life)
-            {
-                letthrough = true;
-                lifeLastTurn = res.life;
-            }
+            return Action.BuildOrUpgrade;
         }
-
-        evaluateActions();
-
-        if (wave > 2)
+        if (opponentEstimatedDamage < (estimatedWaveHP * HP_DMG_FACTOR + SEND_MINION_BORDER))
         {
-            letthrough = false;
+            return Action.Send;
         }
-        return ratedActions[0];
-    }
-
-    //TODO: Make more efficient by adding turrets in a sorted way.
-    private void evaluateActions()
-    {
-        ratedActions = new List<RatedAction>();
-        ratedActions.Add(new RatedAction(Action.Nothing, evaluateNothing()));
-        ratedActions.Add(new RatedAction(Action.Build, evaluateBuild()));
-        ratedActions.Add(new RatedAction(Action.Destroy, evaluateDestroy()));
-        ratedActions.Add(new RatedAction(Action.Send, evaluateSend()));
-        ratedActions.Add(new RatedAction(Action.Upgrade, evaluateUpgrade()));
-        ratedActions.Sort();
-    }
-
-    private float evaluateDestroy()
-    {
-        return 0.0f;
-    }
-
-    private float evaluateUpgrade()
-    {
-        return 0.0f;
-    }
-
-    private float evaluateSend()
-    {
-        return 0.0f;
-    }
-
-    private float evaluateBuild()
-    {
-        return 50.0f;
-    }
-
-    private float evaluateNothing()
-    {
-        if (!letthrough)
+        if (myEstimatedDamage < estimatedWaveHP * HP_DMG_FACTOR)
         {
-            return 100.0f;
+            return Action.BuildGoldTower;
         }
-        return 0.0f;
+        return Action.Nothing;
+    }
+
+    private float estimateDamage(List<TowerStructure> list1, BaseEnemy enemy)
+    {
+        float retVal = 0.0f;
+        foreach(TowerStructure t in list1)
+        {
+            retVal += t.dmg.calcAbsoluteDmg(enemy.resistance) * t.attackspeed * t.range / enemy.speed;
+        }
+        return retVal;
     }
 }

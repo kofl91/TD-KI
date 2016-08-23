@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 // Ein Projektil, das von Türmen geschossen wird und beim Aufprall Schaden an einem Gegner verursacht.
 public class BaseProjectile : MonoBehaviour
@@ -22,7 +23,10 @@ public class BaseProjectile : MonoBehaviour
 
     // Flag zeigt an ob das Projektil abgefeuert wurde
     private bool isLaunched = false;
-    
+
+    public bool splash;
+
+    public GameObject explosion;
 
     // Basis Initialisierung 
     public BaseProjectile()
@@ -69,13 +73,15 @@ public class BaseProjectile : MonoBehaviour
     //      - Verfehlene implementieren: NotLockedOn, Ziel erreicht, aber keine Kollision -> kein Schaden 
     protected virtual void ReachTarget()
     {
+        Vector3 posi = new Vector3(transform.position.x, 1.0f, transform.position.z);
+        GameObject explosionInstance = Instantiate(explosion, posi, Quaternion.identity) as GameObject;
+        Destroy(explosionInstance, 0.1f);
         if (Target)
         {
             Target.SendMessage("OnDamage", Damage);
         }
         Destroy(gameObject);
     }
-
 
     // Abschussfunktion
     // Started das Projektil und setzt Ziel und Ursprung fest.

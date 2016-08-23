@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.SceneManagement;
+using System.Collections.Generic;
+using Prototype.NetworkLobby;
 
 public class menu : MonoBehaviour {
 
@@ -10,6 +12,8 @@ public class menu : MonoBehaviour {
     public GameObject plyVsply;
     public GameObject exit;
     public GameObject modus;
+    public GameObject LobbyManager;
+    public List<Scene> Level;
 
     bool moCom = false;
     bool moPly = false;
@@ -75,8 +79,7 @@ public class menu : MonoBehaviour {
     public void NextStep()
     {
         if (com == false && ex == false && moPly == true)
-        {
-           
+        {            
             Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
             modus.SetActive(false);
             plyVsply.SetActive(true);
@@ -118,16 +121,26 @@ public class menu : MonoBehaviour {
     public void Easy()
     {
         //SceneManager.LoadScene();
-        Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
+        //Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
+        //LobbyManager.sc = Level[0];
+        LobbyManager.GetComponent<LobbyManager>().playScene = "Ladder - 2P";
+        LobbyManager.gameObject.SetActive(true);
+        SceneManager.LoadScene("NetworkLobby");
     }
 
     public void Normal()
     {
+        LobbyManager.GetComponent<LobbyManager>().playScene = "Networking";
+        LobbyManager.gameObject.SetActive(true);
+        SceneManager.LoadScene("NetworkLobby");
         //SceneManager.LoadScene();
         Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
     }
     public void Hard()
     {
+        LobbyManager.GetComponent<LobbyManager>().playScene="Networking";
+        LobbyManager.gameObject.SetActive(true);
+        SceneManager.LoadScene("NetworkLobby");
         //SceneManager.LoadScene();
         Debug.Log("MUSS ERST ERSTELLT WERDEN!!");
     }

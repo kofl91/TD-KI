@@ -7,20 +7,28 @@ public abstract class AIPlayer : MonoBehaviour
 
     // A Player-Reference to build tower and manage ressources
     public PlayerController player;
+    public PlayerController enemy;
 
     protected List<TowerStructure> towers;
 
     public bool isPlaying = false;
 
     protected bool isInitialized = false;
+    private float lastAction=0.0f;
+    private float cooldown = 1.0f;
 
     public abstract void MakeMove();
 
     void Update()
     {
-        if (isPlaying)
+
+        if (Time.time - lastAction > cooldown)
         {
-            MakeMove();
+            lastAction = Time.time;
+            if (isPlaying)
+            {
+                MakeMove();
+            }
         }
     }
 
@@ -48,6 +56,24 @@ public abstract class AIPlayer : MonoBehaviour
 
         return mylist;
     }
+    protected List<EnemyStructure> GetEnemyStructureList()
+    {
+        List<EnemyStructure> mylist = new List<EnemyStructure>();
+
+        List<GameObject> allEnemys = PrefabContainer.Instance.enemys;
+
+        int index = 0;
+        foreach (GameObject bt in allEnemys)
+        {
+            EnemyStructure es = new EnemyStructure();
+            es.enemy = bt.GetComponent<BaseEnemy>();
+            es.Id = index;
+            index++;
+            mylist.Add(es);
+        }
+        return mylist;
+    }
+
 
     internal abstract void Reset();
 }

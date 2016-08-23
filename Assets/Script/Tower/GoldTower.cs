@@ -8,6 +8,11 @@ public class GoldTower : BaseTower {
     protected override void Action(Transform t)
     {
         lastAction = Time.time;
+        if (!owner)
+        {
+            owner = GetComponentInParent<PlayerController>();
+            return;
+        }
         owner.Gold += 1;
     }
 

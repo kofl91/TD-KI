@@ -17,6 +17,15 @@ public class DamageInfo {
         nature = 1.0f;
     }
 
+    public DamageInfo Multiply(float dmgFactor)
+    {
+        normal *= dmgFactor;
+        fire *= dmgFactor;
+        water *= dmgFactor;
+        nature *= dmgFactor;
+        return this;
+    }
+
     // Berechnet den Absoluten Schaden gegen eine Resistenz
     internal float calcAbsoluteDmg(DamageInfo resistance)
     {
@@ -53,5 +62,30 @@ public class DamageInfo {
         this.fire = fire;
         this.water = water;
         this.nature = nature;
+    }
+
+    internal string GetDamageType()
+    {
+        if ((normal >= fire) && (normal >= water) && (normal >= nature))
+        {
+            return "Normal";
+        }
+        else if ((fire >= water) && (fire >= nature))
+        {
+            return "Fire";
+        }
+        else if (water >= nature)
+        {
+            return "Water";
+        }
+        else
+        {
+            return "Nature";
+        }
+    }
+
+    internal void Add(object v)
+    {
+        throw new NotImplementedException();
     }
 }

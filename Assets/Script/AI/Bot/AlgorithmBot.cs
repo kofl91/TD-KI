@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 public class AlgorithmBot : AIPlayer
 {
@@ -12,8 +12,10 @@ public class AlgorithmBot : AIPlayer
     TowerEvaluator towerEvaluator;
     // The part of the Bot that decides what action to do
     ActionEvaluator actionEvaluator;
+
+    EnemyEvaluator enemyEvaluator;
     // A reference to the spawner to get information about the next wave
-    private Spawner spawner;
+    public Spawner spawner;
     
 
     // This initializes the Bot.
@@ -23,10 +25,22 @@ public class AlgorithmBot : AIPlayer
     {
         spawner = GameObject.FindObjectOfType<Spawner>();
         player = GetComponentInParent<PlayerController>();
+        if (!enemy)
+        {
+            PlayerController[] allplayer = FindObjectsOfType<PlayerController>();
+            foreach (PlayerController pl in allplayer)
+            {
+                if (!pl.Equals(player))
+                {
+                    enemy = pl;
+                }
+            }
+        }
         gridEvaluator = new GridEvaluator(gridMaker.GetComponent<GridMaker>().GetGrid());
         towerEvaluator = new TowerEvaluator();
         towerEvaluator.SetTowerList(GetTowerStructureList());
         actionEvaluator = new ActionEvaluator();
+        enemyEvaluator = new EnemyEvaluator(GetEnemyStructureList());
     }
 
     // Makes a move. Decides what to do and where to place.
@@ -38,10 +52,11 @@ public class AlgorithmBot : AIPlayer
             Init();
             isInitialized = true;
         }
-        RatedAction bestAction = actionEvaluator.GetBestAction(new ResourcesStructure(player.GetMoney(), player.GetLife()), spawner.GetWave());
-        switch (bestAction.action)
+        Action bestAction = actionEvaluator.GetBestAction(GetTowerFromPlayer(player), GetTowerFromPlayer(enemy),spawner.GetNextEnemy());
+        Debug.Log(bestAction);
+        switch (bestAction)
         {
-            case Action.Build:
+            case Action.BuildOrUpgrade:
                 AIBuild();
                 break;
             case Action.Destroy:
@@ -65,7 +80,7 @@ public class AlgorithmBot : AIPlayer
         if (player.SpendMoney(bestTower.tower.cost))
         {
             RatedPosition nextPosition = gridEvaluator.GetNextPosition();
-            nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
+            //nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
             player.BuildTower(bestTower.tower, nextPosition.tile);
         }
     }
@@ -77,7 +92,7 @@ public class AlgorithmBot : AIPlayer
 
     protected override void AISend()
     {
-        throw new NotImplementedException();
+        player.SendEnemys(enemyEvaluator.GetBestEnemy(estimateDamage(GetTowerFromPlayer(enemy))));
     }
 
     protected override void AIUpgrade()
@@ -88,5 +103,26 @@ public class AlgorithmBot : AIPlayer
     internal override void Reset()
     {
         gridEvaluator = new GridEvaluator(gridMaker.GetComponent<GridMaker>().GetGrid());
+    }
+
+    private List<TowerStructure> GetTowerFromPlayer(PlayerController player)
+    {
+        BaseTower[] allTower = player.GetComponentsInChildren<BaseTower>();
+        List<TowerStructure> towerList = new List<TowerStructure>();
+        foreach (BaseTower t in allTower)
+        {
+            towerList.Add(t.GetTowerStructure());
+        }
+        return towerList;
+    }
+
+    private DamageInfo estimateDamage(List<TowerStructure> towerList)
+    {
+        DamageInfo retVal = new DamageInfo();
+        foreach (TowerStructure t in towerList)
+        {
+            retVal.Add(t.dmg.Multiply(t.attackspeed));
+        }
+        return retVal;
     }
 }

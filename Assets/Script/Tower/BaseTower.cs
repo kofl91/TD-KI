@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
+using UnityEngine.Networking;
 using System.Collections.Generic;
 
 
 // Basisklasse für alle Türme
-public class BaseTower : MonoBehaviour {
+public class BaseTower : NetworkBehaviour
+{
 
     // Das Projektil, welches der Turm abfeuert
     public GameObject projectile;
@@ -22,7 +24,7 @@ public class BaseTower : MonoBehaviour {
     // Die Upgradekosten
     protected int upgradeCost = 5;
     // Die Upgradstuffe
-    protected int level = 1;
+    public int level = 1;
     #endregion
 
     #region CooldownBerechnung
@@ -37,7 +39,7 @@ public class BaseTower : MonoBehaviour {
     protected float cooldownMultiplier = 1.0f;
 
     // Die Spielerzugehörigkeit
-    protected PlayerController owner;
+    public PlayerController owner;
 
     // Eine Referenz auf ein GameObject, dass sich zum Ziel drehen soll
     private RotatesTowardsTarget rtt;
@@ -52,7 +54,7 @@ public class BaseTower : MonoBehaviour {
     public List<Del> TargetingFunkcions = new List<Del>();
 
     // Aufzählung aller Zielerfassungsmodi
-    public enum TargetingModes { Close=0, Weak=1, Strong=2 };
+    public enum TargetingModes { Close = 0, Weak = 1, Strong = 2 };
 
     // Der Ausgewählte Zielerfassungsmode.
     public TargetingModes TargetChooser;
@@ -60,7 +62,7 @@ public class BaseTower : MonoBehaviour {
     // Initialisierung
     public BaseTower()
     {
-        baseDmg.Set(turretDmg.normal/2,turretDmg.fire / 2, turretDmg.water / 2, turretDmg.nature / 2);
+        baseDmg.Set(turretDmg.normal / 2, turretDmg.fire / 2, turretDmg.water / 2, turretDmg.nature / 2);
         upgradeCost = buildCost / 2;
 
         TargetingFunkcions.Add(GetNearestEnemy);
@@ -74,7 +76,7 @@ public class BaseTower : MonoBehaviour {
     // Initialisierung
     void Start()
     {
-        rtt = GetComponentInChildren<RotatesTowardsTarget>(); 
+        rtt = GetComponentInChildren<RotatesTowardsTarget>();
     }
 
     // Update is called once per frame
@@ -90,7 +92,7 @@ public class BaseTower : MonoBehaviour {
         }
 
         // Abfeuern der Projektile
-        if (Time.time - lastAction > (cooldown* cooldownMultiplier))
+        if (Time.time - lastAction > (cooldown * cooldownMultiplier))
         {
             if (Time.time - lastAction > refreshRate)
             {
@@ -103,6 +105,7 @@ public class BaseTower : MonoBehaviour {
                 }
             }
         }
+
     }
     #endregion
 
@@ -207,8 +210,8 @@ public class BaseTower : MonoBehaviour {
     protected void ShootBullet(Transform t)
     {
         // Erstelle ein Projektil und...
-        GameObject bullet = Instantiate(projectile) as GameObject;
-        
+        GameObject bullet = Instantiate(projectile, transform.position, Quaternion.identity) as GameObject;
+
         Transform start;
 
         // Gibt es eine Abschussrampe, welche durch die Rotation zum Ziel identifiziert wird
@@ -216,27 +219,29 @@ public class BaseTower : MonoBehaviour {
             start = rtt.transform; // schieße das Projektil von hier ab
         else
             start = transform;
-
         // Feuer es ab
         bullet.GetComponent<BaseProjectile>().Launch(start, t, turretDmg);
     }
 
+
     // Wertet den Turm auf.
     public void Upgrade()
     {
-        if (level < 10)
+        if (GetComponentInParent<PlayerController>().Gold >= upgradeCost)
         {
-            level++;
-            turretDmg.Add(baseDmg);
-            range *= 1.05f;
+            if (level < 10)
+            {
+                level++;
+                turretDmg.Add(baseDmg);
+                range *= 1.05f;
+            }
         }
     }
 
     // Gibt die Turminformationen als Datenstruktur zurück.
     public TowerStructure GetTowerStructure()
     {
-        return new TowerStructure(turretDmg, 1 / cooldown, buildCost, this.gameObject);
+        return new TowerStructure(turretDmg, 1 / cooldown, range, buildCost , this.gameObject);
     }
 
-   
 }

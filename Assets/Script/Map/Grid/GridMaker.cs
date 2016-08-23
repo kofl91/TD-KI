@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using UnityEngine.Networking;
 
 /*
 This Class creates a Grid of a specified size.
@@ -25,19 +26,16 @@ public class GridMaker : MonoBehaviour
 
     private GridStructure myGrid;
 
+    bool enableTiles;
+
     #endregion
 
     #region METHODS
 
-    // Update is called once per frame
-    void Awake()
-    {
-        MakeGrid();
-    }
-
     // Use this for initialization
-    void MakeGrid()
+    public void MakeGrid(bool enabled)
     {
+        enableTiles = enabled;
         // Find a corner of the plane to start from.
         Vector3 cornerPosition = FindCorner();
         // Calculate gridsize.
@@ -83,8 +81,13 @@ public class GridMaker : MonoBehaviour
                 clickTile.tileX = x;
                 clickTile.tileY = y;
             }
+
             newTile.transform.parent = transform;
             newTile.SetActive(active);
+            if (!enableTiles)
+            {
+                newTile.SetActive(false);
+            }
             return newTile;
         }
         return null;

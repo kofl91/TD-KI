@@ -9,11 +9,14 @@ public class ClickableTile : MonoBehaviour {
 
     void OnMouseUp()
     {
-        if (!owner)
+        if (!UnityEngine.EventSystems.EventSystem.current.IsPointerOverGameObject())
         {
-            owner = GetComponentInParent<PlayerController>();
+            if (!owner)
+            {
+                owner = GetComponentInParent<PlayerController>();
+            }
+            owner.CreateTurretUnit(tileX, tileY);
         }
-        owner.CreateTurretUnit(tileX, tileY);
     }
 
     void OnMouseOver()

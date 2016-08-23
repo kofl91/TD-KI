@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System;
 using UnityEngine.Networking;
 
+[Serializable]
 public class PlayerController : NetworkBehaviour,IPlayer {
 
 
@@ -23,9 +24,29 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     public int chosenTower = 0;
 
     public GridStructure grid;
+
+    public PlayerUI UI;
+
+    private bool isNetworkPlayer = false;
     
-    void Start()
+    public void Init()
     {
+        // Only make grid enabled when you are the local player
+        if (GetComponentInChildren<NetworkIdentity>())
+        {
+            isNetworkPlayer = true;
+            GetComponentInChildren<GridMaker>().MakeGrid(isLocalPlayer);
+            if (isLocalPlayer)
+            {
+                UI = FindObjectOfType<PlayerUI>();
+                UI.player = this;
+                //UI.SetActive(true);
+            }
+        }
+        else
+        {
+            GetComponentInChildren<GridMaker>().MakeGrid(true);
+        }
         grid = GetComponentInChildren<GridMaker>().GetGrid();
     }
 	
@@ -68,20 +89,38 @@ public class PlayerController : NetworkBehaviour,IPlayer {
         if (grid.tiles[x,y].type == eTile.Free)
         {
             GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
-            GameObject go = (GameObject)Instantiate(turretPrefab);
-            go.transform.position = grid.tiles[x, y].obj.transform.position;
-            BaseTower tower = go.GetComponent<BaseTower>();
+            BaseTower tower = turretPrefab.GetComponent<BaseTower>();
             if (tower.buildCost < Gold)
             {
-                Gold -= tower.buildCost;
-                go.transform.parent = transform;
                 grid.tiles[x, y].type = eTile.Tower;
-            }
-            else
-            {
-                Destroy(go);
+                if (GetComponent<NetworkIdentity>())
+                    CmdSpawnTower(x, y);
+                else
+                    SpawnTower(x,y);
             }
         }
+    }
+
+    public void SpawnTower(int x, int y)
+    {
+        Debug.Log("offline");
+        GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
+        Gold -= turretPrefab.GetComponent<BaseTower>().buildCost;
+        GameObject go = (GameObject)Instantiate(turretPrefab);
+        go.transform.position = grid.tiles[x, y].obj.transform.position;
+        go.transform.parent = transform;
+    }
+
+    [Command]
+    public void CmdSpawnTower(int x, int y)
+    {
+        Debug.Log("online");
+        GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
+        Gold -= turretPrefab.GetComponent<BaseTower>().buildCost;
+        GameObject go = (GameObject)Instantiate(turretPrefab);
+        go.transform.position = grid.tiles[x, y].obj.transform.position;
+        go.transform.parent = transform;
+        NetworkServer.Spawn(go);
     }
 
     internal DamageInfo GetNextEnemyResistance()
@@ -134,6 +173,18 @@ public class PlayerController : NetworkBehaviour,IPlayer {
 
     public void ChooseTower(int ID)
     {
+        if (isNetworkPlayer)
+        {
+            CmdChooseTower(ID);
+        }else
+        {
+            chosenTower = ID;
+        }
+    }
+
+    [Command]
+    public void CmdChooseTower(int ID)
+    {
         chosenTower = ID;
     }
 
@@ -145,6 +196,13 @@ public class PlayerController : NetworkBehaviour,IPlayer {
             Destroy(t.gameObject);
         }
     }
+
+    public void SellTower(BaseTower tower)
+    {
+        Gold += (int) (tower.buildCost * 0.7);
+        Destroy(tower.gameObject);
+    }
+
     #endregion
 
     #region InterfaceImplementation
