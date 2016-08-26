@@ -12,7 +12,7 @@ public class AlgorithmBot : AIPlayer
     TowerEvaluator towerEvaluator;
     // The part of the Bot that decides what action to do
     ActionEvaluator actionEvaluator;
-
+    // The part of the Bot that decides which minion to send
     EnemyEvaluator enemyEvaluator;
     // A reference to the spawner to get information about the next wave
     public Spawner spawner;

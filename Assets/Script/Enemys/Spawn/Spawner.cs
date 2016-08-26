@@ -56,7 +56,9 @@ public class Spawner : NetworkBehaviour {
     // Heuert einen Minion an
     public void HireMinion(PlayerController sendingPlayer,int enemyID)
     {
-        Debug.Log("Should send stuff!");
+        if (player.Length < 2)
+            return;
+
         int cost = waves[0].enemyBounty;
         // Kann sich der Spieler die Einheit leisten?
         if (sendingPlayer.Gold > cost) {
