@@ -5,7 +5,8 @@ using UnityEngine.Networking;
 
 
 // Singleton welcher das Spawnen der Minions übernimmt
-public class Spawner : NetworkBehaviour {
+public class Spawner : NetworkBehaviour
+{
 
     #region Attribute
     // Referenzen zu den beiden Spielerns
@@ -18,7 +19,7 @@ public class Spawner : NetworkBehaviour {
 
     // Parent Container für alle Enemy Objekte
     public GameObject container;
-    
+
     // Liste an Wellen. Werden aus den Componenten gezogen
     private List<Wave> waves;
     // Index der aktuellen Welle
@@ -41,46 +42,45 @@ public class Spawner : NetworkBehaviour {
     #endregion
 
     #region SpawnFunktionen
-    // Heuert einen Minion für Spieler 1 an.
-    public void HireMinionForPlayer1(int enemyID)
-    {
-        HireMinion(player[0], enemyID);
-    }
-
-    // Heuert einen Minion für Spieler 2 an.
-    public void HireMinionForPlayer2(int enemyID)
-    {
-        HireMinion(player[1], enemyID);
-    }
 
     // Heuert einen Minion an
-    public void HireMinion(PlayerController sendingPlayer,int enemyID)
+    [Command]
+    public void CmdHireMinion(GameObject sendingPlayerObject, int enemyID)
     {
         if (player.Length < 2)
             return;
 
-        int cost = waves[0].enemyBounty;
-        // Kann sich der Spieler die Einheit leisten?
-        if (sendingPlayer.Gold > cost) {
-            sendingPlayer.Gold -= cost;
-            GameObject towards;
-            PlayerController playerToSendTowards;
-            // Entscheide wer der Gegner ist.
-            if (sendingPlayer == player[0])
-            {
-                towards = playerBases[1];
-                playerToSendTowards = player[1];
-            }
-            else
-            {
-                towards = playerBases[0];
-                playerToSendTowards = player[0];
-            }   
-            foreach ( HiredSpawnPoint spawnPoint in hiredSpawnPoints)
-            {
-                spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, towards, playerToSendTowards);
-            }
+        GameObject towards;
+        PlayerController playerToSendTowards;
+
+        PlayerController sendingPlayer = sendingPlayerObject.GetComponent<PlayerController>();
+
+        if (sendingPlayer == player[0])
+        {
+            Debug.Log("Player 1 was sending minions!");
+            towards = playerBases[1];
+            playerToSendTowards = player[1];
         }
+        else if (sendingPlayer == player[1])
+        {
+            Debug.Log("Player 2 was sending minions!");
+            towards = playerBases[0];
+            playerToSendTowards = player[0];
+        }
+        else
+        {
+            Debug.Log("Wir haben ein Problem!");
+            towards = playerBases[0];
+            playerToSendTowards = player[0];
+        }
+
+        // Entscheide wer der Gegner ist.
+
+        foreach (HiredSpawnPoint spawnPoint in hiredSpawnPoints)
+        {
+            CmdspawnMinionAtTowardsVersus(enemyID, spawnPoint.transform.position, towards, playerToSendTowards.gameObject);
+        }
+
     }
 
     // Spawnt einen Minion, an einer Position, das zu einem Punkt läuft und gegen eine Spieler ist.
@@ -97,7 +97,7 @@ public class Spawner : NetworkBehaviour {
         return spawnedMinion;
     }
 
-    
+
     [Command]
     public void CmdspawnMinionAtTowardsVersus(int enemyID, Vector3 at, GameObject towards, GameObject player)
     {
@@ -143,7 +143,7 @@ public class Spawner : NetworkBehaviour {
                 CmdspawnMinionAtTowardsVersus(enemyID, spawnPoint.transform.position, playerBases[0], player[0].gameObject);
                 CmdspawnMinionAtTowardsVersus(enemyID, spawnPoint.transform.position, playerBases[1], player[1].gameObject);
             }
-            
+
         }
         else
         {
@@ -171,12 +171,13 @@ public class Spawner : NetworkBehaviour {
         if (preDefinedWaves)
         {
             getWavesFromComponent();
-        }else
+        }
+        else
         {
             generateWaves();
-        }  
+        }
     }
-	
+
     void generateWaves()
     {
         float HP = 5;
@@ -212,8 +213,9 @@ public class Spawner : NetworkBehaviour {
             w.Reset();
         }
     }
-	// Update is called once per frame
-	void Update () {
+    // Update is called once per frame
+    void Update()
+    {
 
         //Spawning Logic
         if (isSpawning)
@@ -262,6 +264,11 @@ public class Spawner : NetworkBehaviour {
     public int GetWave()
     {
         return waveNumber;
+    }
+
+    public int GetHPCurrentWave()
+    {
+        return waves[0].enemyHP;
     }
 
     // Gibt zurück ob alle Gegner einer Welle tot sind

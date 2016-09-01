@@ -51,7 +51,7 @@ public class BaseTower : NetworkBehaviour
     public Del GetTarget;
 
     // Eine Liste aller Targetfunktionen
-    public List<Del> TargetingFunkcions = new List<Del>();
+    public List<Del> TargetingFunctions = new List<Del>();
 
     // Aufzählung aller Zielerfassungsmodi
     public enum TargetingModes { Close = 0, Weak = 1, Strong = 2 };
@@ -62,14 +62,14 @@ public class BaseTower : NetworkBehaviour
     // Initialisierung
     public BaseTower()
     {
-        baseDmg.Set(turretDmg.normal / 2, turretDmg.fire / 2, turretDmg.water / 2, turretDmg.nature / 2);
+       
         upgradeCost = buildCost / 2;
 
-        TargetingFunkcions.Add(GetNearestEnemy);
-        TargetingFunkcions.Add(GetWeakestEnemy);
-        TargetingFunkcions.Add(GetStrongestEnemy);
+        TargetingFunctions.Add(GetNearestEnemy);
+        TargetingFunctions.Add(GetWeakestEnemy);
+        TargetingFunctions.Add(GetStrongestEnemy);
 
-        GetTarget = TargetingFunkcions[(int)TargetChooser];
+        GetTarget = TargetingFunctions[(int)TargetChooser];
     }
 
     #region Unity
@@ -225,15 +225,22 @@ public class BaseTower : NetworkBehaviour
 
 
     // Wertet den Turm auf.
-    public void Upgrade()
+    [Command]
+    public void CmdUpgrade()
     {
         if (GetComponentInParent<PlayerController>().Gold >= upgradeCost)
         {
+            GetComponentInParent<PlayerController>().Gold -= upgradeCost;
+            if (level == 1)
+            {
+                baseDmg.Set(turretDmg.normal / 2, turretDmg.fire / 2, turretDmg.water / 2, turretDmg.nature / 2);
+            }
             if (level < 10)
             {
                 level++;
                 turretDmg.Add(baseDmg);
-                range *= 1.05f;
+                range *= 1.01f;
+                cooldown *= 0.99f;
             }
         }
     }

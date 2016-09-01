@@ -67,7 +67,7 @@ public abstract class AIPlayer : MonoBehaviour
         {
             EnemyStructure es = new EnemyStructure();
             es.enemy = bt.GetComponent<BaseEnemy>();
-            es.Id = index;
+            es.id = index;
             index++;
             mylist.Add(es);
         }

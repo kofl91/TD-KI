@@ -456,5 +456,21 @@ namespace Prototype.NetworkLobby
         {
             playScene = levelname;
         }
+
+        public void ExitGame()
+        {
+            #if UNITY_EDITOR
+                        UnityEditor.EditorApplication.isPlaying = false;
+            #elif UNITY_WEBPLAYER
+                     Application.OpenURL(webplayerQuitURL);
+            #else
+                     Application.Quit();
+            #endif
+        }
+
+        public void DisplayMainPanel(bool flag)
+        {
+            ourPanel04.gameObject.SetActive(flag);
+        }
     }
 }

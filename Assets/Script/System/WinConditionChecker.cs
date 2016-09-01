@@ -24,15 +24,15 @@ public class WinConditionChecker : MonoBehaviour {
         }
         if (player[0].Life <= 0)
         {
-            NetworkManager.singleton.StopClient();
-            NetworkManager.singleton.StopHost();
-            SceneManager.LoadScene("GameOver");
+        //    NetworkManager.singleton.StopClient();
+        //    NetworkManager.singleton.StopHost();
+          
         }
         if (player[1].Life <= 0)
         {
-            NetworkManager.singleton.StopClient();
-            NetworkManager.singleton.StopHost();
-            SceneManager.LoadScene("VictoryScreen");
+        //    NetworkManager.singleton.StopClient();
+        //    NetworkManager.singleton.StopHost();
+           
         }
     }
 }

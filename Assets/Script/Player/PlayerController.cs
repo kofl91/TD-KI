@@ -3,9 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 [Serializable]
-public class PlayerController : NetworkBehaviour,IPlayer {
+public class PlayerController : NetworkBehaviour, IPlayer {
 
 
     // Game Logic
@@ -19,6 +20,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     private float lastGoldIncrement;
     private float goldIncrementDelay = 1.0f;
 
+    private PlayerController enemy;
     // For Tower Placement
     [SyncVar]
     public int chosenTower = 0;
@@ -28,7 +30,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     public PlayerUI UI;
 
     private bool isNetworkPlayer = false;
-    
+
     public void Init()
     {
         // Only make grid enabled when you are the local player
@@ -49,18 +51,44 @@ public class PlayerController : NetworkBehaviour,IPlayer {
         }
         grid = GetComponentInChildren<GridMaker>().GetGrid();
     }
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update() {
         if (Time.time - lastGoldIncrement > goldIncrementDelay && goldIncrementDelay != 0.0f)
         {
             Gold += goldIncrement;
             lastGoldIncrement = Time.time;
         }
+
+        if (isLocalPlayer)
+        {
+            if(Life <= 0)
+            {
+                RpcLoadGameOverScreen();
+               
+            }
+            if (!enemy)
+            {
+                foreach(PlayerController p in FindObjectsOfType<PlayerController>())
+                {             
+                  if (p != this)
+                    {
+                        enemy = p;
+                    }
+                }
+
+            }
+            if (enemy.Life <= 0)
+            {
+                RpcLoadVictoryScene();
+                
+            }
+
+        }
     }
 
     #region GameLogicFunctions
-    internal bool ChangeBalance(int goldDifference)
+    public bool ChangeBalance(int goldDifference)
     {
         Gold += goldDifference;
         if (Gold < 0)
@@ -86,7 +114,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
         {
             grid = GetComponentInChildren<GridMaker>().GetGrid();
         }
-        if (grid.tiles[x,y].type == eTile.Free)
+        if (grid.tiles[x, y].type == eTile.Free)
         {
             GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
             BaseTower tower = turretPrefab.GetComponent<BaseTower>();
@@ -96,7 +124,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
                 if (GetComponent<NetworkIdentity>())
                     CmdSpawnTower(x, y);
                 else
-                    SpawnTower(x,y);
+                    SpawnTower(x, y);
             }
         }
     }
@@ -176,7 +204,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
         if (isNetworkPlayer)
         {
             CmdChooseTower(ID);
-        }else
+        } else
         {
             chosenTower = ID;
         }
@@ -191,7 +219,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
     public void removeAllTower()
     {
         BaseTower[] towerList = GetComponentsInChildren<BaseTower>();
-        foreach(BaseTower t in towerList)
+        foreach (BaseTower t in towerList)
         {
             Destroy(t.gameObject);
         }
@@ -199,7 +227,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
 
     public void SellTower(BaseTower tower)
     {
-        Gold += (int) (tower.buildCost * 0.7);
+        Gold += (int)(tower.buildCost * 0.7);
         Destroy(tower.gameObject);
     }
 
@@ -221,7 +249,7 @@ public class PlayerController : NetworkBehaviour,IPlayer {
         }
         GameObject go = (GameObject)Instantiate(tower.prefab);
         go.transform.position = tile.obj.transform.position;
-        go.transform.parent = this.transform;
+        go.transform.SetParent(transform);
         tile.type = eTile.Tower;
 
         if (grid == null)
@@ -247,9 +275,26 @@ public class PlayerController : NetworkBehaviour,IPlayer {
         return Gold;
     }
 
-    internal void SendEnemys(EnemyStructure es)
+    public void SendEnemys(EnemyStructure es)
     {
-        FindObjectOfType<Spawner>().HireMinion(this, es.Id);
+        CmdSendMinion(es.id);
+    }
+
+    public void SendEnemys(int id)
+    {
+        CmdSendMinion(id);
+    }
+
+    [Command]
+    public void CmdSendMinion(int id)
+    {
+        int cost = 50;
+        // Kann sich der Spieler die Einheit leisten?
+        if (Gold > cost)
+        {
+            Gold -= cost;
+            FindObjectOfType<Spawner>().CmdHireMinion(gameObject, id);
+        }
     }
 
     public int GetLife()
@@ -273,6 +318,34 @@ public class PlayerController : NetworkBehaviour,IPlayer {
                 ts.type = eTile.Free;
         }
     }
+
+    [ClientRpc]
+    void RpcLoadVictoryScene()
+    {
+        if (isLocalPlayer)
+        {
+            SceneManager.LoadScene("victory");
+        }
+        else
+        {
+            SceneManager.LoadScene("GameOver");
+        }
+    }
+    [ClientRpc]
+    void RpcLoadGameOverScreen()
+    {
+        if (isLocalPlayer)
+        {
+            SceneManager.LoadScene("GameOver");
+        }
+        else
+        {
+            SceneManager.LoadScene("victory");
+        }
+    }
+  
+
+
 
     #endregion
 }

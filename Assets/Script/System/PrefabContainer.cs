@@ -15,7 +15,7 @@ public class PrefabContainer : MonoSingleton<PrefabContainer> {
         for (int i=0;i<enemys.Count;i++)
         {
             EnemyStructure creep = new EnemyStructure();
-            creep.Id = i;
+            creep.id = i;
             creep.enemy = enemys[i].GetComponent<BaseEnemy>();
             retList.Add(creep);
         }

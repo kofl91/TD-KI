@@ -2,7 +2,7 @@
 
 public class EnemyStructure : IEquatable<EnemyStructure>, IComparable<EnemyStructure>
 {
-    public int Id;
+    public int id;
 
     public BaseEnemy enemy;
 
