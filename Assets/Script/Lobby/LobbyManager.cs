@@ -106,7 +106,7 @@ namespace Prototype.NetworkLobby
                 }
                 else
                 {
-                    ChangeTo(mainMenuPanel);
+                    ChangeTo(ourPanel04);
                 }
 
                 topPanel.ToggleVisibility(true);
@@ -149,6 +149,7 @@ namespace Prototype.NetworkLobby
             }
             else
             {
+          
                 backButton.gameObject.SetActive(false);
                 SetServerInfo("Offline", "None");
                 _isMatchmaking = false;
@@ -189,7 +190,7 @@ namespace Prototype.NetworkLobby
 
         public void SimpleBackClbk()
         {
-            ChangeTo(mainMenuPanel);
+            ChangeTo(ourPanel04);
         }
 
         public void StopHostClbk()
@@ -223,7 +224,7 @@ namespace Prototype.NetworkLobby
         public void StopServerClbk()
         {
             StopServer();
-            ChangeTo(mainMenuPanel);
+            ChangeTo(ourPanel04);
         }
 
         class KickMsg : MessageBase { }
@@ -417,12 +418,12 @@ namespace Prototype.NetworkLobby
         public override void OnClientDisconnect(NetworkConnection conn)
         {
             base.OnClientDisconnect(conn);
-            ChangeTo(mainMenuPanel);
+            ChangeTo(ourPanel04);
         }
 
         public override void OnClientError(NetworkConnection conn, int errorCode)
         {
-            ChangeTo(mainMenuPanel);
+            ChangeTo(ourPanel04);
             infoPanel.Display("Cient error : " + (errorCode == 6 ? "timeout" : errorCode.ToString()), "Close", null);
         }
 

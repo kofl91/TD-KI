@@ -50,7 +50,7 @@ public class PlayerUI : MonoBehaviour {
     {
         Button[] buttonList = TowerPanel.GetComponentsInChildren<Button>();
         List<GameObject> towers = PrefabContainer.Instance.turrets;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < towers.Count; i++)
         {
             Text[] texts = buttonList[i].GetComponentsInChildren<Text>();
             RawImage img = buttonList[i].GetComponentInChildren<RawImage>();
