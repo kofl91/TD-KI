@@ -22,7 +22,6 @@ public class TowerEvaluator
         foreach (TowerStructure tower in allTower)
         {
             ratedTower.Add(new RatedTower(tower, evaluateTower(tower)));
-            
         }
         ratedTower.Sort();
     }

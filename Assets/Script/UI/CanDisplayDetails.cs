@@ -23,9 +23,7 @@ public class CanDisplayDetails : MonoBehaviour {
     {
         range.SetActive(true);
         float size = GetComponent<BaseTower>().range * 2;
-        Debug.Log("the size is: " + size);
         range.transform.localScale = new Vector3(size, size, size);
-        Debug.Log("the scale is: " + range.transform.lossyScale.ToString());
     }
 
     void OnMouseExit()

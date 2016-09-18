@@ -62,6 +62,11 @@ public class GridMaker : MonoBehaviour
                 else
                 {
                     newTile = new TileStructure(x, y, eTile.Path, SpawnTile(spawnPosition, x, y, false));
+                    newTile.obj.GetComponent<IncreaseValueOnTriggerEnter>().tile = newTile;
+                }
+                if (!enableTiles)
+                {
+                    newTile.obj.SetActive(false);
                 }
                 grid[x, y] = newTile;
             }
@@ -84,9 +89,13 @@ public class GridMaker : MonoBehaviour
 
             newTile.transform.parent = transform;
             newTile.SetActive(active);
-            if (!enableTiles)
+            if (!active)
             {
-                newTile.SetActive(false);
+                newTile.SetActive(true);
+                newTile.transform.localScale = new Vector3(newTile.transform.localScale.x, 4.0f, newTile.transform.localScale.z);
+                newTile.AddComponent<Rigidbody>().useGravity = false;
+                Destroy(newTile.GetComponent<ClickableTile>());
+                //newTile.GetComponent<MeshRenderer>().enabled = true;
             }
             return newTile;
         }

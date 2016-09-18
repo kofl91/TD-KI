@@ -6,7 +6,8 @@ using UnityEngine.Networking;
 using UnityEngine.SceneManagement;
 
 [Serializable]
-public class PlayerController : NetworkBehaviour, IPlayer {
+public class PlayerController : NetworkBehaviour, IPlayer
+{
 
 
     // Game Logic
@@ -19,6 +20,8 @@ public class PlayerController : NetworkBehaviour, IPlayer {
     private int goldIncrement = 1;
     private float lastGoldIncrement;
     private float goldIncrementDelay = 1.0f;
+
+    private int sendMinionCount = 0;
 
     private PlayerController enemy;
     // For Tower Placement
@@ -53,7 +56,8 @@ public class PlayerController : NetworkBehaviour, IPlayer {
     }
 
     // Update is called once per frame
-    void Update() {
+    void Update()
+    {
         if (Time.time - lastGoldIncrement > goldIncrementDelay && goldIncrementDelay != 0.0f)
         {
             Gold += goldIncrement;
@@ -62,26 +66,30 @@ public class PlayerController : NetworkBehaviour, IPlayer {
 
         if (isLocalPlayer)
         {
-            if(Life <= 0)
+            ScoreManager sm = FindObjectOfType<ScoreManager>();
+            sm.ownLife = Life;
+            sm.remainingGold = Gold;
+            sm.sendMinions = sendMinionCount;
+            if (Life <= 0)
             {
                 RpcLoadGameOverScreen();
-               
+
             }
             if (!enemy)
             {
-                foreach(PlayerController p in FindObjectsOfType<PlayerController>())
-                {             
-                  if (p != this)
+                foreach (PlayerController p in FindObjectsOfType<PlayerController>())
+                {
+                    if (p != this)
                     {
                         enemy = p;
                     }
                 }
 
             }
-            if (enemy.Life <= 0)
+            else if (enemy.Life <= 0)
             {
                 RpcLoadVictoryScene();
-                
+
             }
 
         }
@@ -108,27 +116,6 @@ public class PlayerController : NetworkBehaviour, IPlayer {
         }
     }
 
-    public void CreateTurretUnit(int x, int y)
-    {
-        if (grid == null)
-        {
-            grid = GetComponentInChildren<GridMaker>().GetGrid();
-        }
-        if (grid.tiles[x, y].type == eTile.Free)
-        {
-            GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
-            BaseTower tower = turretPrefab.GetComponent<BaseTower>();
-            if (tower.buildCost < Gold)
-            {
-                grid.tiles[x, y].type = eTile.Tower;
-                if (GetComponent<NetworkIdentity>())
-                    CmdSpawnTower(x, y);
-                else
-                    SpawnTower(x, y);
-            }
-        }
-    }
-
     public void SpawnTower(int x, int y)
     {
         Debug.Log("offline");
@@ -147,7 +134,7 @@ public class PlayerController : NetworkBehaviour, IPlayer {
         Gold -= turretPrefab.GetComponent<BaseTower>().buildCost;
         GameObject go = (GameObject)Instantiate(turretPrefab);
         go.transform.position = grid.tiles[x, y].obj.transform.position;
-        go.transform.parent = transform;
+        go.transform.SetParent(transform);
         NetworkServer.Spawn(go);
     }
 
@@ -199,12 +186,23 @@ public class PlayerController : NetworkBehaviour, IPlayer {
         return myDmg;
     }
 
+    private GridEvaluator gridEvaluator;
+    public void DisplayBestMoves()
+    {
+        if (gridEvaluator == null)
+        {
+            gridEvaluator = new GridEvaluator(grid);
+        }
+        gridEvaluator.DisplayTopTenPositions();
+    }
+
     public void ChooseTower(int ID)
     {
         if (isNetworkPlayer)
         {
             CmdChooseTower(ID);
-        } else
+        }
+        else
         {
             chosenTower = ID;
         }
@@ -228,9 +226,18 @@ public class PlayerController : NetworkBehaviour, IPlayer {
     public void SellTower(BaseTower tower)
     {
         Gold += (int)(tower.buildCost * 0.7);
+        grid.tiles[tower.posX, tower.posY].type = eTile.Free;
         Destroy(tower.gameObject);
     }
 
+    public void SellTower(int x, int y)
+    {
+        Debug.Log("Selling at: " + x + " / " + y);
+        BaseTower tower = grid.tiles[x, y].tower.GetComponent<BaseTower>();
+        Gold += (int)(tower.buildCost * 0.7);
+        grid.tiles[tower.posX, tower.posY].type = eTile.Free;
+        Destroy(tower.gameObject);
+    }
     #endregion
 
     #region InterfaceImplementation
@@ -256,11 +263,30 @@ public class PlayerController : NetworkBehaviour, IPlayer {
         {
             grid = GetComponentInChildren<GridMaker>().GetGrid();
         }
+        grid.tiles[tile.xPos, tile.yPos].tower = go;
+        go.GetComponent<BaseTower>().posX = tile.xPos;
+        go.GetComponent<BaseTower>().posY = tile.yPos;
+        Debug.Log("Build at: " + tile.xPos + " / " + tile.yPos);
+    }
 
-        if (grid.tiles[tile.xPos, tile.yPos].type != eTile.Tower)
+    public void CreateTurretUnit(int x, int y)
+    {
+        if (grid == null)
         {
-            grid.tiles[tile.xPos, tile.yPos].type = eTile.Tower;
-            Debug.Log("Still had to be done!");
+            grid = GetComponentInChildren<GridMaker>().GetGrid();
+        }
+        if (grid.tiles[x, y].type == eTile.Free)
+        {
+            GameObject turretPrefab = PrefabContainer.Instance.turrets[chosenTower];
+            BaseTower tower = turretPrefab.GetComponent<BaseTower>();
+            if (tower.buildCost < Gold)
+            {
+                grid.tiles[x, y].type = eTile.Tower;
+                if (GetComponent<NetworkIdentity>())
+                    CmdSpawnTower(x, y);
+                else
+                    SpawnTower(x, y);
+            }
         }
     }
 
@@ -277,11 +303,13 @@ public class PlayerController : NetworkBehaviour, IPlayer {
 
     public void SendEnemys(EnemyStructure es)
     {
+        sendMinionCount++;
         CmdSendMinion(es.id);
     }
 
     public void SendEnemys(int id)
     {
+        sendMinionCount++;
         CmdSendMinion(id);
     }
 
@@ -312,7 +340,7 @@ public class PlayerController : NetworkBehaviour, IPlayer {
 
     void resetGrid()
     {
-        foreach(TileStructure ts in grid.tiles)
+        foreach (TileStructure ts in grid.tiles)
         {
             if (ts.type == eTile.Tower)
                 ts.type = eTile.Free;
@@ -343,7 +371,7 @@ public class PlayerController : NetworkBehaviour, IPlayer {
             SceneManager.LoadScene("victory");
         }
     }
-  
+
 
 
 

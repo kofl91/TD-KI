@@ -16,7 +16,7 @@ public class AlgorithmBot : AIPlayer
     EnemyEvaluator enemyEvaluator;
     // A reference to the spawner to get information about the next wave
     public Spawner spawner;
-    
+
 
     // This initializes the Bot.
     // Finds the spawner, player and grid. Also creates the
@@ -52,8 +52,16 @@ public class AlgorithmBot : AIPlayer
             Init();
             isInitialized = true;
         }
-        Action bestAction = actionEvaluator.GetBestAction(GetTowerFromPlayer(player), GetTowerFromPlayer(enemy),spawner.GetNextEnemy());
-        Debug.Log(bestAction);
+        gridEvaluator.UpdateRating();
+        gridEvaluator.ShowBestPositions();
+        RatedPosition bp = gridEvaluator.BadlyPlacedTower();
+        if (bp != null)
+        {
+            player.SellTower(bp.tile.xPos, bp.tile.yPos);
+        }
+
+        Action bestAction = actionEvaluator.GetBestAction(GetTowerFromPlayer(player), GetTowerFromPlayer(enemy), spawner.GetNextEnemy());
+        //Debug.Log(bestAction);
         switch (bestAction)
         {
             case Action.BuildOrUpgrade:
@@ -79,9 +87,15 @@ public class AlgorithmBot : AIPlayer
         RatedTower bestTower = towerEvaluator.GetBestTower();
         if (player.SpendMoney(bestTower.tower.cost))
         {
+            gridEvaluator.UpdateRating();
+
             RatedPosition nextPosition = gridEvaluator.GetNextPosition();
+
+            nextPosition.tile.type = eTile.Tower;
+            gridEvaluator.grid.tiles[nextPosition.tile.xPos, nextPosition.tile.yPos].type = eTile.Tower;
             //nextPosition.tile.obj.GetComponent<MeshRenderer>().enabled = true;
             player.BuildTower(bestTower.tower, nextPosition.tile);
+            //gridEvaluator.ResetMinionsPassed();
         }
     }
 

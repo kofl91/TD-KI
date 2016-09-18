@@ -20,17 +20,18 @@ public class SpwanerMainMenu : MonoBehaviour {
         GameObject go;
         while (true)
         {
-            yield return new WaitForSeconds(3);
             go = Instantiate(Fire, this.transform.position, this.transform.rotation)as GameObject;
-            go.transform.SetParent(transform);
-                     
+            go.transform.SetParent(transform);     
             yield return new WaitForSeconds(3);
+
             go = Instantiate(Water, this.transform.position, this.transform.rotation) as GameObject;
             go.transform.SetParent(transform);
-
             yield return new WaitForSeconds(3);
+
             go = Instantiate(Green, this.transform.position, this.transform.rotation) as GameObject;
             go.transform.SetParent(transform);
+            yield return new WaitForSeconds(3);
+
         }
 
     }

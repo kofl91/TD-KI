@@ -12,20 +12,31 @@ public class BaseTower : NetworkBehaviour
 
     #region Turmattribute
     // Der Schaden, den der Turm als Grundwert hat
+    [SyncVar]
     protected DamageInfo baseDmg = new DamageInfo();
     // Der Schaden, den der Turm zufügt
+    [SyncVar]
     public DamageInfo turretDmg = new DamageInfo();
     // Die Reichweite
+    [SyncVar]
     public float range = 10.0f;
     // Die Schussfrequenz
+    [SyncVar]
     public float cooldown = 1.0f;
     // Die Baukosten
+    [SyncVar]
     public int buildCost = 10;
     // Die Upgradekosten
-    protected int upgradeCost = 5;
+    [SyncVar]
+    protected int upgradeCost = 100;
     // Die Upgradstuffe
+    [SyncVar]
     public int level = 1;
+    public int posX = 0;
+    public int posY = 0;
     #endregion
+
+
 
     #region CooldownBerechnung
     // Zeitvariablen für das kontinuierliche abfeuern von Projektilen
@@ -228,6 +239,7 @@ public class BaseTower : NetworkBehaviour
     [Command]
     public void CmdUpgrade()
     {
+        Debug.Log("Command Upgrade!");
         if (GetComponentInParent<PlayerController>().Gold >= upgradeCost)
         {
             GetComponentInParent<PlayerController>().Gold -= upgradeCost;
@@ -251,4 +263,26 @@ public class BaseTower : NetworkBehaviour
         return new TowerStructure(turretDmg, 1 / cooldown, range, buildCost , this.gameObject);
     }
 
+
+    public DamageInfo GetDmgAtPosition(Vector3 pos)
+    {
+        if (Vector3.Distance(pos, transform.position) < range)
+        {
+            return turretDmg;
+        }
+
+        DamageInfo nulldmg = new DamageInfo();
+        return nulldmg;
+    }
+
+    public static DamageInfo GetAllDmgAtPosition(Vector3 pos)
+    {
+        BaseTower[] allTower = FindObjectsOfType<BaseTower>();
+        DamageInfo retDmg = new DamageInfo();
+        foreach (BaseTower t in allTower)
+        {
+            retDmg.Add(t.GetDmgAtPosition(pos));
+        }
+        return retDmg;
+    }
 }

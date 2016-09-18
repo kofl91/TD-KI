@@ -9,7 +9,7 @@ public class SlowRocket : BaseProjectile {
     // Die Dauer der Verlangsamung
     //float debuffduration = 2.0f;
     // Die Effektivität der Verlangsamung
-    float slow = 0.5f;
+    float slow = 0.1f;
 
    
 

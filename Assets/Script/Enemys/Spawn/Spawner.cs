@@ -83,20 +83,6 @@ public class Spawner : NetworkBehaviour
 
     }
 
-    // Spawnt einen Minion, an einer Position, das zu einem Punkt läuft und gegen eine Spieler ist.
-    public GameObject spawnMinionAtTowardsVersus(int enemyID, Transform at, GameObject towards, PlayerController player)
-    {
-        GameObject spawnedMinion = Instantiate(PrefabContainer.Instance.enemys[enemyID], at.position, at.rotation) as GameObject;
-        BaseEnemy buffer = spawnedMinion.GetComponent<BaseEnemy>();
-        buffer.target = towards;
-        buffer.enemy = player;
-        buffer.bounty = waves[0].enemyBounty;
-        buffer.SetMaxLife(waves[0].enemyHP);
-
-        spawnedMinion.transform.parent = container.transform;
-        return spawnedMinion;
-    }
-
 
     [Command]
     public void CmdspawnMinionAtTowardsVersus(int enemyID, Vector3 at, GameObject towards, GameObject player)
@@ -112,8 +98,7 @@ public class Spawner : NetworkBehaviour
         spawnedMinion.GetComponent<NavMeshAgent>().enabled = true;
     }
 
-
-    public bool init = false;
+    private bool init = false;
     // Eine Spawn Iteration
     public void spawnRegular()
     {
@@ -129,7 +114,6 @@ public class Spawner : NetworkBehaviour
 
                 neutralSpawnPoints.AddRange(FindObjectsOfType<NeutralSpawnPoint>());
                 hiredSpawnPoints.AddRange(FindObjectsOfType<HiredSpawnPoint>());
-
             }
             return;
         }
@@ -145,23 +129,7 @@ public class Spawner : NetworkBehaviour
             }
 
         }
-        else
-        {
-            foreach (NeutralSpawnPoint spawnPoint in neutralSpawnPoints)
-            {
-                Debug.Log("offline send!");
-                spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, playerBases[0], player[0]);
-                spawnMinionAtTowardsVersus(enemyID, spawnPoint.transform, playerBases[1], player[1]);
-            }
-        }
     }
-
-    [Command]
-    public void CmdSpawnOnNetwork(GameObject go)
-    {
-        NetworkServer.Spawn(go);
-    }
-
     #endregion
 
     #region Unity
@@ -178,41 +146,7 @@ public class Spawner : NetworkBehaviour
         }
     }
 
-    void generateWaves()
-    {
-        float HP = 5;
-        float Bounty = 1;
-        int numberEnemyTypes = 5;
-        waves = new List<Wave>();
-        for (int i = 0; i < 99; i++)
-        {
-            HP *= 1.1f;
-            Bounty *= 1.1f;
-            if (i % 10 == 9)
-            {
-                waves.Add(new Wave((int)HP * 3, (int)Bounty, i % numberEnemyTypes, 5, 2));
-            }
-            else
-            {
-                waves.Add(new Wave((int)HP, (int)Bounty, i % numberEnemyTypes, 10, 2));
-            }
-        }
-        foreach (Wave w in waves)
-        {
-            w.Reset();
-        }
-    }
-
-    void getWavesFromComponent()
-    {
-        // Get Waves from components
-        waves = new List<Wave>();
-        waves.AddRange(GetComponents<Wave>());
-        foreach (Wave w in waves)
-        {
-            w.Reset();
-        }
-    }
+    
     // Update is called once per frame
     void Update()
     {
@@ -308,6 +242,42 @@ public class Spawner : NetworkBehaviour
         }
         else
             return PrefabContainer.Instance.enemys[0].GetComponent<BaseEnemy>();
+    }
+
+    void generateWaves()
+    {
+        float HP = 5;
+        float Bounty = 1;
+        int numberEnemyTypes = 5;
+        waves = new List<Wave>();
+        for (int i = 0; i < 99; i++)
+        {
+            HP *= 1.2f;
+            Bounty *= 1.1f;
+            if (i % 10 == 9)
+            {
+                waves.Add(new Wave((int)HP * 3, (int)Bounty, i % numberEnemyTypes, 5, 2));
+            }
+            else
+            {
+                waves.Add(new Wave((int)HP, (int)Bounty, i % numberEnemyTypes, 10, 2));
+            }
+        }
+        foreach (Wave w in waves)
+        {
+            w.Reset();
+        }
+    }
+
+    void getWavesFromComponent()
+    {
+        // Get Waves from components
+        waves = new List<Wave>();
+        waves.AddRange(GetComponents<Wave>());
+        foreach (Wave w in waves)
+        {
+            w.Reset();
+        }
     }
     #endregion
 }

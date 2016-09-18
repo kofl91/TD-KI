@@ -205,7 +205,7 @@ namespace Prototype.NetworkLobby
             }
 
 
-            ChangeTo(mainMenuPanel);
+            ChangeTo(ourPanel04);
         }
 
         public void StopClientClbk()
@@ -217,7 +217,7 @@ namespace Prototype.NetworkLobby
                 StopMatchMaker();
             }
 
-            ChangeTo(mainMenuPanel);
+            ChangeTo(ourPanel04);
         }
 
         public void StopServerClbk()
@@ -471,6 +471,12 @@ namespace Prototype.NetworkLobby
         public void DisplayMainPanel(bool flag)
         {
             ourPanel04.gameObject.SetActive(flag);
+        }
+
+        public void StopHostClient()
+        {
+            StopHost();
+            StopClient();
         }
     }
 }

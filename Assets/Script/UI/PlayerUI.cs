@@ -31,6 +31,8 @@ public class PlayerUI : MonoBehaviour {
 
     public BaseTower chosenTower;
 
+    public GameObject chosenTowerParticle;
+
     // Use this for initialization
     void Start () {
         infoTexts = InfoPanel.GetComponentsInChildren<Text>();
@@ -124,8 +126,10 @@ public class PlayerUI : MonoBehaviour {
 
     public void DisplayTowerDetails(BaseTower tower)
     {
+        chosenTowerParticle.SetActive(true);
+        chosenTowerParticle.transform.position = tower.transform.position;
         TowerDetailPanel.SetActive(true);
-        MinionDetailPanel.SetActive(false);
+        HideMinionDetails();
         detailtexts[1].text = "" + tower.turretDmg.calcDmgVsNeutralResistance();
         detailtexts[3].text = "" + tower.turretDmg.GetDamageType();
         detailtexts[5].text = "" + tower.cooldown;
@@ -140,12 +144,13 @@ public class PlayerUI : MonoBehaviour {
 
     public void HideTowerDetails()
     {
+        chosenTowerParticle.SetActive(false);
         TowerDetailPanel.SetActive(false);
     }
 
     public void DisplayMinionDetails(int id)
     {
-        TowerDetailPanel.SetActive(false);
+        HideTowerDetails();
         MinionDetailPanel.SetActive(true);
 
         Text[] texts = MinionDetailPanel.GetComponentsInChildren<Text>();
@@ -185,5 +190,9 @@ public class PlayerUI : MonoBehaviour {
         player.ChooseTower(towerID);
     }
 
+    public void DisplayBestMoves()
+    {
+        player.DisplayBestMoves();
+    }
 
 }

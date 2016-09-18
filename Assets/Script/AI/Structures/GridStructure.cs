@@ -10,6 +10,8 @@ public class TileStructure
     public int yPos;
     public eTile type;
     public GameObject obj;
+    public GameObject tower;
+    public int minionsPassed;
 
     public TileStructure(int x, int y, eTile t, GameObject go)
     {
@@ -17,6 +19,7 @@ public class TileStructure
         yPos = y;
         type = t;
         obj = go;
+        minionsPassed = 0;
     }
 }
 [Serializable()]

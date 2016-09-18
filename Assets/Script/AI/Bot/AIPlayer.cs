@@ -15,7 +15,7 @@ public abstract class AIPlayer : MonoBehaviour
 
     protected bool isInitialized = false;
     private float lastAction=0.0f;
-    private float cooldown = 1.0f;
+    private float cooldown = 3.0f;
 
     public abstract void MakeMove();
 

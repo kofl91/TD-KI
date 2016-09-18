@@ -14,12 +14,6 @@ public class CameraMove : MonoBehaviour {
     public int ScrollUp = 200;
     public int ScrollDwon = 1;
 
-
-    // Use this for initialization
-    void Start () {
-	
-	}
-	
 	// Update is called once per frame
 	void Update () {
 
